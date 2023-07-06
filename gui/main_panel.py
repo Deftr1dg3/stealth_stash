@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 
 import wx
-import os 
-import sys
-from top_bar import TopBarPanel
-from body_panel import BodyPanel
-
-main_scope_path = os.path.abspath("../")
-sys.path.append(main_scope_path)
-
-from command import Command
+from gui.topbar.top_bar_panel import TopBarPanel
+from gui.body_panel import BodyPanel
+from gui.command import Command
 
 
 class MainPanel(wx.Panel):
@@ -17,8 +11,9 @@ class MainPanel(wx.Panel):
         self._command = command
         self._main_frame = main_frame
         super().__init__(self._main_frame)
+       
         self._init_ui()
-        self.SetBackgroundColour("#D0D366")
+
         # screen_size = wx.DisplaySize()
         
     def _init_ui(self):

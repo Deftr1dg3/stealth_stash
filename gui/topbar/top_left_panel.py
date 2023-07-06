@@ -2,24 +2,26 @@
 
 
 import wx 
-from command import Command
+from gui.command import Command
+from gui.colours import Colours
 
 
 class TopLeftPanel(wx.Panel):
-    def __init__(self, top_bar: wx.Panel, command: Command, colour: wx.Colour):
+    def __init__(self, top_bar: wx.Panel, command: Command):
         self._top_bar = top_bar
         self._command = command 
         super().__init__(self._top_bar, size=(200, 30))
+        
         self._init_ui()
         self._bind_events()
         
-        self.SetBackgroundColour(colour)
+        self.SetBackgroundColour(Colours.TOP_BAR)
         
     def _init_ui(self):
         main_box = wx.BoxSizer(wx.HORIZONTAL)
         
         main_box.AddStretchSpacer()
-        self.add = wx.Button(self, label='Add  +', size=(180, -1))
+        self.add = wx.Button(self, label='Category  +', size=(180, -1))
         main_box.Add(self.add, 0, wx.ALIGN_CENTRE)
         main_box.AddStretchSpacer()
         

@@ -2,7 +2,7 @@
 
 
 import wx 
-from command import Command
+from gui.command import Command
 from data_file import Category
 
 class CategotyRightClickMenu(wx.Menu):
@@ -27,4 +27,4 @@ class CategotyRightClickMenu(wx.Menu):
         self._command.rename_category(self._parent, self._category)
         
     def _remove_category(self, event) -> None:
-        self._command.remove_category(self._category)
+        self._command.remove_category(self._parent, self._category)

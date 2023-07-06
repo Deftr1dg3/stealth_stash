@@ -7,7 +7,7 @@ from aes import AES_Encripton
 from exceptions import UnreadableToDecodeTheFile
 
 
-class Row:
+class Entry:
     def __init__(self, row: list = ["New Record", "", "", "", ""]):
         self._row = row 
       
@@ -65,7 +65,7 @@ class Category:
     def name(self) -> str:
         return self._name
         
-    def get_content(self) -> list[Row]:
+    def get_content(self) -> list[Entry]:
         content = self._data_file.get_category_content(self._name)
         return content
     
@@ -76,17 +76,17 @@ class Category:
     def remove(self) -> None:
         self._data_file.delete_category(self.name)
     
-    def remove_row(self, row: Row) -> None:
+    def remove_row(self, row: Entry) -> None:
         content = self.get_content()
         index = content.index(row)
         self._data_file.delete_row_from_category(self.name, index)
     
-    def get_row(self, index) -> Row:
+    def get_row(self, index) -> Entry:
         content = self.get_content()
         return content[index]
     
-    def new_row(self) -> Row:
-        new_row = Row()
+    def new_row(self) -> Entry:
+        new_row = Entry()
         self._data_file.add_row_to_categoty(self.name, new_row.row)
         return new_row
         
@@ -140,12 +140,13 @@ class DataFile:
         encrypted_str_data = self._aes_encription.encrypt(bytes_data)
         self._io_data.save_data(encrypted_str_data)
     
-    def get_category_content(self, category: str) -> list[Row]:
-        categoty_data = [Row(row) for row in self._data[category]]
+    def get_category_content(self, category: str) -> list[Entry]:
+        categoty_data = [Entry(row) for row in self._data[category]]
         return categoty_data
             
     def add_category(self, categoty: str) -> None:
         self._data[categoty] = []
+        self.commit()
         
     def rename_category(self, category: str, new_name: str) -> None:
         keys = list(self._data.keys())
@@ -153,15 +154,19 @@ class DataFile:
         categoty_index = keys.index(category)
         keys[categoty_index] = new_name
         self._data = dict(zip(keys, values))
+        self.commit()
         
     def delete_category(self, category: str) -> None:
         del self._data[category]
+        self.commit()
         
     def add_row_to_categoty(self, category: str, row: list[str]) -> None:
         self._data[category].append(row)
+        self.commit()
         
     def delete_row_from_category(self, category: str, row_index: int) -> None:
         del self._data[category][row_index]
+        self.commit()
     
     def get_categories(self) -> list[Category]:
         categories = [Category(category, self) for category in self._data.keys()]

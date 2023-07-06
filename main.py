@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 
-
 import os
 import platform
-from enum import Enum
+from typing import NamedTuple
 from data_file import DataFile
-from command import Command
 from main_frame import launch_gui
 from exceptions import UnsupportedSystem, UnreadableToDecodeTheFile
+from gui.command import Command
 
-current_dir = os.path.abspath("./")
-print(f"{current_dir=}")
-class DefaultPath(Enum):
+
+current_dir = "/Users/stasusbondevito/Documents/PYTHON/Projects/KeyKeeper"
+
+
+class DefaultPath(NamedTuple):
     DARWIN = current_dir + os.sep + "KeyKeeperDataFile.kkdf"
     LINUX = ""
     WINDOWS = ""
@@ -25,11 +26,11 @@ def _get_default_datafile_path() -> str:
     system = platform.system()
     match system:
         case "Darwin":
-            return DefaultPath.DARWIN.value
+            return DefaultPath.DARWIN
         case "Linux":
-            return DefaultPath.LINUX.value
+            return DefaultPath.LINUX
         case "Windows":
-            return DefaultPath.LINUX.value
+            return DefaultPath.WINDOWS
         case _:
             raise UnsupportedSystem(f"{system=}")
 
@@ -74,7 +75,6 @@ def main():
         exit(1)
     command = Command(data_file)
     launch_gui(command)
-
 
     
 if __name__ == "__main__":

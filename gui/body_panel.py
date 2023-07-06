@@ -2,16 +2,25 @@
 
 
 import wx 
-from left_panel import LeftPanel
-from mid_panel import MidPanel
-from right_panel import RightPanel
-from command import Command
+from gui.colours import Colours
+from gui.leftpanel.left_panel import LeftPanel
+from gui.midpanel.mid_panel import MidPanel
+from gui.rightpanel.right_panel import RightPanel
+from gui.command import Command
 
 class BodyPanel(wx.Panel):
     def __init__(self, main_panel: wx.Panel, command: Command) -> None:
         self._command = command
         self._main_panel = main_panel
         super().__init__(self._main_panel)
+        
+        self._text_colour = wx.Colour(wx.WHITE)
+        self._selection_colour = wx.Colour(wx.BLUE)
+        
+        self._left_panel_colour = wx.Colour("#B36179")
+        self._mid_panel_colour = wx.Colour("#614CC2")
+        self._right_panel_colour = wx.Colour("#E961DC")
+        
         self.SetBackgroundColour("#617DB3")
         self._init_ui()
         
