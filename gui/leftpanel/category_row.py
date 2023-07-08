@@ -74,12 +74,15 @@ class CategoryRow(wx.Panel):
     def _on_left_click(self, event) -> None:
         self.select_row()
         if self._command.selected_category_row is not None:
+            if self._command.selected_category_row is self:
+                return
             self._command.selected_category_row.deselect_row()  #type: ignore
         self._command.selected_category_row = self
         self._command.display_category_content()
         
     
     def _on_right_click(self, event) -> None:
+        self._on_left_click(None)
         right_click_menu = CategotyRightClickMenu(self, self._command, self._category)
         position = event.GetPosition()
         self.PopupMenu(right_click_menu, position)
@@ -131,6 +134,4 @@ class CategoryRow(wx.Panel):
         self.is_selected = False
         self._target_colour = self._text_colour
         self._on_mouse_leave(None)
-        
-    
-    
+  

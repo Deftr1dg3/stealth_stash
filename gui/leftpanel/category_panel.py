@@ -2,6 +2,7 @@
 
 
 import wx
+from gui.colours import Colours
 
 
 class CategoryPanel(wx.Panel):
@@ -15,6 +16,7 @@ class CategoryPanel(wx.Panel):
         # main_box.AddStretchSpacer()
         main_box = wx.BoxSizer(wx.HORIZONTAL)
         self._category_name = wx.StaticText(self, label=self._name)
+        self._category_name.SetForegroundColour(Colours.TEXT)
         main_box.Add(self._category_name, 0, wx.TOP | wx.LEFT, 6)
         self.SetSizer(main_box)
         self.Layout()

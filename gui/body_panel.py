@@ -17,11 +17,6 @@ class BodyPanel(wx.Panel):
         self._text_colour = wx.Colour(wx.WHITE)
         self._selection_colour = wx.Colour(wx.BLUE)
         
-        self._left_panel_colour = wx.Colour("#B36179")
-        self._mid_panel_colour = wx.Colour("#614CC2")
-        self._right_panel_colour = wx.Colour("#E961DC")
-        
-        self.SetBackgroundColour("#617DB3")
         self._init_ui()
         
     def _init_ui(self):
@@ -37,14 +32,14 @@ class BodyPanel(wx.Panel):
         right_panel = RightPanel(self, self._command)
         self._command.right = right_panel
         
-        left_box.Add(left_panel, 1, wx.EXPAND)
+        left_box.Add(left_panel, 1, wx.EXPAND | wx.TOP, 1)
         mid_box.Add(mid_panel, 1, wx.EXPAND)
-        right_box.Add(right_panel, 1, wx.EXPAND)
+        right_box.Add(right_panel, 1, wx.EXPAND | wx.TOP, 1)
         
         main_box.Add(left_box, 0, wx.EXPAND)
         main_box.Add(mid_box, 1, wx.EXPAND)
         main_box.Add(right_box, 0, wx.EXPAND)
         
-        
         self.SetSizer(main_box)
+        self.Layout()
         

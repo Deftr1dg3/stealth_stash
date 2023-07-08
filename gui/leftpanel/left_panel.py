@@ -29,7 +29,7 @@ class LeftPanel(wx.Panel):
         scroll_sizer = wx.BoxSizer(wx.VERTICAL)
         
         for category in self._command.list_categories():
-            self.display_category(self.scroll, scroll_sizer, category)  
+            self._display_category(self.scroll, scroll_sizer, category)  
 
         self._command.category_row_list = self._category_row_list
         
@@ -39,7 +39,7 @@ class LeftPanel(wx.Panel):
         self.SetSizer(main_box)
         self.Layout()
         
-    def display_category(self, scroll, scroll_sizer, category: Category) -> None:
+    def _display_category(self, scroll, scroll_sizer, category: Category) -> None:
         category_row = CategoryRow(scroll, category, self._command)
         self._category_row_list.append(category_row)
         scroll_sizer.Add(category_row, 0, wx.EXPAND)

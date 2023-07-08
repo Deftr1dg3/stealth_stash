@@ -23,13 +23,10 @@ class TopMidPanel(wx.Panel):
         search_box = wx.BoxSizer(wx.VERTICAL)
         
         self.add = wx.Button(self, label='Entry  +')
-
-        button_box.Add(self.add, 0, wx.EXPAND | wx.LEFT, 10)
-
-
         self.search = wx.TextCtrl(self, size=(200, -1))
         self.search.SetHint('Search record ...')
 
+        button_box.Add(self.add, 0, wx.EXPAND | wx.LEFT, 10)
         search_box.Add(self.search, 0, wx.EXPAND)
 
 
@@ -40,13 +37,12 @@ class TopMidPanel(wx.Panel):
         self.SetSizer(main_box)
         self.Layout()
 
-        
     def _bind_events(self):
         self.add.Bind(wx.EVT_BUTTON, self._add_entry)
-        self.search.Bind(wx.EVT_KEY_UP, self._search)
+        self.search.Bind(wx.EVT_TEXT, self._search)
         
     def _add_entry(self, event) -> None:
-        print("ADD ENTRY")
+        self._command.add_entry()
         
     def _search(self, event) -> None:
         query = self.search.GetValue()

@@ -8,52 +8,59 @@ from exceptions import UnreadableToDecodeTheFile
 
 
 class Entry:
-    def __init__(self, row: list = ["New Record", "", "", "", ""]):
-        self._row = row 
+    def __init__(self, entry_data: (list | None) = None):
+        if entry_data is None:
+            self._entry_data = ["New Record", "TestUsername", "TestPassword", "Test", "Test"]
+        else:
+            self._entry_data = entry_data
+    
+    @property
+    def entry_data(self) -> list:
+        return self._entry_data
       
-    @property    
-    def row(self) -> list:
-        return self._row
+    # @property    
+    # def row(self) -> list:
+    #     return self._entry_data
         
     @property
     def record_name(self) -> str:
-        return self._row[0]
+        return self._entry_data[0]
     
     @record_name.setter
     def record_name(self, new_value: str) -> None:
-        self._row[0] = new_value
+        self._entry_data[0] = new_value
         
     @property
     def username(self) -> str:
-        return self._row[1]
+        return self._entry_data[1]
     
     @username.setter
     def username(self, new_value: str) -> None:
-        self._row[1] = new_value
+        self._entry_data[1] = new_value
         
     @property
     def password(self) -> str:
-        return self._row[2]
+        return self._entry_data[2]
     
     @password.setter
     def password(self, new_value: str) -> None:
-        self._row[2] = new_value
+        self._entry_data[2] = new_value
         
     @property
     def url(self) -> str:
-        return self._row[3]
+        return self._entry_data[3]
     
     @url.setter
     def url(self, new_value: str) -> None:
-        self._row[3] = new_value
+        self._entry_data[3] = new_value
         
     @property
     def notes(self) -> str:
-        return self._row[4]
+        return self._entry_data[4]
     
     @notes.setter
     def notes(self, new_value: str) -> None:
-        self._row[4] = new_value
+        self._entry_data[4] = new_value
     
 
 class Category:
@@ -76,18 +83,17 @@ class Category:
     def remove(self) -> None:
         self._data_file.delete_category(self.name)
     
-    def remove_row(self, row: Entry) -> None:
-        content = self.get_content()
-        index = content.index(row)
-        self._data_file.delete_row_from_category(self.name, index)
+    def remove_entry(self, entry: Entry) -> None:
+        entry_data = entry.entry_data
+        self._data_file.delete_row_from_category(self._name, entry_data)
+            
+    # def get_entry(self, index) -> Entry:
+    #     content = self.get_content()
+    #     return content[index]
     
-    def get_row(self, index) -> Entry:
-        content = self.get_content()
-        return content[index]
-    
-    def new_row(self) -> Entry:
+    def new_entry(self) -> Entry:
         new_row = Entry()
-        self._data_file.add_row_to_categoty(self.name, new_row.row)
+        self._data_file.add_row_to_categoty(self.name, new_row.entry_data)
         return new_row
         
     
@@ -139,6 +145,9 @@ class DataFile:
         bytes_data = json_data.encode("utf-8")
         encrypted_str_data = self._aes_encription.encrypt(bytes_data)
         self._io_data.save_data(encrypted_str_data)
+        
+    def get_category_data(self, category: str) -> list[list]:
+        return self._data[category]
     
     def get_category_content(self, category: str) -> list[Entry]:
         categoty_data = [Entry(row) for row in self._data[category]]
@@ -164,13 +173,21 @@ class DataFile:
         self._data[category].append(row)
         self.commit()
         
-    def delete_row_from_category(self, category: str, row_index: int) -> None:
-        del self._data[category][row_index]
+    def delete_row_from_category(self, category: str, entry_data: list) -> None:
+        index = 0
+        for row in self._data[category]:
+            if row is entry_data:
+                del self._data[category][index]
+                return
+            index += 1
         self.commit()
     
     def get_categories(self) -> list[Category]:
         categories = [Category(category, self) for category in self._data.keys()]
         return categories
+    
+    def get_categories_namespace(self) -> set:
+        return set(self._data.keys())
         
         
             

@@ -22,6 +22,7 @@ class TopLeftPanel(wx.Panel):
         
         main_box.AddStretchSpacer()
         self.add = wx.Button(self, label='Category  +', size=(180, -1))
+        self.add.SetForegroundColour("green")
         main_box.Add(self.add, 0, wx.ALIGN_CENTRE)
         main_box.AddStretchSpacer()
         

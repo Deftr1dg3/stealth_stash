@@ -42,7 +42,7 @@ class TopBarMenu(wx.MenuBar):
         self._command.add_category(self._main_frame)
 
     def _add_entry(self, event):
-        print("New entry")
+        self._command.add_entry()
 
     def on_exit(self, event):
         # self._main_frame = wx.GetApp().GetTopWindow()

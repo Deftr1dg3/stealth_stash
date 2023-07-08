@@ -2,7 +2,7 @@
 
 
 import wx
-
+from gui.colours import Colours
 
 class IconPanel(wx.Panel):
     def __init__(self, parent: wx.Panel, icon: str, colour: wx.Colour) -> None:
@@ -25,7 +25,7 @@ class IconPanel(wx.Panel):
         icon(dc)
         
     def _folder_icon(self, dc: wx.PaintDC) -> None:
-        dc.SetPen(wx.Pen(wx.Colour("#323232"), 1))
+        dc.SetPen(wx.Pen(wx.Colour(Colours.PEN), 1))
         dc.SetBrush(wx.Brush(self._icon_colour))
         dc.DrawRoundedRectangle(9, 6, 10, 10, 2)
         dc.DrawRoundedRectangle(7, 8, 23, 15, 3)
