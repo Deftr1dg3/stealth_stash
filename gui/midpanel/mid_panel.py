@@ -44,7 +44,7 @@ class MidPanel(wx.Panel):
         
     def _display_entry(self, scroll, scroll_sizer, entry: Entry) -> None:
         entry_row = EntryRow(scroll, entry, self._command)
-        scroll_sizer.Add(entry_row, 0, wx.EXPAND | wx.TOP, 1)
+        scroll_sizer.Add(entry_row, 0, wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, 1)
         
     def _clear_categories(self):
         # Get the sizer from the ScrolledWindow

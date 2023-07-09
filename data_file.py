@@ -5,15 +5,15 @@ import json
 import atexit
 from aes import AES_Encripton
 from exceptions import UnreadableToDecodeTheFile
+from manage_password import PasswordStrength, GeneratePassword
 
 
 class Entry:
     def __init__(self, entry_data: (list | None) = None):
         if entry_data is None:
-            self._entry_data = ["New Record", "TestUsername", "TestPassword", "Test", "Test"]
+            self._entry_data = ["New Record", "Username", self._generate_password(), "URL", "N/A"]
         else:
             self._entry_data = entry_data
-    
     @property
     def entry_data(self) -> list:
         return self._entry_data
@@ -61,6 +61,11 @@ class Entry:
     @notes.setter
     def notes(self, new_value: str) -> None:
         self._entry_data[4] = new_value
+        
+    def _generate_password(self) -> str:
+        g = GeneratePassword()
+        password = g.generate_password(PasswordStrength.STRONG)
+        return password
     
 
 class Category:
@@ -86,10 +91,6 @@ class Category:
     def remove_entry(self, entry: Entry) -> None:
         entry_data = entry.entry_data
         self._data_file.delete_row_from_category(self._name, entry_data)
-            
-    # def get_entry(self, index) -> Entry:
-    #     content = self.get_content()
-    #     return content[index]
     
     def new_entry(self) -> Entry:
         new_row = Entry()

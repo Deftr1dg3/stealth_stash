@@ -22,4 +22,4 @@ class EntryRightClickMenu(wx.Menu):
         self.Bind(wx.EVT_MENU, self._remove_entry, id=1)
         
     def _remove_entry(self, event) -> None:
-        self._command.remove_entry(self._parent, self._entry)
+        self._command.remove_entry(self._entry)

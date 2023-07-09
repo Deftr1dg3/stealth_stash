@@ -164,7 +164,7 @@ class Command:
             return
         self.right.refresh()
         
-    def remove_entry(self, parent: wx.Panel, entry: Entry) -> None:
+    def remove_entry(self,entry: Entry) -> None:
         if self.selected_category_row is None:
             message_popup("No Categoty selected.", "Error.")
             return

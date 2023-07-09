@@ -4,6 +4,8 @@
 import wx 
 from gui.command import Command
 from data_file import Entry
+from gui.modals.popups import message_popup, dialog_popup
+from manage_password import PasswordStrength, GeneratePassword, ValidatePassword
 
 
 class EditPanel(wx.Panel):
@@ -15,10 +17,15 @@ class EditPanel(wx.Panel):
         self._show_password_ind = False
         self._show_password_label = "Show Passowrd"
         self._hide_password_label = "Hide Password"
+        self._generate_password_label = "Generate New Passowrd"
+        self._remove_entry_label = "Remove Entry"
         
         self._entry: Entry
         
         self._placeholder = "No Entry Selected"
+        
+        self._dropdown_options = ["VERY STRONG", "STRONG", "MEDIUM", "WEAK", "VERY WEAK"]
+        self._current_password_strength = "STRONG"
         
         self._init_ui()
         self._bind_events()
@@ -47,8 +54,11 @@ class EditPanel(wx.Panel):
         password_title = wx.StaticText(self._scroll, label="Password:")
         self._password = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER | wx.TE_PASSWORD)
         self._reveal_password = wx.Button(self._scroll, label=self._show_password_label)
-        url_title = wx.StaticText(self._scroll, label="Password:")
+        self._password_strength = wx.ComboBox(self._scroll, choices=self._dropdown_options, style=wx.CB_READONLY)
+        self._generate_password_button = wx.Button(self._scroll, label=self._generate_password_label)
+        url_title = wx.StaticText(self._scroll, label="URL://")
         self._url = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
+        self._remove_entry = wx.Button(self._scroll, label=self._remove_entry_label)
         
         self._scroll_sizer.Add(record_name_title, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(self._record_name, 0, wx.EXPAND | wx.ALL, 5)
@@ -57,19 +67,25 @@ class EditPanel(wx.Panel):
         self._scroll_sizer.Add(password_title, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(self._password, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(self._reveal_password, 0, wx.EXPAND | wx.ALL, 5)
+        self._scroll_sizer.Add(self._password_strength, 0, wx.EXPAND | wx.ALL, 5)
+        self._scroll_sizer.Add(self._generate_password_button, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(url_title, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(self._url, 0, wx.EXPAND | wx.ALL, 5)
+        self._scroll_sizer.Add(self._remove_entry, 0, wx.EXPAND | wx.ALL, 5)
         
         if self._command.selected_entry_row is None:
             self._record_name.Disable()
             self._username.Disable()
             self._password.Disable()
             self._reveal_password.Disable()
+            self._password_strength.Disable()
+            self._generate_password_button.Disable()
             self._url.Disable()
             self._record_name.SetValue(self._placeholder)
             self._username.SetValue(self._placeholder)
             self._password.SetValue(self._placeholder)
             self._url.SetValue(self._placeholder)
+            self._remove_entry.Disable()
         else:
             self.entry = self._command.selected_entry_row.entry
             entry_name = self.entry.record_name
@@ -79,6 +95,7 @@ class EditPanel(wx.Panel):
             self._record_name.SetValue(entry_name)
             self._username.SetValue(username)
             self._password.SetValue(password)
+            self._validate_password_strength(None)
             self._url.SetValue(url)
      
         self._scroll.SetSizer(self._scroll_sizer)
@@ -94,30 +111,65 @@ class EditPanel(wx.Panel):
         self._url.Bind(wx.EVT_TEXT, self._on_url)
         
         self._reveal_password.Bind(wx.EVT_BUTTON, self._show_password)
+        self._generate_password_button.Bind(wx.EVT_BUTTON, self._generate_password)
+        self._password_strength.Bind(wx.EVT_COMBOBOX, self._on_select_password_strength)
+        self._remove_entry.Bind(wx.EVT_BUTTON, self._on_remove_entry)
         
-    def _on_record_name(self, event):
+    def _on_record_name(self, event) -> None:
         value = self._record_name.GetValue()
         self.entry.record_name = value
         self._on_enter(None)
     
-    def _on_username(self, event):
+    def _on_username(self, event) -> None:
         value = self._username.GetValue()
         self.entry.username = value
         self._on_enter(None)
     
-    def _on_password(self, event):
+    def _on_password(self, event) -> None:
         value = self._password.GetValue()
         self.entry.password = value
+        self._validate_password_strength(None)
         self._on_enter(None)
     
-    def _on_url(self, event):
+    def _on_url(self, event) -> None:
         value = self._url.GetValue()
         self.entry.url = value
         self._on_enter(None)
         
-    def _on_enter(self, event):
+    def _on_enter(self, event) -> None:
         self._command.refresh_mid()
     
+    def _on_remove_entry(self, event):
+        self._command.remove_entry(self.entry)
+        
+    def _validate_password_strength(self, event) -> None:
+        password = self.entry.password
+        validator = ValidatePassword()
+        result = validator.validate_password(password)
+        self._current_password_strength = result 
+        self._password_strength.SetValue(self._current_password_strength)
+        
+    def _on_select_password_strength(self, event) -> None:
+        self._current_password_strength = self._password_strength.GetValue()
+    
+    def _generate_password(self, event) -> None:
+        validate = dialog_popup("If you generate a new password, the current one will be LOST. Are you sure you want to proceed?", "IMPORTANT: Confirmation")
+        g = GeneratePassword()
+        match self._current_password_strength:
+            case "VERY STRONG":
+                password = g.generate_password(PasswordStrength.VERY_STRONG)
+            case "STRONG":
+                password = g.generate_password(PasswordStrength.STRONG)
+            case "MEDIUM":
+                password = g.generate_password(PasswordStrength.MEDIUM)
+            case "WEAK":
+                password = g.generate_password(PasswordStrength.WEAK)  
+            case "VERY WEAK":
+                password = g.generate_password(PasswordStrength.VERY_WEAK)  
+            case _:
+                return
+        self._password.SetValue(password)
+        
     def _show_password(self, event):
         if not self._show_password_ind:
             self._show_password_ind = not self._show_password_ind
