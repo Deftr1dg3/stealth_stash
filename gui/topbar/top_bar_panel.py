@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.colours import Colours
+from gui.colours import Colours, ColoursDefinition
 from gui.command import Command
 from gui.topbar.top_left_panel import TopLeftPanel
 from gui.topbar.top_mid_panel import TopMidPanel
@@ -14,11 +14,8 @@ class TopBarPanel(wx.Panel):
         self._main_panel = main_panel
         super().__init__(self._main_panel, size=(-1, 30))
         
-        self._background_colour = Colours.TOP_BAR
-        
-        self.SetBackgroundColour(self._background_colour)
-        
         self._init_ui()
+        
         
     def _init_ui(self):
         main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -40,3 +37,8 @@ class TopBarPanel(wx.Panel):
         
         self.SetSizer(main_box)
         self.Layout()
+    
+    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
+        self.SetBackgroundColour(Colours.TOP_BAR)
+        self.Refresh()
+        

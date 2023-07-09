@@ -15,13 +15,12 @@ class MainFrame(wx.Frame):
         self.SetTitle('Key Keeper')
         self.SetMinSize((800, 400))
         self._init_ui()
-        # self.SetBackgroundColour(wx.Colour(0,0,0,0))
         
     def _init_ui(self) -> None:
         MainPanel(self, self._command)
         self.SetMenuBar(TopBarMenu(self, self._command))
     
-        
+
 def launch_gui(command: Command) -> None:
     app = wx.App()
     MainFrame(command).Show()

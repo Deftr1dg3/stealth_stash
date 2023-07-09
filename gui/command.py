@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
+    from gui.body_panel import BodyPanel
     from gui.topbar.top_bar_panel import TopBarPanel
     from gui.leftpanel.left_panel import LeftPanel
     from gui.leftpanel.category_row import CategoryRow
@@ -21,13 +22,31 @@ if TYPE_CHECKING:
 class Command:
     def __init__(self, data_file: DataFile) -> None:
         self._data_file = data_file
+        self._body_panel: BodyPanel
         self._top: TopBarPanel
         self._left: LeftPanel
         self._mid: MidPanel
         self._right: RightPanel
+        self._edit_panel: EditPanel
         self._category_row_list: list[CategoryRow] = []
         self._selected_category_row: (CategoryRow| None) = None
         self._selected_entry_row: (EntryRow | None) = None
+        
+    @property
+    def body_panel(self) -> BodyPanel:
+        return self._body_panel
+    
+    @body_panel.setter
+    def body_panel(self, body_panel: BodyPanel) -> None:
+        self._body_panel = body_panel
+    
+    @property
+    def edit_panel(self) -> EditPanel:
+        return self._edit_panel
+    
+    @edit_panel.setter
+    def edit_panel(self, edit_panel: EditPanel) -> None:
+        self._edit_panel = edit_panel
         
     @property
     def category_row_list(self) -> list[CategoryRow]:
@@ -113,7 +132,11 @@ class Command:
         self.mid.refresh()  
         self.right.refresh()
         
-    def remove_category(self, parent: wx.Panel, category: Category) -> None:
+    def remove_category(self) -> None:
+        if self.selected_category_row is None:
+            message_popup("No Category selected.", "Error.")
+            return
+        category = self.selected_category_row.category
         result = dialog_popup(f"Are you sure you want to completely remove '{category.name}' category including all its data?", "Confirmation")
         if result:
             category.remove()
@@ -164,10 +187,15 @@ class Command:
             return
         self.right.refresh()
         
-    def remove_entry(self,entry: Entry) -> None:
+    def remove_entry(self, entry: (Entry | None) = None) -> None:
         if self.selected_category_row is None:
             message_popup("No Categoty selected.", "Error.")
             return
+        if entry is None:
+            if self.selected_entry_row is None:
+                message_popup("No entry selected.", "Error.")
+                return
+            entry = self.selected_entry_row.entry
         result = dialog_popup(f"Are you sure you want to completely remove this Entry? All Entry data will be lost.", "Confirmation")
         if result:
             self.selected_category_row.category.remove_entry(entry)
@@ -176,6 +204,9 @@ class Command:
     
     def refresh_mid(self):
         self.mid.refresh()
+    
+    def manage_entry_states(self, direction: int = 1):
+        self.edit_panel.manage_self_states(direction)
         
         
        

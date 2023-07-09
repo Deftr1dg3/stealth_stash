@@ -4,7 +4,7 @@
 import wx
 from data_file import Entry
 from gui.command import Command 
-from gui.colours import Colours
+from gui.colours import Colours, ColoursDefinition
 from gui.midpanel.entry_row import EntryRow
 
 
@@ -12,11 +12,8 @@ class MidPanel(wx.Panel):
     def __init__(self, body_panel: wx.Panel, command: Command) -> None:
         self._command = command
         self._body_panel = body_panel
+        self._entry_row_list: list[EntryRow] = []
         super().__init__(self._body_panel)
-        
-        self._background_colour = Colours.MID_PANEL
-        
-        self.SetBackgroundColour(self._background_colour)
         
         self._init_ui()
         
@@ -44,6 +41,7 @@ class MidPanel(wx.Panel):
         
     def _display_entry(self, scroll, scroll_sizer, entry: Entry) -> None:
         entry_row = EntryRow(scroll, entry, self._command)
+        self._entry_row_list.append(entry_row)
         scroll_sizer.Add(entry_row, 0, wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, 1)
         
     def _clear_categories(self):
@@ -65,3 +63,8 @@ class MidPanel(wx.Panel):
         self._clear_categories()
         self._init_ui()
         self._command.selected_entry_row = None
+        
+    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
+        self.SetBackgroundColour(Colours.MID_PANEL)
+        self.Refresh()
+        

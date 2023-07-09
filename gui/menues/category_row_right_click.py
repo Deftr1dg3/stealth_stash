@@ -15,8 +15,8 @@ class CategotyRightClickMenu(wx.Menu):
         self._bind_events()
         
     def _init_menu(self) -> None:
-        self.Append(1, 'Rename')
-        self.Append(2, 'Remove')
+        self.Append(1, '&Rename')
+        self.Append(2, '&Remove')
 
     def _bind_events(self) -> None:
         self.Bind(wx.EVT_MENU, self._rename_category, id=1)
@@ -26,4 +26,4 @@ class CategotyRightClickMenu(wx.Menu):
         self._command.rename_category(self._parent, self._category)
         
     def _remove_category(self, event) -> None:
-        self._command.remove_category(self._parent, self._category)
+        self._command.remove_category()

@@ -4,7 +4,7 @@
 import wx
 from data_file import Entry
 from gui.command import Command
-from gui.colours import Colours
+from gui.colours import Colours, ColoursDefinition
 from gui.midpanel.record_panel import RecordName, Username, Password, URL
 from gui.menues.entry_row_right_click import EntryRightClickMenu
 
@@ -30,7 +30,6 @@ class EntryRow(wx.Panel):
         self._init_ui()
         self._bind_events()
         
-        self.SetBackgroundColour(self._background_colour)
         
     @property
     def entry(self) -> Entry:
@@ -146,3 +145,13 @@ class EntryRow(wx.Panel):
     def deselect_entry(self) -> None:
         self.is_selected = False 
         self._smooth_deselect()
+        
+    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
+        print("row works")
+        self._text_colour = Colours.TEXT
+        self._selection_colour = Colours.SELECTION
+        self._background_colour = Colours.ENTRY_BACKGROUND
+        self._target_colour = self._selection_colour
+        self._current_colour = self._background_colour
+        self.SetBackgroundColour(self._background_colour)
+        self.Refresh()

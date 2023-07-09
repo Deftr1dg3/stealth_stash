@@ -3,7 +3,7 @@
 
 import wx
 from data_file import Category
-from gui.colours import Colours
+from gui.colours import Colours, ColoursDefinition
 from gui.command import Command
 from gui.icons.icons import IconPanel
 from gui.leftpanel.category_panel import CategoryPanel
@@ -137,3 +137,8 @@ class CategoryRow(wx.Panel):
         self._target_colour = self._text_colour
         self._on_mouse_leave(None)
   
+    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
+        self._text_colour = colours.TEXT
+        self._selection_colour = colours.SELECTION
+        self._display_category.set_colour(self._text_colour)
+        self.Refresh()

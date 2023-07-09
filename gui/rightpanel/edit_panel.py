@@ -6,6 +6,7 @@ from gui.command import Command
 from data_file import Entry
 from gui.modals.popups import message_popup, dialog_popup
 from manage_password import PasswordStrength, GeneratePassword, ValidatePassword
+from gui.rightpanel.entry_state import EntryState
 
 
 class EditPanel(wx.Panel):
@@ -18,9 +19,21 @@ class EditPanel(wx.Panel):
         self._show_password_label = "Show Passowrd"
         self._hide_password_label = "Hide Password"
         self._generate_password_label = "Generate New Passowrd"
+        
+        self._PASSWORD_STRENGTH = {
+                            'VERY STRONG': PasswordStrength.VERY_STRONG,
+                            'STRONG': PasswordStrength.STRONG,
+                            'MEDIUM': PasswordStrength.MEDIUM,
+                            'WEAK': PasswordStrength.WEAK,
+                            'VERY WEAK': PasswordStrength.VERY_WEAK,
+                        }
+        
+        
         self._remove_entry_label = "Remove Entry"
         
         self._entry: Entry
+        self._entry_state: (EntryState | None) = None
+        self._undo_in_progress = False
         
         self._placeholder = "No Entry Selected"
         
@@ -30,7 +43,6 @@ class EditPanel(wx.Panel):
         self._init_ui()
         self._bind_events()
         
-    
     @property
     def entry(self) -> Entry:
         return self._entry
@@ -88,6 +100,10 @@ class EditPanel(wx.Panel):
             self._remove_entry.Disable()
         else:
             self.entry = self._command.selected_entry_row.entry
+            self._command.edit_panel = self
+            self._entry_state = EntryState(self.entry)
+            self._entry_state.entry_states = []
+            self._entry_state.snapshot()
             entry_name = self.entry.record_name
             username = self.entry.username
             password = self.entry.password
@@ -137,6 +153,8 @@ class EditPanel(wx.Panel):
         self._on_enter(None)
         
     def _on_enter(self, event) -> None:
+        if self._entry_state is not None and not self._undo_in_progress:
+            self._entry_state.snapshot()
         self._command.refresh_mid()
     
     def _on_remove_entry(self, event):
@@ -155,19 +173,7 @@ class EditPanel(wx.Panel):
     def _generate_password(self, event) -> None:
         validate = dialog_popup("If you generate a new password, the current one will be LOST. Are you sure you want to proceed?", "IMPORTANT: Confirmation")
         g = GeneratePassword()
-        match self._current_password_strength:
-            case "VERY STRONG":
-                password = g.generate_password(PasswordStrength.VERY_STRONG)
-            case "STRONG":
-                password = g.generate_password(PasswordStrength.STRONG)
-            case "MEDIUM":
-                password = g.generate_password(PasswordStrength.MEDIUM)
-            case "WEAK":
-                password = g.generate_password(PasswordStrength.WEAK)  
-            case "VERY WEAK":
-                password = g.generate_password(PasswordStrength.VERY_WEAK)  
-            case _:
-                return
+        password = g.generate_password(self._PASSWORD_STRENGTH[self._current_password_strength])  
         self._password.SetValue(password)
         
     def _show_password(self, event):
@@ -195,3 +201,28 @@ class EditPanel(wx.Panel):
             self._password.SetValue(self.entry.password)
             self._reveal_password.SetLabel(self._show_password_label)
             self.Layout()
+            
+    def manage_self_states(self, direction: int = 1):
+        if self._entry_state is None:
+            return 
+        if direction:
+            state = self._entry_state.undo()
+        else:
+            state = self._entry_state.reverse_undo()
+        if state is None:
+            return
+        self._undo_in_progress = True
+        try:
+            self._record_name.SetValue(state.record_name)
+            self._record_name.SetInsertionPointEnd()
+            self._username.SetValue(state.username)
+            self._username.SetInsertionPointEnd()
+            self._password.SetValue(state.password)
+            self._password.SetInsertionPointEnd()
+            self._url.SetValue(state.url)
+            self._url.SetInsertionPointEnd()
+        except RuntimeError:
+            print("The instance has bee deleted")
+        
+        self._undo_in_progress = False
+        
