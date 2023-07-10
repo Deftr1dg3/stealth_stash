@@ -39,11 +39,13 @@ class TopMidPanel(wx.Panel):
 
     def _bind_events(self):
         self.add.Bind(wx.EVT_BUTTON, self._add_entry)
-        self.search.Bind(wx.EVT_TEXT, self._search)
+        self.search.Bind(wx.EVT_TEXT, self._on_search)
         
     def _add_entry(self, event) -> None:
         self._command.add_entry()
         
-    def _search(self, event) -> None:
+    def _on_search(self, event) -> None:
         query = self.search.GetValue()
-        print(f"SERCHING FOR --> {query}")
+        self._command.query = query
+        self._command.refresh_mid()
+    

@@ -26,14 +26,25 @@ class MidPanel(wx.Panel):
         # Sizer for scrolled window
         scroll_sizer = wx.BoxSizer(wx.VERTICAL)
         
-        if self._command.selected_category_row is not None:
-            entries = self._command.selected_category_row.category.get_content()
+        if self._command.query:
+            self._command.refresh_left()
+            entries = self._command.search()
             for entry in entries:
                 self._display_entry(self.scroll, scroll_sizer, entry)
-            
+                
             self._command.entry_rows = self._entry_rows
-            
+            #clear self._entry_rows after each cycle to store entries only from current cycle.
             self._entry_rows = {}
+            
+        else:
+            if self._command.selected_category_row is not None:
+                entries = self._command.selected_category_row.category.get_content()
+                for entry in entries:
+                    self._display_entry(self.scroll, scroll_sizer, entry)
+                
+                self._command.entry_rows = self._entry_rows
+                #clear self._entry_rows after each cycle to store entries only from current cycle.
+                self._entry_rows = {}
         
         self.scroll.SetSizer(scroll_sizer)
         main_box.Add(self.scroll, 1, wx.EXPAND)

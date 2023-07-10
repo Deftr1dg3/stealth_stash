@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 class Command:
     def __init__(self, data_file: DataFile) -> None:
         self._data_file = data_file
+        self._query: str = ""
         self._body_panel: BodyPanel
         self._top: TopBarPanel
         self._left: LeftPanel
@@ -34,6 +35,14 @@ class Command:
         self._selected_entry_row: (EntryRow | None) = None
         self._selected_entry_id: int = 0
         self._entry_rows: dict[int, EntryRow] = {}
+    
+    @property
+    def query(self) -> str:
+        return self._query
+    
+    @query.setter
+    def query(self, query: str) -> None:
+        self._query = query
         
     @property
     def selected_entry_id(self) -> int:
@@ -93,8 +102,7 @@ class Command:
             if self.selected_entry_id in self._entry_rows:
                 currently_selected = self.entry_rows[self.selected_entry_id]
                 currently_selected._smooth_deselect() 
-            self.selected_entry_id = entry.id   
-                 
+            self.selected_entry_id = entry.id       
         self._selected_entry_row = entry
                         
     @property
@@ -192,6 +200,17 @@ class Command:
         self.refresh_mid()
         self.refresh_right()
         
+    def clear_category(self) -> None:
+        if self.selected_category_row is None:
+            message_popup("No Categoty selected.", "Error.")
+            return
+        category = self.selected_category_row.category
+        confirmation = dialog_popup(f"All content of the '{category.name}' will be permanentely lost.\nARE YOU SURE YOU WANT TO CONTINUE?", "INPORTANT: Category Content Removal.")
+        if confirmation:
+            category.clear_category()
+            self.refresh_mid()
+            self.refresh_right()
+        
     def display_category_content(self) -> None:
         if self.selected_category_row is not None:
             self.refresh_mid()
@@ -231,7 +250,10 @@ class Command:
         if self._entry_rows and self.selected_entry_id:
             if self.selected_entry_id in self._entry_rows:
                 entry_row = self._entry_rows[self.selected_entry_id]
-                entry_row.set_selected_colour()
+                try:
+                    entry_row.set_selected_colour()
+                except RuntimeError as ex:
+                    pass
     
     def refresh_left(self) -> None:
         self.left.refresh()
@@ -245,6 +267,10 @@ class Command:
     
     def manage_entry_states(self, direction: int = 1):
         self.edit_panel.manage_self_states(direction)
+    
+    def search(self) -> list[Entry]:
+        results = self._data_file.search(self.query)
+        return results
         
         
        

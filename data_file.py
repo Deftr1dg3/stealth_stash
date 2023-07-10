@@ -25,10 +25,6 @@ class Entry:
     @property
     def entry_data(self) -> list:
         return self._entry_data
-      
-    # @property    
-    # def row(self) -> list:
-    #     return self._entry_data
         
     @property
     def record_name(self) -> str:
@@ -110,6 +106,9 @@ class Category:
         new_row = Entry()
         self._data_file.add_row_to_categoty(self.name, new_row.entry_data)
         return new_row
+    
+    def clear_category(self) -> None:
+        self._data_file.clear_category(self.name)
         
     
     
@@ -201,6 +200,10 @@ class DataFile:
                 return
             index += 1
         self.commit()
+        
+    def clear_category(self, category_name: str) -> None:
+        self._data[category_name] = []
+        self.commit()
     
     def get_categories(self) -> list[Category]:
         categories = []
@@ -210,9 +213,18 @@ class DataFile:
     
     def get_categories_namespace(self) -> set:
         return set(self._data.keys())
+    
+    def search(self, query: str) -> list[Entry]:
+        all_entries = []
+        for categoty_value in self._data.values():
+            all_entries.extend([Entry(entry) for entry in categoty_value])
+        if query == "ALL":
+            return all_entries
+        found = [entry for entry in all_entries if query.lower() in entry.record_name.lower() or query in entry.username.lower()]
+        return found
         
         
-            
+
         
         
 
