@@ -77,10 +77,10 @@ class CategoryRow(wx.Panel):
             if self._command.selected_category_row is self:
                 return
             self._command.selected_category_row.deselect_row()  #type: ignore
+            self._command.selected_entry_id = 0
         self._command.selected_category_row = self
         self._command.display_category_content()
         
-    
     def _on_right_click(self, event) -> None:
         self._on_left_click(None)
         right_click_menu = CategotyRightClickMenu(self, self._command, self._category)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 import json 
 import atexit
+from base64 import b64encode, b64decode
 from aes import AES_Encripton
 from exceptions import UnreadableToDecodeTheFile
 from manage_password import PasswordStrength, GeneratePassword
@@ -14,6 +15,13 @@ class Entry:
             self._entry_data = ["New Record", "Username", self._generate_password(), "URL", "N/A"]
         else:
             self._entry_data = entry_data
+            
+        self._id = id(self._entry_data)
+    
+    @property
+    def id(self) -> int:
+        return self._id
+        
     @property
     def entry_data(self) -> list:
         return self._entry_data
@@ -67,11 +75,17 @@ class Entry:
         password = g.generate_password(PasswordStrength.STRONG)
         return password
     
+    
 
 class Category:
-    def __init__(self, name: str, data_file: DataFile) -> None:
+    def __init__(self, name: str, data_file: DataFile, id: int) -> None:
         self._data_file = data_file
         self._name = name 
+        self._id = id
+        
+    @property
+    def id(self) -> int:
+        return self._id
         
     @property
     def name(self) -> str:
@@ -98,12 +112,14 @@ class Category:
         return new_row
         
     
+    
 class Data(dict):
     def __init__(self):
         super().__init__()
         self["General"] = []
         self["Internet"] = []
         self["Email"] = []
+
 
 
 class IODataFile:
@@ -131,9 +147,11 @@ class DataFile:
         self.commit()
     
     def load_data(self) -> None:
-        encrypted_str_data = self._io_data.get_data()
+        b64_str_data = self._io_data.get_data()
+        encrypted_bytes_data = b64decode(b64_str_data)
         try:
-            json_data = self._aes_encription.decrypt(encrypted_str_data)
+            decrypted_bytes_data = self._aes_encription.decrypt(encrypted_bytes_data)
+            json_data = decrypted_bytes_data.decode("utf-8")
         except ValueError:
             raise UnreadableToDecodeTheFile()
         self._data = json.loads(json_data)
@@ -144,8 +162,9 @@ class DataFile:
         except AttributeError:
             return 
         bytes_data = json_data.encode("utf-8")
-        encrypted_str_data = self._aes_encription.encrypt(bytes_data)
-        self._io_data.save_data(encrypted_str_data)
+        encrypted_bytes_packet = self._aes_encription.encrypt(bytes_data)
+        b64_str_data = b64encode(encrypted_bytes_packet).decode('utf-8')
+        self._io_data.save_data(b64_str_data)
         
     def get_category_data(self, category: str) -> list[list]:
         return self._data[category]
@@ -184,7 +203,9 @@ class DataFile:
         self.commit()
     
     def get_categories(self) -> list[Category]:
-        categories = [Category(category, self) for category in self._data.keys()]
+        categories = []
+        for category_name in self._data.keys():
+            categories.append(Category(category_name, self, id(self._data[category_name])))
         return categories
     
     def get_categories_namespace(self) -> set:

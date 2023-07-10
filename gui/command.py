@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import wx
+from gui.colours import Colours
 from data_file import Category, Entry, DataFile
 from gui.modals.popups import get_input, message_popup, dialog_popup
 from typing import TYPE_CHECKING
@@ -31,7 +32,25 @@ class Command:
         self._category_row_list: list[CategoryRow] = []
         self._selected_category_row: (CategoryRow| None) = None
         self._selected_entry_row: (EntryRow | None) = None
+        self._selected_entry_id: int = 0
+        self._entry_rows: dict[int, EntryRow] = {}
         
+    @property
+    def selected_entry_id(self) -> int:
+        return self._selected_entry_id
+    
+    @selected_entry_id.setter
+    def selected_entry_id(self, selected_entry_id: int) -> None:
+        self._selected_entry_id = selected_entry_id
+    
+    @property
+    def entry_rows(self) -> dict[int, EntryRow]:
+        return self._entry_rows
+    
+    @entry_rows.setter
+    def entry_rows(self, entry_rows: dict[int, EntryRow]) -> None:
+        self._entry_rows = entry_rows
+
     @property
     def body_panel(self) -> BodyPanel:
         return self._body_panel
@@ -70,8 +89,14 @@ class Command:
     
     @selected_entry_row.setter
     def selected_entry_row(self, entry: (EntryRow | None)) -> None:
+        if entry is not None:
+            if self.selected_entry_id in self._entry_rows:
+                currently_selected = self.entry_rows[self.selected_entry_id]
+                currently_selected._smooth_deselect() 
+            self.selected_entry_id = entry.id   
+                 
         self._selected_entry_row = entry
-        
+                        
     @property
     def top(self) -> TopBarPanel :
         return self._top
@@ -103,7 +128,7 @@ class Command:
     @right.setter
     def right(self, panel: RightPanel) -> None:
         self._right = panel  
-    
+                
     def _validate_new_name(self, new_name: str) -> bool:
         namespace = self._data_file.get_categories_namespace()
         if new_name in namespace:
@@ -128,9 +153,9 @@ class Command:
             return
         self._data_file.add_category(name)
         self.selected_category_row = None
-        self.left.refresh()  
-        self.mid.refresh()  
-        self.right.refresh()
+        self.refresh_left()
+        self.refresh_mid()
+        self.refresh_right()
         
     def remove_category(self) -> None:
         if self.selected_category_row is None:
@@ -141,9 +166,9 @@ class Command:
         if result:
             category.remove()
             self.selected_category_row = None
-            self.left.refresh() 
-            self.mid.refresh()  
-            self.right.refresh()
+            self.refresh_left()
+            self.refresh_mid()
+            self.refresh_right()
 
     def rename_category(self, parent: wx.Panel, category: Category) -> None:
         if self.selected_category_row is None:
@@ -163,14 +188,14 @@ class Command:
             return
         category.rename(name)
         self.selected_category_row = None
-        self.left.refresh()
-        self.mid.refresh() 
-        self.right.refresh()   
+        self.refresh_left()
+        self.refresh_mid()
+        self.refresh_right()
         
     def display_category_content(self) -> None:
         if self.selected_category_row is not None:
-            self.mid.refresh()
-            self.right.refresh()
+            self.refresh_mid()
+            self.refresh_right()
     
     def add_entry(self) -> None:
         if self.selected_category_row is None:
@@ -178,14 +203,14 @@ class Command:
             return 
         category = self.selected_category_row.category
         category.new_entry()
-        self.mid.refresh()
-        self.right.refresh()
+        self.refresh_mid()
+        self.refresh_right()
             
     def edit_entry(self) -> None:
         if self.selected_entry_row is None:
             message_popup("No Entry selected.", "Error.")
             return
-        self.right.refresh()
+        self.refresh_right()
         
     def remove_entry(self, entry: (Entry | None) = None) -> None:
         if self.selected_category_row is None:
@@ -199,11 +224,24 @@ class Command:
         result = dialog_popup(f"Are you sure you want to completely remove this Entry? All Entry data will be lost.", "Confirmation")
         if result:
             self.selected_category_row.category.remove_entry(entry)
-            self.mid.refresh()
-            self.right.refresh()
+            self.refresh_mid()
+            self.refresh_right()
+            
+    def _keep_entry_row_selected(self) -> None:
+        if self._entry_rows and self.selected_entry_id:
+            if self.selected_entry_id in self._entry_rows:
+                entry_row = self._entry_rows[self.selected_entry_id]
+                entry_row.set_selected_colour()
     
-    def refresh_mid(self):
+    def refresh_left(self) -> None:
+        self.left.refresh()
+    
+    def refresh_mid(self) -> None:
         self.mid.refresh()
+        self._keep_entry_row_selected()
+        
+    def refresh_right(self) -> None:
+        self.right.refresh()
     
     def manage_entry_states(self, direction: int = 1):
         self.edit_panel.manage_self_states(direction)

@@ -29,15 +29,14 @@ class AES_Encripton:
         key = pbkdf2_hmac("sha256", self._password.encode("utf-8"), salt, self._key_iterations_count)
         return key
 
-    def encrypt(self, bytes_data: bytes) -> str:
+    def encrypt(self, bytes_data: bytes) -> bytes:
         padded_bytes_data = pad(bytes_data, AES.block_size) 
         cipher = AES.new(self._encryption_key, AES.MODE_CBC)
         encrypted_bytes_data = cipher.encrypt(padded_bytes_data)
         encrypted_bytes_packet = cipher.iv + self._salt + encrypted_bytes_data  # type: ignore
-        return b64encode(encrypted_bytes_packet).decode('utf-8')
+        return encrypted_bytes_packet
 
-    def decrypt(self, encrypted_str_packet: str) -> str:
-        encrypted_bytes_packet = b64decode(encrypted_str_packet)
+    def decrypt(self, encrypted_bytes_packet: bytes) -> bytes:
         iv = encrypted_bytes_packet[:AES.block_size]
         salt = encrypted_bytes_packet[AES.block_size: AES.block_size + self._salt_size]
         encrypted_bytes_data = encrypted_bytes_packet[self._salt_size + AES.block_size:]
@@ -45,39 +44,39 @@ class AES_Encripton:
         cipher = AES.new(decryption_key, AES.MODE_CBC, iv=iv)
         padded_bytes_data = cipher.decrypt(encrypted_bytes_data)
         bytes_data = unpad(padded_bytes_data, AES.block_size)
-        return bytes_data.decode("utf-8")
+        return bytes_data
         
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    import json 
+#     import json 
 
-    a = AES_Encripton("pass")
+#     a = AES_Encripton("pass")
 
-    def enc():
-        with open("zen.txt", "r") as f:
-            str_data = f.read()
+#     def enc():
+#         with open("zen.txt", "r") as f:
+#             str_data = f.read()
             
-        json_data = json.dumps(str_data)
-        bytes_data = json_data.encode("utf-8")
+#         json_data = json.dumps(str_data)
+#         bytes_data = json_data.encode("utf-8")
 
-        edata = a.encrypt(bytes_data)
+#         edata = a.encrypt(bytes_data)
 
-        with open("enc.kkdb", "w") as f:
-            f.write(edata)
+#         with open("enc.kkdb", "w") as f:
+#             f.write(edata)
 
-    def dec():
-        with open("zen.txt", "r") as f:
-            edata = f.read()
-        try:
-            json_data = a.decrypt(edata)
-        except ValueError:
-            print("The passwrod is incorrect !!!")
-            exit(1)
-        str_data = json.loads(json_data)
+#     def dec():
+#         with open("zen.txt", "r") as f:
+#             edata = f.read()
+#         try:
+#             json_data = a.decrypt(edata)
+#         except ValueError:
+#             print("The passwrod is incorrect !!!")
+#             exit(1)
+#         str_data = json.loads(json_data)
 
-        print(str_data)
+#         print(str_data)
 
-    # enc()
-    dec()
+#     # enc()
+#     dec()

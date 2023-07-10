@@ -12,7 +12,7 @@ class MidPanel(wx.Panel):
     def __init__(self, body_panel: wx.Panel, command: Command) -> None:
         self._command = command
         self._body_panel = body_panel
-        self._entry_row_list: list[EntryRow] = []
+        self._entry_rows: dict[int, EntryRow] = {}
         super().__init__(self._body_panel)
         
         self._init_ui()
@@ -28,10 +28,12 @@ class MidPanel(wx.Panel):
         
         if self._command.selected_category_row is not None:
             entries = self._command.selected_category_row.category.get_content()
-            if not entries:
-                print("No entry")
             for entry in entries:
                 self._display_entry(self.scroll, scroll_sizer, entry)
+            
+            self._command.entry_rows = self._entry_rows
+            
+            self._entry_rows = {}
         
         self.scroll.SetSizer(scroll_sizer)
         main_box.Add(self.scroll, 1, wx.EXPAND)
@@ -41,7 +43,7 @@ class MidPanel(wx.Panel):
         
     def _display_entry(self, scroll, scroll_sizer, entry: Entry) -> None:
         entry_row = EntryRow(scroll, entry, self._command)
-        self._entry_row_list.append(entry_row)
+        self._entry_rows[entry_row.id] = entry_row
         scroll_sizer.Add(entry_row, 0, wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, 1)
         
     def _clear_categories(self):

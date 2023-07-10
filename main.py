@@ -75,7 +75,6 @@ def main():
         exit(1)
     command = Command(data_file)
     launch_gui(command)
-
     
 if __name__ == "__main__":
     main()

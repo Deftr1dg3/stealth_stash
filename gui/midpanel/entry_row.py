@@ -15,6 +15,7 @@ class EntryRow(wx.Panel):
         self._entry = entry
         self._command = command
         self._is_selected = False
+        self._id = entry.id
         super().__init__(self._scroll_panel, size=(-1, 30))
         
         self._text_colour = Colours.TEXT
@@ -30,6 +31,9 @@ class EntryRow(wx.Panel):
         self._init_ui()
         self._bind_events()
         
+    @property
+    def id(self) -> int:
+        return self._id
         
     @property
     def entry(self) -> Entry:
@@ -145,6 +149,14 @@ class EntryRow(wx.Panel):
     def deselect_entry(self) -> None:
         self.is_selected = False 
         self._smooth_deselect()
+        
+    def set_selected_colour(self) -> None:
+        self.SetBackgroundColour(self._selection_colour)
+        self.Refresh()
+    
+    def set_regular_colour(self) -> None:
+        self.SetBackgroundColour(self._background_colour)
+        self.Refresh()
         
     def set_colour_scheme(self, colours: ColoursDefinition) -> None:
         print("row works")
