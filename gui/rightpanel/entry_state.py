@@ -17,6 +17,7 @@ class EntrySnapshot(NamedTuple):
 
 class EntryState:
     _entry_states: list[EntrySnapshot] = []
+    _cursor_states: dict = {}
     
     def __init__(self, entry: Entry) -> None:
         self._entry = entry 

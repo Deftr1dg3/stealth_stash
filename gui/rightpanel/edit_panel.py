@@ -7,6 +7,7 @@ from data_file import Entry
 from gui.modals.popups import message_popup, dialog_popup
 from manage_password import PasswordStrength, GeneratePassword, ValidatePassword
 from gui.rightpanel.entry_state import EntryState
+from config import RightPanelConst, PasswordReplacemetPopup
 
 
 class EditPanel(wx.Panel):
@@ -16,30 +17,29 @@ class EditPanel(wx.Panel):
         super().__init__(self._right_panel)
         
         self._show_password_ind = False
-        self._show_password_label = "Show Passowrd"
-        self._hide_password_label = "Hide Password"
-        self._generate_password_label = "Generate New Passowrd"
+        self._show_password_label = RightPanelConst.SHOW_PASSWORD_BUTTON_LABEL
+        self._hide_password_label = RightPanelConst.HIDE_PASSWORD_BUTTON_LABEL
+        self._generate_password_label = RightPanelConst.GENERATE_PASSWORD_BUTTON_LABEL
         
-        self._PASSWORD_STRENGTH = {
-                            'VERY STRONG': PasswordStrength.VERY_STRONG,
-                            'STRONG': PasswordStrength.STRONG,
-                            'MEDIUM': PasswordStrength.MEDIUM,
-                            'WEAK': PasswordStrength.WEAK,
-                            'VERY WEAK': PasswordStrength.VERY_WEAK,
-                        }
+        self._PASSWORD_STRENGTH = RightPanelConst.PASSWORD_STRENGTH
         
-        
-        self._remove_entry_label = "Remove Entry"
+        self._remove_entry_label = RightPanelConst.REMOVE_ENTRY_BUTTON_LABEL
         
         self._entry: Entry
         self._entry_state: (EntryState | None) = None
         self._undo_in_progress = False
         
-        self._placeholder = "No Entry Selected"
+        self._placeholder = RightPanelConst.ENTRY_PLACE_HOLDER
         
-        self._dropdown_options = ["VERY STRONG", "STRONG", "MEDIUM", "WEAK", "VERY WEAK"]
-        self._current_password_strength = "STRONG"
+        self._dropdown_options = list(self._PASSWORD_STRENGTH.keys())
+        self._current_password_strength = RightPanelConst.DEFAULT_PASSWORD_STRENGTH
         
+        self._record_name_title = RightPanelConst.RECORD_NAME_TITLE
+        self._username_title = RightPanelConst.USERNAME_TITLE
+        self._password_title = RightPanelConst.PASSWORD_TITLE
+        self._url_title = RightPanelConst.URL_TITLE
+        
+        # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
         
@@ -52,26 +52,33 @@ class EditPanel(wx.Panel):
         self._entry = entry
         
     def _init_ui(self):
+        """ Function initializing visible interface. """
+        
+        # Create main sizer
         main_box = wx.BoxSizer(wx.VERTICAL)
         
+        # Create ScrolledWindow
         self._scroll = wx.ScrolledWindow(self, -1)
         self._scroll.SetScrollbars(20, 20, 50, 50)
         
+        # Sizer for ScrolledWindow.
         self._scroll_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        record_name_title = wx.StaticText(self._scroll, label="Entry Name:")
+        # Create GUI objects
+        record_name_title = wx.StaticText(self._scroll, label=self._record_name_title)
         self._record_name = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
-        username_title = wx.StaticText(self._scroll, label="Username:")
+        username_title = wx.StaticText(self._scroll, label=self._username_title)
         self._username = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
-        password_title = wx.StaticText(self._scroll, label="Password:")
+        password_title = wx.StaticText(self._scroll, label=self._password_title)
         self._password = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER | wx.TE_PASSWORD)
         self._reveal_password = wx.Button(self._scroll, label=self._show_password_label)
         self._password_strength = wx.ComboBox(self._scroll, choices=self._dropdown_options, style=wx.CB_READONLY)
         self._generate_password_button = wx.Button(self._scroll, label=self._generate_password_label)
-        url_title = wx.StaticText(self._scroll, label="URL://")
+        url_title = wx.StaticText(self._scroll, label=self._url_title)
         self._url = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
         self._remove_entry = wx.Button(self._scroll, label=self._remove_entry_label)
         
+        # Add GUI objects to the ScrolledWindow sizer
         self._scroll_sizer.Add(record_name_title, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(self._record_name, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(username_title, 0, wx.EXPAND | wx.ALL, 5)
@@ -85,6 +92,7 @@ class EditPanel(wx.Panel):
         self._scroll_sizer.Add(self._url, 0, wx.EXPAND | wx.ALL, 5)
         self._scroll_sizer.Add(self._remove_entry, 0, wx.EXPAND | wx.ALL, 5)
         
+        # Alter GUI objects depending if an EntryRow was selected or not
         if self._command.selected_entry_row is None:
             self._record_name.Disable()
             self._username.Disable()
@@ -113,11 +121,17 @@ class EditPanel(wx.Panel):
             self._password.SetValue(password)
             self._validate_password_strength(None)
             self._url.SetValue(url)
-     
+
+        # Set sizer to the ScrolledWindow
         self._scroll.SetSizer(self._scroll_sizer)
+        
+        # Add Scrolled Window to the main sizer
         main_box.Add(self._scroll, 1, wx.EXPAND)
         
+        # Set the main sizer to the panel
         self.SetSizer(main_box)
+        
+        # Refresh layout
         self.Layout()
         
     def _bind_events(self):
@@ -171,10 +185,11 @@ class EditPanel(wx.Panel):
         self._current_password_strength = self._password_strength.GetValue()
     
     def _generate_password(self, event) -> None:
-        validate = dialog_popup("If you generate a new password, the current one will be LOST. Are you sure you want to proceed?", "IMPORTANT: Confirmation")
-        g = GeneratePassword()
-        password = g.generate_password(self._PASSWORD_STRENGTH[self._current_password_strength])  
-        self._password.SetValue(password)
+        confirmation = dialog_popup(PasswordReplacemetPopup.MESSAGE, PasswordReplacemetPopup.TITLE)
+        if confirmation:
+            g = GeneratePassword()
+            password = g.generate_password(self._PASSWORD_STRENGTH[self._current_password_strength])  
+            self._password.SetValue(password)
         
     def _show_password(self, event):
         if not self._show_password_ind:
@@ -212,6 +227,7 @@ class EditPanel(wx.Panel):
         if state is None:
             return
         self._undo_in_progress = True
+        
         try:
             self._record_name.SetValue(state.record_name)
             self._record_name.SetInsertionPointEnd()
@@ -222,7 +238,7 @@ class EditPanel(wx.Panel):
             self._url.SetValue(state.url)
             self._url.SetInsertionPointEnd()
         except RuntimeError:
-            print("The instance has bee deleted")
+            pass
         
         self._undo_in_progress = False
         

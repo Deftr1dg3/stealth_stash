@@ -11,7 +11,7 @@ class MainFrame(wx.Frame):
     def __init__(self, command: Command) -> None:
         super().__init__(None)
         self._command = command
-        self.SetSize((1100, 650))
+        self.SetSize((1100, 600))
         self.SetTitle('Key Keeper')
         self.SetMinSize((800, 400))
         self._init_ui()

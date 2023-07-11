@@ -7,9 +7,10 @@ from data_file import DataFile
 from main_frame import launch_gui
 from exceptions import UnsupportedSystem, UnreadableToDecodeTheFile
 from gui.command import Command
+from config import DataFilePath
 
 
-current_dir = "/Users/stasusbondevito/Documents/PYTHON/Projects/KeyKeeper"
+current_dir = DataFilePath.DATA_FILE_PATH
 
 
 class DefaultPath(NamedTuple):

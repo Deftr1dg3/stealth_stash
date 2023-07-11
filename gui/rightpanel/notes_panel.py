@@ -4,6 +4,7 @@
 import wx 
 from gui.command import Command
 from data_file import Entry
+from config import RightPanelConst
 
 
 class NotesPanel(wx.Panel):
@@ -14,8 +15,10 @@ class NotesPanel(wx.Panel):
         
         self._entry: Entry
         
-        self._title = "Notes:"
+        self._title = RightPanelConst.NOTES_TITLE
+        self._notes_field_size = RightPanelConst.NOTES_FIELD_SIZE
         
+        # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
         
@@ -28,12 +31,20 @@ class NotesPanel(wx.Panel):
         self._entry = entry
         
     def _init_ui(self):
+        """ Function initializing visible interface. """
+        
+        # Create main sizer
         main_box = wx.BoxSizer(wx.VERTICAL)
+        
+        # Create secondary sizers
         title_box = wx.BoxSizer(wx.HORIZONTAL)
         notes_box = wx.BoxSizer(wx.HORIZONTAL)
         
+        # Create GUI objects
         title = wx.StaticText(self, label=self._title)
-        self._notes = wx.TextCtrl(self, size=(-1, 150), style=wx.TE_MULTILINE)
+        self._notes = wx.TextCtrl(self, size=self._notes_field_size, style=wx.TE_MULTILINE)
+        
+        # Enable or disable GUI objects depending on selected EntryRow
         if self._command.selected_entry_row is None:
             self._notes.Disable()
         else:
@@ -41,13 +52,18 @@ class NotesPanel(wx.Panel):
             notes = self.entry.notes
             self._notes.SetValue(notes)
         
+        # Add GUI objects to secondary sizers
         title_box.Add(title, 1, wx.EXPAND)
         notes_box.Add(self._notes, 1, wx.EXPAND)
         
+        # Add secondary sizers to the main sizer
         main_box.Add(title_box, 0, wx.EXPAND | wx.ALL, 5)
         main_box.Add(notes_box, 1, wx.EXPAND | wx.ALL, 5)
         
+        # Set main sizer to the panel
         self.SetSizer(main_box)
+        
+        # Refresh lauout
         self.Layout()
         
     def _bind_events(self):

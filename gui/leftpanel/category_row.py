@@ -8,6 +8,7 @@ from gui.command import Command
 from gui.icons.icons import IconPanel
 from gui.leftpanel.category_panel import CategoryPanel
 from gui.menues.category_row_right_click import CategotyRightClickMenu
+from config import LeftPanelConst
 
 
 class CategoryRow(wx.Panel):
@@ -16,17 +17,17 @@ class CategoryRow(wx.Panel):
         self._category = category
         self._command = command
         self._is_selected = False
-        super().__init__(self._left_panel, size=(200, 30))
-        
+        super().__init__(self._left_panel, size=LeftPanelConst.CATEGORY_ROW_SIZE)
+        # Setting colours
         self._text_colour = Colours.TEXT
         self._selection_colour = Colours.SELECTION
-        
+        # Defining target and current colours
         self._target_colour = self._selection_colour
         self._current_colour = self._text_colour
-        
+        # Defining colour timer and colour changing step
         self._colour_step = 5  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
-        
+        # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
         
@@ -44,21 +45,24 @@ class CategoryRow(wx.Panel):
         
         
     def _init_ui(self) -> None:
-        # main_box.AddStretchSpacer()
+        """ Function initializing visible interface. """
+        # Create main sizer
         main_box = wx.BoxSizer(wx.HORIZONTAL)
+        # Create secondary sizers
         icon_box = wx.BoxSizer(wx.VERTICAL)
         category_box = wx.BoxSizer(wx.VERTICAL)
-
-        self._display_icon = IconPanel(self, "folder", self._selection_colour)
+        # Create gui objects
+        self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._selection_colour)
         self._display_category = CategoryPanel(self, self._category.name)
-        
+        # Add gui objects to secondary sizers
         icon_box.Add(self._display_icon)
         category_box.Add(self._display_category)
-        
+        # Add secondary sizers to the main sizer
         main_box.Add(icon_box)
         main_box.Add(category_box)
-
+        # Set main sizer to the panel
         self.SetSizer(main_box)
+        # Refresh lauout
         self.Layout()
         
     def _bind_events(self) -> None:

@@ -7,6 +7,7 @@ from gui.command import Command
 from gui.colours import Colours, ColoursDefinition
 from gui.midpanel.record_panel import RecordName, Username, Password, URL
 from gui.menues.entry_row_right_click import EntryRightClickMenu
+from config import MidPanelConst
 
 
 class EntryRow(wx.Panel):
@@ -16,7 +17,7 @@ class EntryRow(wx.Panel):
         self._command = command
         self._is_selected = False
         self._id = entry.id
-        super().__init__(self._scroll_panel, size=(-1, 30))
+        super().__init__(self._scroll_panel, size=MidPanelConst.ENTRY_ROW_SIZE)
         
         self._text_colour = Colours.TEXT
         self._selection_colour = Colours.SELECTION
@@ -25,9 +26,10 @@ class EntryRow(wx.Panel):
         self._target_colour = self._selection_colour
         self._current_colour = self._background_colour
         
-        self._colour_step = 3  # Determines the speed of color transition
+        self._colour_step = MidPanelConst.ENTRY_ROW_COLOUR_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
         
+        # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
         
@@ -47,36 +49,42 @@ class EntryRow(wx.Panel):
     def is_selected(self, selected: bool) -> None:
         self._is_selected = selected
         
-        
     def _init_ui(self) -> None:
-        # main_box.AddStretchSpacer()
+        """ Function initializing visible interface. """
+        
+        # Create main sizer
         main_box = wx.BoxSizer(wx.HORIZONTAL)
+        
+        # Create secondary sizers
         record_box = wx.BoxSizer(wx.VERTICAL)
         username_box = wx.BoxSizer(wx.VERTICAL)
         password_box = wx.BoxSizer(wx.VERTICAL)
         url_box = wx.BoxSizer(wx.VERTICAL)
-
+        
+        # Create GUI objects
         self._record_name = RecordName(self, self._entry.record_name)
         self._username = Username(self, self._entry.username)
         self._password = Password(self, self._entry.password)
         self._url = URL(self, self._entry.url)
         
+        # Add GUI objects to secondary sizers
         record_box.Add(self._record_name, proportion=1, flag=wx.EXPAND | wx.LEFT, border=0)
         username_box.Add(self._username, proportion=1, flag=wx.EXPAND | wx.LEFT, border=0)
         password_box.Add(self._password, proportion=1, flag=wx.EXPAND | wx.LEFT, border=0)
         url_box.Add(self._url, proportion=1, flag=wx.EXPAND | wx.LEFT, border=0)
         record_box.AddStretchSpacer()
         
+        # Add secondary sizers to the main sizer
         main_box.Add(record_box, proportion=1, flag=wx.EXPAND)
         main_box.Add(username_box, proportion=1, flag=wx.EXPAND)
         main_box.Add(password_box, proportion=1, flag=wx.EXPAND)
         main_box.Add(url_box, proportion=1, flag=wx.EXPAND)
-
+        
+        # Set main sizer to the panel
         self.SetSizer(main_box)
+        
+        # Refresh lauout
         self.Layout()
-        
-        # self._bind_events()
-        
         
     def _bind_events(self) -> None:
         self._record_name.Bind(wx.EVT_LEFT_DOWN,self._on_left_click)
@@ -90,8 +98,6 @@ class EntryRow(wx.Panel):
         self._url.Bind(wx.EVT_RIGHT_DOWN,self._on_right_click)
         
         self.Bind(wx.EVT_TIMER, self._on_color_timer, self._colour_timer)
-        # self.Bind(wx.EVT_ENTER_WINDOW, self._smooth_select)
-        # self.Bind(wx.EVT_LEAVE_WINDOW, self._smooth_deselect)
     
     def _on_left_click(self, event) -> None:
         self.select_entry()
@@ -159,7 +165,6 @@ class EntryRow(wx.Panel):
         self.Refresh()
         
     def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        print("row works")
         self._text_colour = Colours.TEXT
         self._selection_colour = Colours.SELECTION
         self._background_colour = Colours.ENTRY_BACKGROUND

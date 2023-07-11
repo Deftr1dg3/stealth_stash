@@ -4,33 +4,45 @@
 import wx
 import pyperclip
 from gui.colours import Colours
+from config import MidPanelConst
 
 
 class BaseRecordPanel(wx.Panel):
     def __init__(self, parent_panel: wx.Panel, record_value: str) -> None:
         self._record_value = record_value
         self._parent_panel = parent_panel
-        self._displayed_str_length = 12
-        self._displayed_password_length = 8
+        self._displayed_str_length = MidPanelConst.DISPLAYED_STRING_LEGTH
+        self._displayed_password_length = MidPanelConst.DISPLAYED_PASSWORD_LENGTH
+        self._extra_characters_replacement = MidPanelConst.EXTRA_CHARACTERS_REPLACEMENT
         super().__init__(self._parent_panel)
         
         self._text_colour = Colours.TEXT
         self._selected_text_colour = Colours.SELECTION
         self._current_colour = Colours.TEXT
         
-        self._colour_step = 1  # Determines the speed of color transition
+        self._colour_step = MidPanelConst.RECORD_PANEL_COLOUR_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
         
         self._init_ui()
         self._bind_events()
         
     def _init_ui(self) -> None:
-        # main_box.AddStretchSpacer()
+        """ Function initializing visible interface. """
+        
+        # Create main sizer
         main_box = wx.BoxSizer(wx.HORIZONTAL)
+        
+        # Create GUI object
         self._display_value = wx.StaticText(self, label=self._format_category_name(self._record_value))
         self._display_value.SetForegroundColour(self._text_colour)
+        
+        # Add GUI object to the main sizer
         main_box.Add(self._display_value, 0, wx.TOP | wx.LEFT, 6)
+        
+        # Set main sizer to the panel
         self.SetSizer(main_box)
+        
+        # Refresh lauout
         self.Layout()
     
     def _bind_events(self):
@@ -70,7 +82,7 @@ class BaseRecordPanel(wx.Panel):
         
     def _format_category_name(self, record_value: str) -> str:
         if len(record_value) > self._displayed_str_length:
-            record_value = record_value[:self._displayed_str_length] + "..."
+            record_value = record_value[:self._displayed_str_length] + self._extra_characters_replacement
         return record_value
     
     def _set_text_colour(self, colour: wx.Colour) -> None:

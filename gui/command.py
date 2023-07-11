@@ -7,6 +7,8 @@ from gui.colours import Colours
 from data_file import Category, Entry, DataFile
 from gui.modals.popups import get_input, message_popup, dialog_popup
 from typing import TYPE_CHECKING
+from config import CategoryExistsPopup, NewCategoryPopup, NoCategorySelectedPopup, NoEntrySelectedPopup
+from config import RemoveConfirmationPopup, RenameCategoryPopup
 
 
 if TYPE_CHECKING:
@@ -30,10 +32,11 @@ class Command:
         self._mid: MidPanel
         self._right: RightPanel
         self._edit_panel: EditPanel
-        self._category_row_list: list[CategoryRow] = []
         self._selected_category_row: (CategoryRow| None) = None
         self._selected_entry_row: (EntryRow | None) = None
+        self._selected_category_id: int = 0
         self._selected_entry_id: int = 0
+        self._category_rows: dict[int, CategoryRow] = {}
         self._entry_rows: dict[int, EntryRow] = {}
     
     @property
@@ -53,12 +56,51 @@ class Command:
         self._selected_entry_id = selected_entry_id
     
     @property
+    def selected_entry_row(self) -> (EntryRow | None):
+        return self._selected_entry_row
+    
+    @selected_entry_row.setter
+    def selected_entry_row(self, entry: (EntryRow | None)) -> None:
+        if entry is not None:
+            if self.selected_entry_id in self._entry_rows:
+                currently_selected = self.entry_rows[self.selected_entry_id]
+                currently_selected._smooth_deselect() 
+            self.selected_entry_id = entry.id       
+        self._selected_entry_row = entry
+    
+    @property
     def entry_rows(self) -> dict[int, EntryRow]:
         return self._entry_rows
     
     @entry_rows.setter
     def entry_rows(self, entry_rows: dict[int, EntryRow]) -> None:
         self._entry_rows = entry_rows
+    
+    @property
+    def selected_category_id(self) -> int:
+        return self._selected_category_id
+    
+    @selected_category_id.setter
+    def selected_category_id(self, selected_category_id: int) -> None:
+        self._selected_category_id = selected_category_id
+    
+    @property
+    def selected_category_row(self) -> (CategoryRow | None):
+        return self._selected_category_row
+    
+    @selected_category_row.setter
+    def selected_category_row(self, category_row: (CategoryRow | None)) -> None:
+        if category_row is not None:
+            self.selected_category_id = category_row.category.id
+        self._selected_category_row = category_row
+    
+    @property
+    def category_rows(self) -> dict[int, CategoryRow]:
+        return self._category_rows
+    
+    @category_rows.setter
+    def category_rows(self, category_rows: dict[int, CategoryRow]) -> None:
+        self._category_rows = category_rows
 
     @property
     def body_panel(self) -> BodyPanel:
@@ -75,35 +117,6 @@ class Command:
     @edit_panel.setter
     def edit_panel(self, edit_panel: EditPanel) -> None:
         self._edit_panel = edit_panel
-        
-    @property
-    def category_row_list(self) -> list[CategoryRow]:
-        return self._category_row_list
-    
-    @category_row_list.setter
-    def category_row_list(self, category_row_list: list[CategoryRow]) -> None:
-        self._category_row_list = category_row_list
-        
-    @property
-    def selected_category_row(self) -> (CategoryRow | None):
-        return self._selected_category_row
-    
-    @selected_category_row.setter
-    def selected_category_row(self, category_row: (CategoryRow | None)) -> None:
-        self._selected_category_row = category_row
-        
-    @property
-    def selected_entry_row(self) -> (EntryRow | None):
-        return self._selected_entry_row
-    
-    @selected_entry_row.setter
-    def selected_entry_row(self, entry: (EntryRow | None)) -> None:
-        if entry is not None:
-            if self.selected_entry_id in self._entry_rows:
-                currently_selected = self.entry_rows[self.selected_entry_id]
-                currently_selected._smooth_deselect() 
-            self.selected_entry_id = entry.id       
-        self._selected_entry_row = entry
                         
     @property
     def top(self) -> TopBarPanel :
@@ -148,16 +161,12 @@ class Command:
         return categories
     
     def add_category(self, parent: (wx.Panel | wx.Frame)) -> None:
-        hint = "Insert desired category name"
-        title = "CREATE NEW CATEGORY"
-        name = get_input(hint, title)
+        name = get_input(NewCategoryPopup.MESSAGE, NewCategoryPopup.TITLE)
         if name is None:
             return
         valid = self._validate_new_name(name)
         if not valid:
-            title = "Categoty Already Exists Error."
-            message = f"Unable to create Categiry. Category with selected name --> '{name}' aready exists."
-            message_popup(message, title)
+            message_popup(CategoryExistsPopup.MESSAGE.format(name), CategoryExistsPopup.TITLE)
             return
         self._data_file.add_category(name)
         self.selected_category_row = None
@@ -167,10 +176,10 @@ class Command:
         
     def remove_category(self) -> None:
         if self.selected_category_row is None:
-            message_popup("No Category selected.", "Error.")
+            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
             return
         category = self.selected_category_row.category
-        result = dialog_popup(f"Are you sure you want to completely remove '{category.name}' category including all its data?", "Confirmation")
+        result = dialog_popup(RemoveConfirmationPopup.MESSAGE.format(category.name), RemoveConfirmationPopup.TITLE)
         if result:
             category.remove()
             self.selected_category_row = None
@@ -180,19 +189,17 @@ class Command:
 
     def rename_category(self, parent: wx.Panel, category: Category) -> None:
         if self.selected_category_row is None:
-            message_popup("No Categoty selected.", "Error.")
+            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
             return
-        hint = "Insert desired category name"
-        title = "RENAME CATEGORY"
         default_value = self.selected_category_row.category.name
-        name = get_input(hint, title, default_value)
+        name = get_input(RenameCategoryPopup.MESSAGE, RenameCategoryPopup.TITLE, default_value)
         if name is None:
             return
         valid = self._validate_new_name(name)
         if not valid:
-            title = "Categoty Already Exists Error."
-            message = f"Unable to create Categiry. Category with selected name --> '{name}' aready exists."
-            message_popup(message, title)
+            if name == self.selected_category_row.category.name:
+                return
+            message_popup(CategoryExistsPopup.MESSAGE.format(name), CategoryExistsPopup.TITLE)
             return
         category.rename(name)
         self.selected_category_row = None
@@ -202,10 +209,10 @@ class Command:
         
     def clear_category(self) -> None:
         if self.selected_category_row is None:
-            message_popup("No Categoty selected.", "Error.")
+            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
             return
         category = self.selected_category_row.category
-        confirmation = dialog_popup(f"All content of the '{category.name}' will be permanentely lost.\nARE YOU SURE YOU WANT TO CONTINUE?", "INPORTANT: Category Content Removal.")
+        confirmation = dialog_popup(RemoveConfirmationPopup.MESSAGE.format(category.name), RemoveConfirmationPopup.TITLE)
         if confirmation:
             category.clear_category()
             self.refresh_mid()
@@ -218,7 +225,7 @@ class Command:
     
     def add_entry(self) -> None:
         if self.selected_category_row is None:
-            message_popup('No Category selected.', 'Error.')
+            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
             return 
         category = self.selected_category_row.category
         category.new_entry()
@@ -227,20 +234,20 @@ class Command:
             
     def edit_entry(self) -> None:
         if self.selected_entry_row is None:
-            message_popup("No Entry selected.", "Error.")
+            message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
             return
         self.refresh_right()
         
     def remove_entry(self, entry: (Entry | None) = None) -> None:
         if self.selected_category_row is None:
-            message_popup("No Categoty selected.", "Error.")
+            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
             return
         if entry is None:
             if self.selected_entry_row is None:
-                message_popup("No entry selected.", "Error.")
+                message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
                 return
             entry = self.selected_entry_row.entry
-        result = dialog_popup(f"Are you sure you want to completely remove this Entry? All Entry data will be lost.", "Confirmation")
+        result = dialog_popup(RemoveConfirmationPopup.MESSAGE.format(entry.record_name), RemoveConfirmationPopup.TITLE)
         if result:
             self.selected_category_row.category.remove_entry(entry)
             self.refresh_mid()
@@ -271,9 +278,3 @@ class Command:
     def search(self) -> list[Entry]:
         results = self._data_file.search(self.query)
         return results
-        
-        
-       
-        
-    
-
