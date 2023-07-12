@@ -4,7 +4,6 @@
 import wx
 from data_file import Entry
 from gui.command import Command
-from gui.colours import Colours, ColoursDefinition
 from gui.midpanel.record_panel import RecordName, Username, Password, URL
 from gui.menues.entry_row_right_click import EntryRightClickMenu
 from config import MidPanelConst
@@ -19,15 +18,20 @@ class EntryRow(wx.Panel):
         self._id = entry.id
         super().__init__(self._scroll_panel, size=MidPanelConst.ENTRY_ROW_SIZE)
         
-        self._text_colour = Colours.TEXT
-        self._selection_colour = Colours.SELECTION
-        self._background_colour = Colours.ENTRY_BACKGROUND
+        self._colours = self._command.colours()
+        self._background_colour = self._colours.ENTRY_BACKGROUND
+        
+        self._text_colour = self._colours.TEXT
+        self._selection_colour = self._colours.SELECTION
+        self._background_colour = self._colours.ENTRY_BACKGROUND
         
         self._target_colour = self._selection_colour
         self._current_colour = self._background_colour
         
         self._colour_step = MidPanelConst.ENTRY_ROW_COLOUR_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
+        
+        self.SetBackgroundColour(self._background_colour)
         
         # Initializing visible objects and binding events
         self._init_ui()
@@ -62,10 +66,10 @@ class EntryRow(wx.Panel):
         url_box = wx.BoxSizer(wx.VERTICAL)
         
         # Create GUI objects
-        self._record_name = RecordName(self, self._entry.record_name)
-        self._username = Username(self, self._entry.username)
-        self._password = Password(self, self._entry.password)
-        self._url = URL(self, self._entry.url)
+        self._record_name = RecordName(self, self._entry.record_name, self._command)
+        self._username = Username(self, self._entry.username, self._command)
+        self._password = Password(self, self._entry.password, self._command)
+        self._url = URL(self, self._entry.url, self._command)
         
         # Add GUI objects to secondary sizers
         record_box.Add(self._record_name, proportion=1, flag=wx.EXPAND | wx.LEFT, border=0)
@@ -134,6 +138,7 @@ class EntryRow(wx.Panel):
         self._current_colour.Green() == self._target_colour.Green() and \
         self._current_colour.Blue() == self._target_colour.Blue():
             self._colour_timer.Stop()
+            self._is_selected = not self._is_selected
 
     def _move_towards(self, current: int, target: int) -> int:
         # Helper function to move a color channel value towards a target value
@@ -145,7 +150,6 @@ class EntryRow(wx.Panel):
             return current
         
     def select_entry(self) -> None:
-        self.is_selected = True 
         if self._command.selected_entry_row is not None:
             self._command.selected_entry_row.deselect_entry()
         self._command.selected_entry_row = self
@@ -153,7 +157,6 @@ class EntryRow(wx.Panel):
         self._smooth_select()
             
     def deselect_entry(self) -> None:
-        self.is_selected = False 
         self._smooth_deselect()
         
     def set_selected_colour(self) -> None:
@@ -161,14 +164,5 @@ class EntryRow(wx.Panel):
         self.Refresh()
     
     def set_regular_colour(self) -> None:
-        self.SetBackgroundColour(self._background_colour)
-        self.Refresh()
-        
-    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        self._text_colour = Colours.TEXT
-        self._selection_colour = Colours.SELECTION
-        self._background_colour = Colours.ENTRY_BACKGROUND
-        self._target_colour = self._selection_colour
-        self._current_colour = self._background_colour
         self.SetBackgroundColour(self._background_colour)
         self.Refresh()

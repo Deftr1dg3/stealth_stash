@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import wx 
+import time
 from typing import NamedTuple
 from data_file import Entry
 from collections import defaultdict
@@ -25,18 +25,21 @@ class EntryState:
         self._entry = entry 
         self._id = entry.id
         self._cursor = self._cursor_states[self._id]
+        self.is_ready = False
         # print(f"{self._cursor=}")
     
-    def display_states(self):
-        i = 0
-        for s in self._entry_states[self._id]:
-            print(f"{i} --> {s.record_name}, {s.username}, {s.password}, {s.url}, {s.notes}")
-            i += 1
-        print(f"{self._cursor=}")
+    # def display_states(self):
+    #     i = 0
+    #     for s in self._entry_states[self._id]:
+    #         print(f"{i} --> {s.record_name}, {s.username}, {s.password}, {s.url}, {s.notes}")
+    #         i += 1
+    #     print(f"{self._cursor=}")
         
     def _update_cursor(self) -> None:
         self._cursor += 1
         self._cursor_states[self._id] = self._cursor
+        if self._cursor > 0:
+            self.is_ready = True
 
     def _move_back(self) -> None:
         if self._entry_states[self._id]:
@@ -61,6 +64,7 @@ class EntryState:
         snapshot = EntrySnapshot(record_name=record_name, username=username, password=password, url=url, notes=notes)
         self._entry_states[self._id].insert(self._cursor + 1, snapshot)
         self._update_cursor()
+       
 
     def undo(self) -> (EntrySnapshot | None):
         if not self._entry_states:

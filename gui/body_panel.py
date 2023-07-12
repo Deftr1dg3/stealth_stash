@@ -6,7 +6,7 @@ from gui.leftpanel.left_panel import LeftPanel
 from gui.midpanel.mid_panel import MidPanel
 from gui.rightpanel.right_panel import RightPanel
 from gui.command import Command
-from gui.colours import Colours, ColoursDefinition
+
 
 class BodyPanel(wx.Panel):
     def __init__(self, main_panel: wx.Panel, command: Command) -> None:
@@ -14,6 +14,11 @@ class BodyPanel(wx.Panel):
         self._main_panel = main_panel
         super().__init__(self._main_panel)
         
+        self._colours = self._command.colours()
+        
+        self._background_colour = self._colours.BODY_PANEL
+        self.SetBackgroundColour(self._background_colour)
+                        
         self._init_ui()
         
     def _init_ui(self):
@@ -39,11 +44,3 @@ class BodyPanel(wx.Panel):
         
         self.SetSizer(main_box)
         self.Layout()
-        
-    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        self.SetBackgroundColour(Colours.BODY_PANEL)
-        self._left_panel.set_colour_scheme(colours)
-        self._mid_panel.set_colour_scheme(colours)
-        self._right_panel.set_colour_scheme(colours)
-        self.Refresh()
-        

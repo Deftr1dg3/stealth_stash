@@ -4,7 +4,7 @@
 import wx
 from data_file import Entry
 from gui.command import Command 
-from gui.colours import Colours, ColoursDefinition
+from gui.colours import Colours
 from gui.midpanel.entry_row import EntryRow
 from config import MidPanelConst
 
@@ -82,11 +82,14 @@ class MidPanel(wx.Panel):
     def _clear_categories(self):
         # Get the sizer from the ScrolledWindow
         scroll_sizer = self.scroll.GetSizer()
+        
         # Destroy all children of the ScrolledWindow
         for child in self.scroll.GetChildren():
             child.Destroy()
+            
         # Clear the sizer
         scroll_sizer.Clear(True)
+        
         # Layout the sizer
         scroll_sizer.Layout()
         self.Layout()
@@ -95,8 +98,3 @@ class MidPanel(wx.Panel):
         self._clear_categories()
         self._init_ui()
         self._command.selected_entry_row = None
-        
-    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        self.SetBackgroundColour(Colours.MID_PANEL)
-        self.Refresh()
-        

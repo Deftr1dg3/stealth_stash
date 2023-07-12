@@ -4,7 +4,6 @@ import wx
 from gui.main_panel import MainPanel
 from gui.command import Command
 from gui.menues.top_menu import TopBarMenu
-import os 
 
 
 class MainFrame(wx.Frame):
@@ -25,7 +24,3 @@ def launch_gui(command: Command) -> None:
     app = wx.App()
     MainFrame(command).Show()
     app.MainLoop()
-    
-    
-# if __name__ == "__main__":
-#     launch_gui()

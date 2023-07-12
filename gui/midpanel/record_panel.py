@@ -5,20 +5,24 @@ import wx
 import pyperclip
 from gui.colours import Colours
 from config import MidPanelConst
+from gui.command import Command
 
 
 class BaseRecordPanel(wx.Panel):
-    def __init__(self, parent_panel: wx.Panel, record_value: str) -> None:
+    def __init__(self, parent_panel: wx.Panel, record_value: str, command: Command) -> None:
         self._record_value = record_value
         self._parent_panel = parent_panel
+        self._command = command
         self._displayed_str_length = MidPanelConst.DISPLAYED_STRING_LEGTH
         self._displayed_password_length = MidPanelConst.DISPLAYED_PASSWORD_LENGTH
         self._extra_characters_replacement = MidPanelConst.EXTRA_CHARACTERS_REPLACEMENT
         super().__init__(self._parent_panel)
         
-        self._text_colour = Colours.TEXT
-        self._selected_text_colour = Colours.SELECTION
-        self._current_colour = Colours.TEXT
+        self._colours = self._command.colours()
+        
+        self._text_colour = self._colours.TEXT
+        self._selection_colour = self._colours.SELECTION
+        self._current_colour = self._colours.TEXT
         
         self._colour_step = MidPanelConst.RECORD_PANEL_COLOUR_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
@@ -51,8 +55,8 @@ class BaseRecordPanel(wx.Panel):
     
     def _on_left_dclick(self, event):
         pyperclip.copy(self._record_value)
-        self._set_text_colour(self._selected_text_colour)
-        self._current_colour = self._selected_text_colour
+        self._set_text_colour(self._selection_colour)
+        self._current_colour = self._selection_colour
         self._colour_timer.Start(10)
         
     def _on_color_timer(self, event) -> None:

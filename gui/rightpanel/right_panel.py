@@ -3,22 +3,25 @@
 
 import wx 
 from gui.command import Command
-from gui.colours import Colours, ColoursDefinition
 from gui.rightpanel.edit_panel import EditPanel
 from gui.rightpanel.notes_panel import NotesPanel
 from config import RightPanelConst
+
 
 class RightPanel(wx.Panel):
     def __init__(self, body_panel: wx.Panel, command: Command) -> None:
         self._command = command
         self._body_panel = body_panel
-        
         self._panel_size = RightPanelConst.PANEL_SIZE
-        
         super().__init__(self._body_panel, size=self._panel_size)
+        
+        self._colours = self._command.colours()
+        self._background_colour = self._colours.RIGHT_PANEL
         
         # Initializing visible objects
         self._init_ui()
+        
+        self.SetBackgroundColour(self._background_colour)
         
     def _init_ui(self):
         """ Function initializing visible interface. """
@@ -51,10 +54,3 @@ class RightPanel(wx.Panel):
     def refresh(self):
         self._main_box.Clear(True)
         self._init_ui()
-        
-    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        self.SetBackgroundColour(Colours.RIGHT_PANEL)
-        self.Refresh()
-        
-        
-        

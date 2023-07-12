@@ -13,6 +13,7 @@ from config import DataFilePath
 current_dir = DataFilePath.DATA_FILE_PATH
 
 
+
 class DefaultPath(NamedTuple):
     DARWIN = current_dir + os.sep + "KeyKeeperDataFile.kkdf"
     LINUX = ""
@@ -82,3 +83,4 @@ if __name__ == "__main__":
     main()
 
 
+# Some encriptuobhjvjhec cjhvbce

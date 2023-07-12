@@ -19,6 +19,13 @@ class NotesPanel(wx.Panel):
         self._title = RightPanelConst.NOTES_TITLE
         self._notes_field_size = RightPanelConst.NOTES_FIELD_SIZE
         
+        self._colours = self._command.colours()
+        self._background_colour = self._colours.RIGHT_PANEL
+        self._input_background_colour = self._colours.INPUT_BACKGROUND
+        self._text_colour = self._colours.TEXT
+        
+        self.SetBackgroundColour(self._background_colour)
+        
         # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
@@ -43,7 +50,10 @@ class NotesPanel(wx.Panel):
         
         # Create GUI objects
         title = wx.StaticText(self, label=self._title)
+        title.SetForegroundColour(self._text_colour)
         self._notes = wx.TextCtrl(self, size=self._notes_field_size, style=wx.TE_MULTILINE)
+        self._notes.SetForegroundColour(self._text_colour)
+        self._notes.SetBackgroundColour(self._input_background_colour)
         
         # Enable or disable GUI objects depending on selected EntryRow
         if self._command.selected_entry_row is None:
@@ -73,8 +83,3 @@ class NotesPanel(wx.Panel):
     def _on_typing(self, event):
         value = self._notes.GetValue()
         self.entry.notes = value
-    
-    def updates_notes_field(self, value: str) -> None:
-        self._notes.SetValue(value)
-        self._notes.SetInsertionPointEnd()
-        self.Layout()

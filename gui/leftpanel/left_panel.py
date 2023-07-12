@@ -3,7 +3,6 @@
 
 import wx
 from data_file import Category
-from gui.colours import Colours, ColoursDefinition
 from gui.leftpanel.category_row import CategoryRow
 from gui.command import Command
 from config import LeftPanelConst
@@ -19,8 +18,14 @@ class LeftPanel(wx.Panel):
         
         super().__init__(self._body_panel, size=self._panel_size)
         
+        self._colours = self._command.colours()
+        self._background_colour = self._colours.LEFT_PANEL
+        
+        self.SetBackgroundColour(self._background_colour)
+
         # Initializing visible objects
         self._init_ui()
+
     
     def _init_ui(self):
         """ Function initializing visible interface. """
@@ -81,8 +86,3 @@ class LeftPanel(wx.Panel):
         self._clear_categories()
         self._init_ui()
         self._command.selected_category_row = None
-    
-    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        self.SetBackgroundColour(Colours.LEFT_PANEL)
-        self.Refresh()
-        

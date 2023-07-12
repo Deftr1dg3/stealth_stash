@@ -9,7 +9,7 @@ from typing import NamedTuple
 app = wx.App() 
  
 
-class ColoursDefinition(NamedTuple):
+class ColoursAssignment(NamedTuple):
     TEXT: wx.Colour      
     SELECTION: wx.Colour 
     BODY_PANEL: wx.Colour
@@ -18,9 +18,10 @@ class ColoursDefinition(NamedTuple):
     MID_PANEL: wx.Colour 
     ENTRY_BACKGROUND: wx.Colour 
     RIGHT_PANEL: wx.Colour 
+    INPUT_BACKGROUND: wx.Colour
     PEN: wx.Colour 
     TEXTCTRL_BACKGROUND: wx.Colour
-    THEM_BUTTON: str
+
     
     
 MOON_SIMPLE = "\U0000263D"
@@ -34,32 +35,95 @@ SUN = "🔆"
 
 @dataclass
 class ColourTheme:
-    DARK = ColoursDefinition(TEXT=wx.Colour(wx.WHITE),    # RGB for wx.WHITE
-                            SELECTION=wx.Colour("#763771"),   # RGB for "#51BC5F"
-                            BODY_PANEL = wx.Colour("#252525"),
-                            TOP_BAR=wx.Colour("#343434"),
-                            LEFT_PANEL=wx.Colour("#343434"), 
-                            MID_PANEL=wx.Colour("#252525"),
-                            ENTRY_BACKGROUND=wx.Colour("#252525"), 
-                            RIGHT_PANEL=wx.Colour("#343434"), 
-                            PEN=wx.Colour("#343434"), 
-                            TEXTCTRL_BACKGROUND = wx.Colour("#252525"),
-                            THEM_BUTTON=SUN_SIMPLE
+    DARK_DARK = wx.Colour("#252525")
+    DARK_MEDIUM = wx.Colour("#343434")
+    DARK_SELECTION = wx.Colour("#339CB4")
+    DARK_TEXT = wx.Colour(wx.WHITE)
+    
+    DARK = ColoursAssignment(TEXT=wx.Colour(DARK_TEXT),    # RGB for wx.WHITE
+                            SELECTION=wx.Colour(DARK_SELECTION),   # RGB for "#51BC5F"
+                            BODY_PANEL = wx.Colour(DARK_DARK),
+                            TOP_BAR=wx.Colour(DARK_MEDIUM),
+                            LEFT_PANEL=wx.Colour(DARK_MEDIUM), 
+                            MID_PANEL=wx.Colour(DARK_DARK),
+                            ENTRY_BACKGROUND=wx.Colour(DARK_DARK), 
+                            RIGHT_PANEL=wx.Colour(DARK_MEDIUM), 
+                            INPUT_BACKGROUND=wx.Colour(DARK_DARK),
+                            PEN=wx.Colour(DARK_MEDIUM), 
+                            TEXTCTRL_BACKGROUND = wx.Colour(DARK_DARK),
                             )
     
-    LIGHT = ColoursDefinition(TEXT=wx.Colour(wx.WHITE),    # RGB for wx.WHITE
-                            SELECTION=wx.Colour("#763771"),   # RGB for "#51BC5F"
-                            BODY_PANEL = wx.Colour("#252525"),
-                            TOP_BAR=wx.Colour("#343434"),
-                            LEFT_PANEL=wx.Colour("#343434"), 
-                            MID_PANEL=wx.Colour("#252525"),
-                            ENTRY_BACKGROUND=wx.Colour("#252525"), 
-                            RIGHT_PANEL=wx.Colour("#343434"), 
-                            PEN=wx.Colour("#343434"), 
-                            TEXTCTRL_BACKGROUND = wx.Colour("#252525"),
-                            THEM_BUTTON=MOON_SIMPLE
+    LIGHT_DARK = wx.Colour("#C6C6C6")
+    LIGHT_MEDIUM = wx.Colour("#EEEEEE")
+    LIGHT_SELECTION = wx.Colour("#339CB4")
+    LIGHT_TEXT = wx.Colour(wx.BLACK)
+    
+    LIGHT = ColoursAssignment(TEXT=wx.Colour(LIGHT_TEXT),    # RGB for wx.WHITE
+                            SELECTION=wx.Colour(LIGHT_SELECTION),   # RGB for "#51BC5F"
+                            BODY_PANEL = wx.Colour(LIGHT_DARK),
+                            TOP_BAR=wx.Colour(LIGHT_MEDIUM),
+                            LEFT_PANEL=wx.Colour(LIGHT_MEDIUM), 
+                            MID_PANEL=wx.Colour(LIGHT_DARK),
+                            ENTRY_BACKGROUND=wx.Colour(LIGHT_DARK), 
+                            RIGHT_PANEL=wx.Colour(LIGHT_MEDIUM), 
+                            INPUT_BACKGROUND=wx.Colour(LIGHT_DARK),
+                            PEN=wx.Colour(LIGHT_MEDIUM), 
+                            TEXTCTRL_BACKGROUND = wx.Colour(LIGHT_DARK),
                             )
     
+    LIGHT_GREEN_DARK = wx.Colour("#003942")
+    LIGHT_GREEN_MEDIUM = wx.Colour("#004952")
+    LIGHT_GREEN_SELECTION = wx.Colour("#1991A0")
+    LIGHT_GREEN_TEXT = wx.Colour(wx.WHITE)
+    
+    LIGHT_GREEN = ColoursAssignment(TEXT=wx.Colour(LIGHT_GREEN_TEXT),    # RGB for wx.WHITE
+                            SELECTION=wx.Colour(LIGHT_GREEN_SELECTION),   # RGB for "#51BC5F"
+                            BODY_PANEL = wx.Colour(LIGHT_GREEN_DARK),
+                            TOP_BAR=wx.Colour(LIGHT_GREEN_MEDIUM),
+                            LEFT_PANEL=wx.Colour(LIGHT_GREEN_MEDIUM), 
+                            MID_PANEL=wx.Colour(LIGHT_GREEN_DARK),
+                            ENTRY_BACKGROUND=wx.Colour(LIGHT_GREEN_DARK), 
+                            RIGHT_PANEL=wx.Colour(LIGHT_GREEN_MEDIUM), 
+                            INPUT_BACKGROUND=wx.Colour(LIGHT_GREEN_DARK),
+                            PEN=wx.Colour(LIGHT_GREEN_MEDIUM), 
+                            TEXTCTRL_BACKGROUND = wx.Colour(LIGHT_GREEN_DARK),
+                            )
+    
+    BLUE_DARK = wx.Colour("#002958")
+    BLUE_MEDIUM = wx.Colour("#003764")
+    BLUE_SELECTION = wx.Colour("#265F8F")
+    BLUE_TEXT = wx.Colour(wx.WHITE)
+    
+    BLUE = ColoursAssignment(TEXT=wx.Colour(BLUE_TEXT),    # RGB for wx.WHITE
+                            SELECTION=wx.Colour(BLUE_SELECTION),   # RGB for "#51BC5F"
+                            BODY_PANEL = wx.Colour(BLUE_DARK),
+                            TOP_BAR=wx.Colour(BLUE_MEDIUM),
+                            LEFT_PANEL=wx.Colour(BLUE_MEDIUM), 
+                            MID_PANEL=wx.Colour(BLUE_DARK),
+                            ENTRY_BACKGROUND=wx.Colour(BLUE_DARK), 
+                            RIGHT_PANEL=wx.Colour(BLUE_MEDIUM), 
+                            INPUT_BACKGROUND=wx.Colour(BLUE_DARK),
+                            PEN=wx.Colour(BLUE_MEDIUM), 
+                            TEXTCTRL_BACKGROUND = wx.Colour(BLUE_DARK),
+                            )
+    
+    BURGUNDY_DARK = wx.Colour("#37171E")
+    BURGUNDY_MEDIUM = wx.Colour("#431B24")
+    BURGUNDY_SELECTION = wx.Colour("#9C263F")
+    BURGUNDY_TEXT = wx.Colour(wx.WHITE)
+    
+    BURGUNDY = ColoursAssignment(TEXT=wx.Colour(BURGUNDY_TEXT),    # RGB for wx.WHITE
+                            SELECTION=wx.Colour(BURGUNDY_SELECTION),   # RGB for "#51BC5F"
+                            BODY_PANEL = wx.Colour(BURGUNDY_DARK),
+                            TOP_BAR=wx.Colour(BURGUNDY_MEDIUM),
+                            LEFT_PANEL=wx.Colour(BURGUNDY_MEDIUM), 
+                            MID_PANEL=wx.Colour(BURGUNDY_DARK),
+                            ENTRY_BACKGROUND=wx.Colour(BURGUNDY_DARK), 
+                            RIGHT_PANEL=wx.Colour(BURGUNDY_MEDIUM), 
+                            INPUT_BACKGROUND=wx.Colour(BURGUNDY_DARK),
+                            PEN=wx.Colour(BURGUNDY_MEDIUM), 
+                            TEXTCTRL_BACKGROUND = wx.Colour(BURGUNDY_DARK),
+                            )
   
 
 Colours = ColourTheme.DARK

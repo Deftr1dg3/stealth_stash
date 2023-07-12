@@ -3,7 +3,6 @@
 
 import wx
 from data_file import Category
-from gui.colours import Colours, ColoursDefinition
 from gui.command import Command
 from gui.icons.icons import IconPanel
 from gui.leftpanel.category_panel import CategoryPanel
@@ -18,15 +17,25 @@ class CategoryRow(wx.Panel):
         self._command = command
         self._is_selected = False
         super().__init__(self._left_panel, size=LeftPanelConst.CATEGORY_ROW_SIZE)
+        
+        self._colours = self._command.colours()
+        
+        self._background_colour = self._colours.LEFT_PANEL
+        
         # Setting colours
-        self._text_colour = Colours.TEXT
-        self._selection_colour = Colours.SELECTION
+        self._text_colour = self._colours.TEXT
+        self._selection_colour = self._colours.SELECTION
+        
         # Defining target and current colours
         self._target_colour = self._selection_colour
         self._current_colour = self._text_colour
+        
         # Defining colour timer and colour changing step
         self._colour_step = 5  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
+        
+        self.SetBackgroundColour(self._background_colour)
+        
         # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
@@ -46,22 +55,29 @@ class CategoryRow(wx.Panel):
         
     def _init_ui(self) -> None:
         """ Function initializing visible interface. """
+        
         # Create main sizer
         main_box = wx.BoxSizer(wx.HORIZONTAL)
+        
         # Create secondary sizers
         icon_box = wx.BoxSizer(wx.VERTICAL)
         category_box = wx.BoxSizer(wx.VERTICAL)
+        
         # Create gui objects
         self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._selection_colour)
-        self._display_category = CategoryPanel(self, self._category.name)
+        self._display_category = CategoryPanel(self, self._category.name, self._command)
+        
         # Add gui objects to secondary sizers
         icon_box.Add(self._display_icon)
         category_box.Add(self._display_category)
+        
         # Add secondary sizers to the main sizer
         main_box.Add(icon_box)
         main_box.Add(category_box)
+        
         # Set main sizer to the panel
         self.SetSizer(main_box)
+        
         # Refresh lauout
         self.Layout()
         
@@ -140,9 +156,3 @@ class CategoryRow(wx.Panel):
         self.is_selected = False
         self._target_colour = self._text_colour
         self._on_mouse_leave(None)
-  
-    def set_colour_scheme(self, colours: ColoursDefinition) -> None:
-        self._text_colour = colours.TEXT
-        self._selection_colour = colours.SELECTION
-        self._display_category.set_colour(self._text_colour)
-        self.Refresh()

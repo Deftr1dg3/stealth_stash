@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import wx
-from gui.colours import Colours
+from gui.colours import ColourTheme, ColoursAssignment
 from data_file import Category, Entry, DataFile
 from gui.modals.popups import get_input, message_popup, dialog_popup
 from typing import TYPE_CHECKING
@@ -40,6 +40,13 @@ class Command:
         self._selected_entry_id: int = 0
         self._category_rows: dict[int, CategoryRow] = {}
         self._entry_rows: dict[int, EntryRow] = {}
+        self._colous = {
+                        "DARK": ColourTheme.DARK,
+                        "LIGHT": ColourTheme.LIGHT,
+                        "LIGHT_GREEN": ColourTheme.LIGHT_GREEN,
+                        "BLUE": ColourTheme.BLUE,
+                        "BURGUNDY": ColourTheme.BURGUNDY
+                        }
     
     @property
     def query(self) -> str:
@@ -284,8 +291,15 @@ class Command:
     
     def manage_entry_states(self, direction: int = 1):
         self.edit_panel.manage_self_states(direction)
+
        
-    
     def search(self) -> list[Entry]:
         results = self._data_file.search(self.query)
         return results
+
+    def colours(self) -> ColoursAssignment:
+        colours = self._colous["LIGHT_GREEN"]
+        return colours
+    
+    
+# first remove this line   

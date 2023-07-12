@@ -3,7 +3,6 @@
 
 import wx 
 from gui.command import Command
-from gui.colours import Colours
 from config import TopBarConst
 
 
@@ -12,11 +11,13 @@ class TopRightPanel(wx.Panel):
         self._top_bar = top_bar
         self._command = command 
         super().__init__(self._top_bar, size=TopBarConst.RIGHT_PANEL_SIZE)
+        
+        self._colours = self._command.colours()
+        self._text_colour = self._colours.TEXT
+        
         # Initializing visible objects and bindig events
         self._init_ui()
         self._bind_events()
-        
-        self.SetBackgroundColour(Colours.TOP_BAR)
         
     def _init_ui(self):
         main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -25,6 +26,7 @@ class TopRightPanel(wx.Panel):
         
         # Create gui objects
         entry_edit_title = wx.StaticText(self, label=TopBarConst.RIGHT_PANEL_TITLE)
+        entry_edit_title.SetForegroundColour(self._text_colour)
         # self._theme_button =  wx.Button(self, label=Colours.THEM_BUTTON, size=(30, -1))
         
         # Add created objects to the sizers
@@ -44,5 +46,3 @@ class TopRightPanel(wx.Panel):
         # self._theme_button.Bind(wx.EVT_BUTTON, self._change_colour_theme)
         ...
         
-    def _change_colour_theme(self, event):
-        ...

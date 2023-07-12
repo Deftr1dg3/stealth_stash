@@ -21,9 +21,7 @@ class EditPanel(wx.Panel):
         self._show_password_label = RightPanelConst.SHOW_PASSWORD_BUTTON_LABEL
         self._hide_password_label = RightPanelConst.HIDE_PASSWORD_BUTTON_LABEL
         self._generate_password_label = RightPanelConst.GENERATE_PASSWORD_BUTTON_LABEL
-        
         self._PASSWORD_STRENGTH = RightPanelConst.PASSWORD_STRENGTH
-        
         self._remove_entry_label = RightPanelConst.REMOVE_ENTRY_BUTTON_LABEL
         
         self._entry: Entry
@@ -39,6 +37,10 @@ class EditPanel(wx.Panel):
         self._username_title = RightPanelConst.USERNAME_TITLE
         self._password_title = RightPanelConst.PASSWORD_TITLE
         self._url_title = RightPanelConst.URL_TITLE
+        
+        self._colours = self._command.colours()
+        self._text_colour = self._colours.TEXT
+        self._input_background_colour = self._colours.INPUT_BACKGROUND
         
         # Initializing visible objects and binding events
         self._init_ui()
@@ -71,16 +73,38 @@ class EditPanel(wx.Panel):
 
         # Create GUI objects
         record_name_title = wx.StaticText(self._scroll, label=self._record_name_title)
+        record_name_title.SetForegroundColour(self._text_colour)
         self._record_name = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
+        self._record_name.SetForegroundColour(self._text_colour)
+        self._record_name.SetBackgroundColour(self._input_background_colour)
+        
         username_title = wx.StaticText(self._scroll, label=self._username_title)
+        username_title.SetForegroundColour(self._text_colour)
         self._username = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
+        self._username.SetForegroundColour(self._text_colour)
+        self._username.SetBackgroundColour(self._input_background_colour)
+        
         password_title = wx.StaticText(self._scroll, label=self._password_title)
+        password_title.SetForegroundColour(self._text_colour)
         self._password = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER | wx.TE_PASSWORD)
+        self._password.SetForegroundColour(self._text_colour)
+        self._password.SetBackgroundColour(self._input_background_colour)
+        
         self._reveal_password = wx.Button(self._scroll, label=self._show_password_label)
+        
         self._password_strength = wx.ComboBox(self._scroll, choices=self._dropdown_options, style=wx.CB_READONLY)
+        self._password_strength.SetForegroundColour(self._text_colour)
+        self._password_strength.SetBackgroundColour(self._input_background_colour)
+        
         self._generate_password_button = wx.Button(self._scroll, label=self._generate_password_label)
+        
+        
         url_title = wx.StaticText(self._scroll, label=self._url_title)
+        url_title.SetForegroundColour(self._text_colour)
         self._url = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
+        self._url.SetForegroundColour(self._text_colour)
+        self._url.SetBackgroundColour(self._input_background_colour)
+        
         self._remove_entry = wx.Button(self._scroll, label=self._remove_entry_label)
         
         # Add GUI objects to the ScrolledWindow sizer
@@ -204,6 +228,8 @@ class EditPanel(wx.Panel):
             self._password.Bind(wx.EVT_TEXT_ENTER, self._on_enter)
             self._password.Bind(wx.EVT_KILL_FOCUS, self._on_enter)
             self._password.Bind(wx.EVT_TEXT, self._on_password)
+            self._password.SetForegroundColour(self._text_colour)
+            self._password.SetBackgroundColour(self._input_background_colour)
             self._scroll_sizer.Insert(5, self._password, 0, wx.EXPAND | wx.ALL, 5)
             self._password.SetValue(self.entry.password)
             self._reveal_password.SetLabel(self._hide_password_label)
@@ -216,6 +242,8 @@ class EditPanel(wx.Panel):
             self._password.Bind(wx.EVT_TEXT_ENTER, self._on_enter)
             self._password.Bind(wx.EVT_KILL_FOCUS, self._on_enter)
             self._password.Bind(wx.EVT_TEXT, self._on_password)
+            self._password.SetForegroundColour(self._text_colour)
+            self._password.SetBackgroundColour(self._input_background_colour)
             self._scroll_sizer.Insert(5, self._password, 0, wx.EXPAND | wx.ALL, 5)
             self._password.SetValue(self.entry.password)
             self._reveal_password.SetLabel(self._show_password_label)
