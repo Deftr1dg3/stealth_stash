@@ -7,6 +7,7 @@ from data_file import Entry
 from gui.modals.popups import message_popup, dialog_popup
 from manage_password import PasswordStrength, GeneratePassword, ValidatePassword
 from gui.rightpanel.entry_state import EntryState
+from gui.rightpanel.notes_panel import NotesPanel
 from config import RightPanelConst, PasswordReplacemetPopup
 
 
@@ -42,6 +43,10 @@ class EditPanel(wx.Panel):
         # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
+    
+    @property
+    def entry_state(self) -> (EntryState | None):
+        return self._entry_state
         
     @property
     def entry(self) -> Entry:
@@ -110,7 +115,6 @@ class EditPanel(wx.Panel):
             self.entry = self._command.selected_entry_row.entry
             self._command.edit_panel = self
             self._entry_state = EntryState(self.entry)
-            self._entry_state.entry_states = []
             self._entry_state.snapshot()
             entry_name = self.entry.record_name
             username = self.entry.username
@@ -226,6 +230,7 @@ class EditPanel(wx.Panel):
             state = self._entry_state.reverse_undo()
         if state is None:
             return
+        
         self._undo_in_progress = True
         
         try:

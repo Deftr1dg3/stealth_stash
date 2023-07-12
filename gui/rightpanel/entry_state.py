@@ -4,9 +4,11 @@
 import wx 
 from typing import NamedTuple
 from data_file import Entry
-from gui.command import Command
+from collections import defaultdict
+from typing import DefaultDict
 
 
+# STARTS HERE
 class EntrySnapshot(NamedTuple):
     record_name: str
     username: str 
@@ -16,35 +18,39 @@ class EntrySnapshot(NamedTuple):
     
 
 class EntryState:
-    _entry_states: list[EntrySnapshot] = []
-    _cursor_states: dict = {}
+    _entry_states: DefaultDict[int, list[EntrySnapshot]] = defaultdict(list)
+    _cursor_states: DefaultDict[int, int] = defaultdict(lambda: -1)
     
     def __init__(self, entry: Entry) -> None:
         self._entry = entry 
-        self._cursor = -1
+        self._id = entry.id
+        self._cursor = self._cursor_states[self._id]
+        # print(f"{self._cursor=}")
     
-    @property
-    def entry_states(self) -> list[EntrySnapshot]:
-        return self._entry_states
-    
-    @entry_states.setter
-    def entry_states(self, lst: list) -> None:
-        self._entry_states = []
+    def display_states(self):
+        i = 0
+        for s in self._entry_states[self._id]:
+            print(f"{i} --> {s.record_name}, {s.username}, {s.password}, {s.url}, {s.notes}")
+            i += 1
+        print(f"{self._cursor=}")
         
     def _update_cursor(self) -> None:
-        self._cursor = len(self._entry_states) - 1
-        
+        self._cursor += 1
+        self._cursor_states[self._id] = self._cursor
+
     def _move_back(self) -> None:
-        if self._entry_states:
+        if self._entry_states[self._id]:
             self._cursor -= 1 
             if self._cursor < 0:
                 self._cursor = 0
+        self._cursor_states[self._id] = self._cursor
         
     def _move_forvard(self) -> None:
-        if self._entry_states:
+        if self._entry_states[self._id]:
             self._cursor += 1
-            if self._cursor > len(self._entry_states) - 1:
-                self._cursor = len(self._entry_states) - 1
+            if self._cursor > len(self._entry_states[self._id]) - 1:
+                self._cursor = len(self._entry_states[self._id]) - 1
+        self._cursor_states[self._id] = self._cursor
         
     def snapshot(self) -> None:
         record_name = self._entry.record_name
@@ -53,29 +59,31 @@ class EntryState:
         url = self._entry.url 
         notes = self._entry.notes 
         snapshot = EntrySnapshot(record_name=record_name, username=username, password=password, url=url, notes=notes)
-        self._entry_states.append(snapshot)
+        self._entry_states[self._id].insert(self._cursor + 1, snapshot)
         self._update_cursor()
 
     def undo(self) -> (EntrySnapshot | None):
         if not self._entry_states:
             return 
         self._move_back()
-        snapshot = self._entry_states[self._cursor]
+        snapshot = self._entry_states[self._id][self._cursor]
         self._entry.record_name = snapshot.record_name 
         self._entry.username = snapshot.username
         self._entry.password = snapshot.password
         self._entry.url = snapshot.url 
         self._entry.notes = snapshot.notes
+        # self.display_states()
         return snapshot
     
     def reverse_undo(self) -> (EntrySnapshot | None):
         if not self._entry_states:
             return 
         self._move_forvard()
-        snapshot = self._entry_states[self._cursor]
+        snapshot = self._entry_states[self._id][self._cursor]
         self._entry.record_name = snapshot.record_name 
         self._entry.username = snapshot.username
         self._entry.password = snapshot.password
         self._entry.url = snapshot.url 
         self._entry.notes = snapshot.notes
+        # self.display_states()
         return snapshot

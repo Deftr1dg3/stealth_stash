@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from gui.midpanel.entry_row import EntryRow
     from gui.rightpanel.right_panel import RightPanel
     from gui.rightpanel.edit_panel import EditPanel
+    from gui.rightpanel.notes_panel import NotesPanel
 
 
 class Command:
@@ -32,6 +33,7 @@ class Command:
         self._mid: MidPanel
         self._right: RightPanel
         self._edit_panel: EditPanel
+        self._notes_panel: NotesPanel
         self._selected_category_row: (CategoryRow| None) = None
         self._selected_entry_row: (EntryRow | None) = None
         self._selected_category_id: int = 0
@@ -117,6 +119,14 @@ class Command:
     @edit_panel.setter
     def edit_panel(self, edit_panel: EditPanel) -> None:
         self._edit_panel = edit_panel
+    
+    @property
+    def notes_panel(self) -> NotesPanel:
+        return self._notes_panel
+    
+    @notes_panel.setter
+    def notes_panel(self, notes_panel: NotesPanel) -> None:
+        self._notes_panel = notes_panel
                         
     @property
     def top(self) -> TopBarPanel :
@@ -274,6 +284,7 @@ class Command:
     
     def manage_entry_states(self, direction: int = 1):
         self.edit_panel.manage_self_states(direction)
+       
     
     def search(self) -> list[Entry]:
         results = self._data_file.search(self.query)

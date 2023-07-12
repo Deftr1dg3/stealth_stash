@@ -4,6 +4,7 @@
 import wx 
 from gui.command import Command
 from data_file import Entry
+from gui.rightpanel.entry_state import EntryState
 from config import RightPanelConst
 
 
@@ -72,3 +73,8 @@ class NotesPanel(wx.Panel):
     def _on_typing(self, event):
         value = self._notes.GetValue()
         self.entry.notes = value
+    
+    def updates_notes_field(self, value: str) -> None:
+        self._notes.SetValue(value)
+        self._notes.SetInsertionPointEnd()
+        self.Layout()
