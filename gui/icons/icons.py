@@ -2,15 +2,20 @@
 
 
 import wx
-from gui.colours import Colours
+from gui.command import Command
 
 class IconPanel(wx.Panel):
-    def __init__(self, parent: wx.Panel, icon: str, colour: wx.Colour) -> None:
+    def __init__(self, parent: wx.Panel, icon: str, command: Command) -> None:
+        self._command = command
         super().__init__(parent, size=(30, 30))
         self._icon = icon
-        self._icon_colour = colour
+        
+        self._colours = self._command.colours()
+        
+        self._icon_colour = self._colours.SELECTION
+        self._pen_colour = self._colours.PEN
+        
         self.Bind(wx.EVT_PAINT, self.OnPaint)
-        # self.SetBackgroundColour("yellow")
         
     def _get_icon_function(self):
         match self._icon:
@@ -25,7 +30,7 @@ class IconPanel(wx.Panel):
         icon(dc)
         
     def _folder_icon(self, dc: wx.PaintDC) -> None:
-        dc.SetPen(wx.Pen(wx.Colour(Colours.PEN), 1))
+        dc.SetPen(wx.Pen(wx.Colour(self._pen_colour), 1))
         dc.SetBrush(wx.Brush(self._icon_colour))
         dc.DrawRoundedRectangle(9, 6, 10, 10, 2)
         dc.DrawRoundedRectangle(7, 8, 23, 15, 3)

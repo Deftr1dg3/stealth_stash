@@ -8,7 +8,9 @@ from gui.modals.popups import message_popup, dialog_popup
 from manage_password import PasswordStrength, GeneratePassword, ValidatePassword
 from gui.rightpanel.entry_state import EntryState
 from gui.rightpanel.notes_panel import NotesPanel
-from config import RightPanelConst, PasswordReplacemetPopup
+from gui.rightpanel.entry_state import EntrySnapshot
+from gui.modals.popups import message_popup
+from config import RightPanelConst, PasswordReplacemetPopup, UndoUnavailable
 
 
 class EditPanel(wx.Panel):
@@ -16,6 +18,8 @@ class EditPanel(wx.Panel):
         self._right_panel = right_panel
         self._command = command
         super().__init__(self._right_panel)
+        
+        self._undo_available = False
         
         self._show_password_ind = False
         self._show_password_label = RightPanelConst.SHOW_PASSWORD_BUTTON_LABEL
@@ -46,10 +50,7 @@ class EditPanel(wx.Panel):
         self._init_ui()
         self._bind_events()
     
-    @property
-    def entry_state(self) -> (EntryState | None):
-        return self._entry_state
-        
+
     @property
     def entry(self) -> Entry:
         return self._entry
@@ -57,6 +58,7 @@ class EditPanel(wx.Panel):
     @entry.setter
     def entry(self, entry: Entry) -> None:
         self._entry = entry
+        
         
     def _init_ui(self):
         """ Function initializing visible interface. """
@@ -98,7 +100,6 @@ class EditPanel(wx.Panel):
         
         self._generate_password_button = wx.Button(self._scroll, label=self._generate_password_label)
         
-        
         url_title = wx.StaticText(self._scroll, label=self._url_title)
         url_title.SetForegroundColour(self._text_colour)
         self._url = wx.TextCtrl(self._scroll, style=wx.TE_PROCESS_ENTER)
@@ -138,8 +139,13 @@ class EditPanel(wx.Panel):
         else:
             self.entry = self._command.selected_entry_row.entry
             self._command.edit_panel = self
-            self._entry_state = EntryState(self.entry)
-            self._entry_state.snapshot()
+            
+            self._entry_state = EntryState(self.entry.id)
+
+            # Point of vulnarability -- segmentation fault -------------------------
+            
+            self._make_snapshot()
+
             entry_name = self.entry.record_name
             username = self.entry.username
             password = self.entry.password
@@ -162,26 +168,39 @@ class EditPanel(wx.Panel):
         # Refresh layout
         self.Layout()
         
+        
     def _bind_events(self):
         self._record_name.Bind(wx.EVT_TEXT, self._on_record_name)
         self._username.Bind(wx.EVT_TEXT, self._on_username)
         self._password.Bind(wx.EVT_TEXT, self._on_password)
         self._url.Bind(wx.EVT_TEXT, self._on_url)
         
-        self._reveal_password.Bind(wx.EVT_BUTTON, self._show_password)
-        self._generate_password_button.Bind(wx.EVT_BUTTON, self._generate_password)
+        self._reveal_password.Bind(wx.EVT_BUTTON, self._on_show_password)
+        self._generate_password_button.Bind(wx.EVT_BUTTON, self._on_generate_password)
         self._password_strength.Bind(wx.EVT_COMBOBOX, self._on_select_password_strength)
         self._remove_entry.Bind(wx.EVT_BUTTON, self._on_remove_entry)
+        
+        self._record_name.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
+        self._username.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
+        self._password.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
+        self._url.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
+        
+        
+    def _on_set_focus(self, event) -> None:
+        self._undo_available = True
+
         
     def _on_record_name(self, event) -> None:
         value = self._record_name.GetValue()
         self.entry.record_name = value
         self._on_enter(None)
     
+    
     def _on_username(self, event) -> None:
         value = self._username.GetValue()
         self.entry.username = value
         self._on_enter(None)
+    
     
     def _on_password(self, event) -> None:
         value = self._password.GetValue()
@@ -189,18 +208,22 @@ class EditPanel(wx.Panel):
         self._validate_password_strength(None)
         self._on_enter(None)
     
+    
     def _on_url(self, event) -> None:
         value = self._url.GetValue()
         self.entry.url = value
         self._on_enter(None)
         
+        
     def _on_enter(self, event) -> None:
         if self._entry_state is not None and not self._undo_in_progress:
-            self._entry_state.snapshot()
+            self._make_snapshot()
         self._command.refresh_mid()
+    
     
     def _on_remove_entry(self, event):
         self._command.remove_entry(self.entry)
+        
         
     def _validate_password_strength(self, event) -> None:
         password = self.entry.password
@@ -209,17 +232,20 @@ class EditPanel(wx.Panel):
         self._current_password_strength = result 
         self._password_strength.SetValue(self._current_password_strength)
         
+        
     def _on_select_password_strength(self, event) -> None:
         self._current_password_strength = self._password_strength.GetValue()
     
-    def _generate_password(self, event) -> None:
+    
+    def _on_generate_password(self, event) -> None:
         confirmation = dialog_popup(PasswordReplacemetPopup.MESSAGE, PasswordReplacemetPopup.TITLE)
         if confirmation:
             g = GeneratePassword()
             password = g.generate_password(self._PASSWORD_STRENGTH[self._current_password_strength])  
             self._password.SetValue(password)
         
-    def _show_password(self, event):
+        
+    def _on_show_password(self, event):
         if not self._show_password_ind:
             self._show_password_ind = not self._show_password_ind
             self._on_password(None)
@@ -249,17 +275,21 @@ class EditPanel(wx.Panel):
             self._reveal_password.SetLabel(self._show_password_label)
             self.Layout()
             
+            
     def manage_self_states(self, direction: int = 1):
+        if not self._undo_available:
+            message_popup(UndoUnavailable.MESSAGE, UndoUnavailable.TITLE)
+            return
         if self._entry_state is None:
             return 
         if direction:
             state = self._entry_state.undo()
         else:
             state = self._entry_state.reverse_undo()
-        if state is None:
-            return
         
         self._undo_in_progress = True
+        
+        self._set_values_to_entry(state)
         
         try:
             self._record_name.SetValue(state.record_name)
@@ -274,4 +304,21 @@ class EditPanel(wx.Panel):
             pass
         
         self._undo_in_progress = False
+        
+        
+    def _make_snapshot(self) -> None:
+        if self._entry_state is not None:
+            snapshot = EntrySnapshot(record_name=self.entry.record_name, username=self.entry.username,
+                password=self.entry.password, url=self.entry.url, notes=self.entry.notes)
+            self._command.commit()
+            self._entry_state.snapshot(snapshot)
+    
+    
+    def _set_values_to_entry(self, snapshot: EntrySnapshot) -> None:
+        self.entry.record_name = snapshot.record_name
+        self.entry.username = snapshot.username
+        self.entry.password = snapshot.password
+        self.entry.url = snapshot.url
+        self.entry.notes = snapshot.notes
+        self._command.commit()
         

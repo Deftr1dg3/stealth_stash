@@ -124,6 +124,3 @@ class ColourTheme:
                             PEN=wx.Colour(BURGUNDY_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(BURGUNDY_DARK),
                             )
-  
-
-Colours = ColourTheme.DARK

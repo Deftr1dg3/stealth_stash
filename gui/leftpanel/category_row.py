@@ -64,7 +64,7 @@ class CategoryRow(wx.Panel):
         category_box = wx.BoxSizer(wx.VERTICAL)
         
         # Create gui objects
-        self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._selection_colour)
+        self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._command)
         self._display_category = CategoryPanel(self, self._category.name, self._command)
         
         # Add gui objects to secondary sizers

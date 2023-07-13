@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 
 import os
-import platform
 from typing import NamedTuple
 from data_file import DataFile
+from settings import Settings
 from main_frame import launch_gui
 from exceptions import UnsupportedSystem, UnreadableToDecodeTheFile
 from gui.command import Command
 from config import DataFilePath
 
 
+
+settings = Settings()
+
 current_dir = DataFilePath.DATA_FILE_PATH
 
-
-
 class DefaultPath(NamedTuple):
-    DARWIN = current_dir + os.sep + "KeyKeeperDataFile.kkdf"
+    DARWIN = current_dir + os.sep + "gui" + os.sep + "KeyKeeperDataFile.kkdf"
     LINUX = ""
     WINDOWS = ""
 
@@ -25,16 +26,9 @@ def _path_exists(path: str) -> bool:
         
     
 def _get_default_datafile_path() -> str:
-    system = platform.system()
-    match system:
-        case "Darwin":
-            return DefaultPath.DARWIN
-        case "Linux":
-            return DefaultPath.LINUX
-        case "Windows":
-            return DefaultPath.WINDOWS
-        case _:
-            raise UnsupportedSystem(f"{system=}")
+    path = settings.DATAFILE_PATH
+    print(f"{path=}")
+    return settings.DATAFILE_PATH
 
 
 def _get_datafile_path() -> str:
@@ -75,12 +69,15 @@ def main():
     except UnreadableToDecodeTheFile:
         print("UNRABLE TO DECODE THE FILE")
         exit(1)
-    command = Command(data_file)
-    launch_gui(command)
+    command = Command(data_file, settings)
+    try:
+        launch_gui(command)
+    except Exception as ex:
+        print(f"Exception in MAIN --> {ex}")
 
     
 if __name__ == "__main__":
     main()
 
 
-# Some encriptuobhjvjhec cjhvbce
+# There  last changes to  be jubh iub iuh oiuh

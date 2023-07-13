@@ -109,8 +109,10 @@ class Category:
     
     def clear_category(self) -> None:
         self._data_file.clear_category(self.name)
-        
     
+    def commit(self):
+        self._data_file.commit()
+        
     
 class Data(dict):
     def __init__(self):

@@ -4,7 +4,6 @@
 import wx
 from data_file import Entry
 from gui.command import Command 
-from gui.colours import Colours
 from gui.midpanel.entry_row import EntryRow
 from config import MidPanelConst
 

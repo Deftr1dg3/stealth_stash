@@ -3,7 +3,6 @@
 
 import wx 
 from gui.command import Command
-from gui.colours import Colours
 from config import TopBarConst
 
 

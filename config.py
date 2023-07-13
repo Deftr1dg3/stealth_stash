@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 
-from typing import NamedTuple
 from dataclasses import dataclass
 from manage_password import PasswordStrength
+
 
 @dataclass(frozen=True)
 class DataFilePath:
@@ -76,6 +76,11 @@ class PasswordReplacemetPopup:
     MESSAGE = ("If you generate a new password, " 
                 "the current one will be LOST. "
                 "Are you sure you want to proceed?")
+    
+@dataclass(frozen=True)
+class SelectColourSchemeConst:
+    TITLE = "Select Colour Scheme"
+    SIZE = (200, 70)
             
 
 @dataclass(frozen=True)
@@ -95,6 +100,7 @@ class RenameCategoryPopup:
     TITLE = "Rename Category"
     MESSAGE = "Insert desired category name"
     
+    
 @dataclass(frozen=True)
 class NoCategorySelectedPopup:
     TITLE = "Error."
@@ -106,7 +112,19 @@ class NoEntrySelectedPopup:
     TITLE = "Error."
     MESSAGE = "No Entry selected."
     
+    
 @dataclass(frozen=True)
 class RemoveConfirmationPopup:
     TITLE = "INPORTANT: Confirmation"
     MESSAGE = "All content of the '{}' will be permanentely LOST.\nARE YOU SURE YOU WANT TO CONTINUE?"
+    
+    
+@dataclass(frozen=True)
+class UndoUnavailable:
+    TITLE = "Unable to change current state."
+    MESSAGE = "Please select one of the fields first."
+    
+@dataclass(frozen=True)
+class ChangeColourSchemeConfirmation:
+    TITLE = "Confirmation"
+    MESSAGE = "In order to change the colour scheme the app has to be restarted. Do you want to proceed?"

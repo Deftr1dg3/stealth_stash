@@ -3,7 +3,6 @@
 
 import wx
 import pyperclip
-from gui.colours import Colours
 from config import MidPanelConst
 from gui.command import Command
 

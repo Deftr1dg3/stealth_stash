@@ -6,3 +6,7 @@ class UnreadableToDecodeTheFile(Exception):
     
 class UnsupportedSystem(Exception):
     ...
+    
+    
+class RestartException(Exception):
+    ...

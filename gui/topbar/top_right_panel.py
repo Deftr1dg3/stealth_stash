@@ -22,27 +22,30 @@ class TopRightPanel(wx.Panel):
     def _init_ui(self):
         main_box = wx.BoxSizer(wx.HORIZONTAL)
         title_box = wx.BoxSizer(wx.VERTICAL)
-        # button_box = wx.BoxSizer(wx.VERTICAL)
+        button_box = wx.BoxSizer(wx.VERTICAL)
         
         # Create gui objects
         entry_edit_title = wx.StaticText(self, label=TopBarConst.RIGHT_PANEL_TITLE)
         entry_edit_title.SetForegroundColour(self._text_colour)
-        # self._theme_button =  wx.Button(self, label=Colours.THEM_BUTTON, size=(30, -1))
+        self._theme_button =  wx.Button(self, label="Theme", size=(-1, -1))
         
         # Add created objects to the sizers
         title_box.Add(entry_edit_title, 0, wx.TOP | wx.LEFT, 7)
-        # button_box.Add(self._theme_button, 0, wx.TOP | wx.RIGHT, 5)
+        button_box.Add(self._theme_button, 0, wx.TOP | wx.RIGHT, 5)
         
         # Add sizers to the main sizer.
         main_box.Add(title_box, 0, wx.EXPAND)
         main_box.AddStretchSpacer()
-        # main_box.Add(button_box, 0, wx.EXPAND)
+        main_box.Add(button_box, 0, wx.EXPAND)
         
         # Set main sizer to the panel
         self.SetSizer(main_box)
         self.Layout()
         
     def _bind_events(self):
-        # self._theme_button.Bind(wx.EVT_BUTTON, self._change_colour_theme)
-        ...
+        self._theme_button.Bind(wx.EVT_BUTTON, self._on_colour_theme)
+        
+    
+    def _on_colour_theme(self, event):
+        self._command.set_colour("BLUE")
         
