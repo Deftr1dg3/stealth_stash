@@ -78,7 +78,7 @@ class Command:
         if entry is not None:
             if self.selected_entry_id in self._entry_rows:
                 currently_selected = self.entry_rows[self.selected_entry_id]
-                currently_selected._smooth_deselect() 
+                currently_selected.deselect_entry() 
             self.selected_entry_id = entry.id       
         self._selected_entry_row = entry
     
@@ -204,8 +204,9 @@ class Command:
     def right(self, panel: RightPanel) -> None:
         self._right = panel  
            
+           
     
-    # Methods ------------------------------------------------------------     
+    # Methods ----------------------------------------------------------------------------------------------------------------------------------------     
                 
     def _validate_new_name(self, new_name: str) -> bool:
         namespace = self._data_file.get_categories_namespace()
@@ -230,6 +231,7 @@ class Command:
         self.refresh_left()
         self.refresh_mid()
         self.refresh_right()
+        self._keep_category_row_selected()
         
     def remove_category(self) -> None:
         if self.selected_category_row is None:
@@ -243,6 +245,7 @@ class Command:
             self.refresh_left()
             self.refresh_mid()
             self.refresh_right()
+            self._keep_category_row_selected()
 
     def rename_category(self) -> None:
         if self.selected_category_row is None:
@@ -264,6 +267,7 @@ class Command:
         self.refresh_left()
         self.refresh_mid()
         self.refresh_right()
+        self._keep_category_row_selected()
         
     def clear_category(self) -> None:
         if self.selected_category_row is None:
@@ -275,6 +279,7 @@ class Command:
             category.clear_category()
             self.refresh_mid()
             self.refresh_right()
+            self._keep_category_row_selected()
         
     def display_category_content(self) -> None:
         if self.selected_category_row is not None:
@@ -320,12 +325,21 @@ class Command:
                 except RuntimeError as ex:
                     pass
     
+    def _keep_category_row_selected(self) -> None:
+        if self.selected_category_id and self.selected_category_id in self.category_rows:
+            category_row = self.category_rows[self.selected_category_id]
+            category_row.select_category()
+            
+    def refresh_on_item_change(self) -> None:
+        self.refresh_mid()
+        self._keep_entry_row_selected()
+
     def refresh_left(self) -> None:
         self.left.refresh()
     
     def refresh_mid(self) -> None:
         self.mid.refresh()
-        self._keep_entry_row_selected()
+        # self._keep_entry_row_selected()
         
     def refresh_right(self) -> None:
         self.right.refresh()

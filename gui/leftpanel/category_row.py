@@ -156,3 +156,6 @@ class CategoryRow(wx.Panel):
         self.is_selected = False
         self._target_colour = self._text_colour
         self._on_mouse_leave(None)
+    
+    def select_category(self) -> None:
+        self._on_left_click(None)

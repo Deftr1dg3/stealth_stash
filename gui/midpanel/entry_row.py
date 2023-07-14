@@ -175,3 +175,4 @@ class EntryRow(wx.Panel):
         
     def copy_url(self) -> None:
         self._url.copy_to_clipboard()
+    

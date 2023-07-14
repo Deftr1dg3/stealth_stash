@@ -218,7 +218,7 @@ class EditPanel(wx.Panel):
     def _on_enter(self, event) -> None:
         if self._entry_state is not None and not self._undo_in_progress:
             self._make_snapshot()
-        self._command.refresh_mid()
+        self._command.refresh_on_item_change()
     
     
     def _on_remove_entry(self, event):

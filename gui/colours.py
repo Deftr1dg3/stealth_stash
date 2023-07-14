@@ -65,10 +65,10 @@ class ColourTheme:
                             TEXTCTRL_BACKGROUND = wx.Colour(LIGHT_DARK),
                             COLOUR_CHANGING_STEP = 6
                             )
-    
+    #  Started  changes  here iugb iujb oiuh 
     LIGHT_GREEN_DARK = wx.Colour("#003942")
     LIGHT_GREEN_MEDIUM = wx.Colour("#004952")
-    LIGHT_GREEN_INPUT_BACKGROUND = wx.Colour("#002B34")
+    LIGHT_GREEN_INPUT_BACKGROUND = wx.Colour("#00333b")
     LIGHT_GREEN_SELECTION = wx.Colour("#1991A0")
     LIGHT_GREEN_TEXT = wx.Colour(wx.WHITE)
     
@@ -125,7 +125,7 @@ class ColourTheme:
                             TEXTCTRL_BACKGROUND = wx.Colour(BURGUNDY_DARK),
                             COLOUR_CHANGING_STEP = 3
                             )
-    # Change starts here juugbh  iubhjh iubjbn
+    #  Start here oihn
     PURPLE_DARK = wx.Colour("#350C63")
     PURPLE_MEDIUM = wx.Colour("#471183")
     PURPLE_INPUT_BACKGROUND = wx.Colour("#270053")
