@@ -6,7 +6,7 @@ from data_file import Category
 from command import Command
 from gui.icons.icons import IconPanel
 from gui.leftpanel.category_panel import CategoryPanel
-from gui.menues.category_row_right_click import CategotyRightClickMenu
+from gui.menues.category_row_right_click import CategoryRightClickMenu
 from config import LeftPanelConst
 
 
@@ -103,7 +103,7 @@ class CategoryRow(wx.Panel):
         
     def _on_right_click(self, event) -> None:
         self._on_left_click(None)
-        right_click_menu = CategotyRightClickMenu(self, self._command, self._category)
+        right_click_menu = CategoryRightClickMenu(self, self._command, self._category)
         position_in_widget = event.GetPosition()
         position_on_screen = event.GetEventObject().ClientToScreen(position_in_widget)
         position = self.ScreenToClient(position_on_screen)

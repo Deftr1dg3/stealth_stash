@@ -80,7 +80,33 @@ class SelectColourSchemeConst:
     BUTTON_CONFIRM_LABEL = "Confirm"
     BUTTON_CANCEL_LABEL = "Cancel"
     
+
+@dataclass(frozen=True)
+class MenueConst:
+    FIRST_FIELD_LABEL = "File"
+    SECONDFIELD_LABEL = "Edit"
     
+    NEW_CATEGORY_LABEL = "New Category"
+    NEW_CATEGORY_SHORTCUT = "Shift+Ctrl+N"
+    REMOVE_CATEGORY_LABEL = "Remove Category"
+    REMOVE_CATEGORY_SHORTCUT = "Shift+Ctrl+D" 
+    RENAME_CATEGORY_LABEL = "Rename Category"
+    CLEAR_CATEGORY_LABEL = "Clear category"
+    NEW_ENTRY_LABEL = "New Entry"
+    NEW_ENTRY_SHORTCUT = "Ctrl+N"
+    REMOVE_ENTRY_LABEL = "Remove Entry"
+    REMOVE_ENTRY_SHORTCUT = "Ctrl+D"
+    EXIT_LABEL = "Exit"
+    EXIT_SHORTCUT = "Ctrl+Q"
+    
+    UNDO_LABLE = "Undo"
+    UNDO_SHORTCUT = "Ctrl+Z"
+    REDO_LABLE = "Reverse Undo"
+    REDO_SHORTCUT = "Shift+Ctrl+Z"
+
+    
+    
+#  POPUPS ------------------------------------------------------------------------ 
 @dataclass(frozen=True)
 class PasswordReplacemetPopup:
     TITLE = "IMPORTANT: Confirmation"

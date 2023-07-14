@@ -240,6 +240,8 @@ class EditPanel(wx.Panel):
     def _on_generate_password(self, event) -> None:
         confirmation = dialog_popup(PasswordReplacemetPopup.MESSAGE, PasswordReplacemetPopup.TITLE)
         if confirmation:
+            self._make_snapshot()
+            self._undo_available = True
             g = GeneratePassword()
             password = g.generate_password(self._PASSWORD_STRENGTH[self._current_password_strength])  
             self._password.SetValue(password)

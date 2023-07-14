@@ -244,11 +244,12 @@ class Command:
             self.refresh_mid()
             self.refresh_right()
 
-    def rename_category(self, parent: wx.Panel, category: Category) -> None:
+    def rename_category(self) -> None:
         if self.selected_category_row is None:
             message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
             return
-        default_value = self.selected_category_row.category.name
+        category = self.selected_category_row.category
+        default_value = category.name
         name = get_input(RenameCategoryPopup.MESSAGE, RenameCategoryPopup.TITLE, default_value)
         if name is None:
             return

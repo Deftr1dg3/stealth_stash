@@ -52,9 +52,12 @@ class BaseRecordPanel(wx.Panel):
     def _bind_events(self):
         self.Bind(wx.EVT_LEFT_DCLICK, self._on_left_dclick)
         self.Bind(wx.EVT_TIMER, self._on_color_timer)
+        
+    def copy_to_clipboard(self) -> None:
+        pyperclip.copy(self._record_value)
     
     def _on_left_dclick(self, event):
-        pyperclip.copy(self._record_value)
+        self.copy_to_clipboard()
         self._set_text_colour(self._selection_colour)
         self._current_colour = self._selection_colour
         self._colour_timer.Start(10)

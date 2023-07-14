@@ -3,6 +3,7 @@
 
 import wx
 from command import Command
+from config import MenueConst
 
 class TopBarMenu(wx.MenuBar):
     def __init__(self, main_frame: wx.Frame, command: Command):
@@ -15,24 +16,25 @@ class TopBarMenu(wx.MenuBar):
     def _init_menu(self):
         # Create "File" menu
         file_menu = wx.Menu()
-        file_menu.Append(1, "&New Category\tShift+Ctrl+N")
-        file_menu.Append(2, "&New Entry\tCtrl+N")
-        file_menu.Append(3, "&Remove Category\tShift+Ctrl+D")
-        file_menu.Append(4, "&Remove Entry\tCtrl+D")
+        file_menu.Append(1, f"&{MenueConst.NEW_CATEGORY_LABEL}\t{MenueConst.NEW_CATEGORY_SHORTCUT}")
+        file_menu.Append(2, f"&{MenueConst.NEW_ENTRY_LABEL}\t{MenueConst.NEW_ENTRY_SHORTCUT}")
+        file_menu.Append(3, f"&{MenueConst.REMOVE_CATEGORY_LABEL}\t{MenueConst.REMOVE_CATEGORY_SHORTCUT}")
+        file_menu.Append(4, f"&{MenueConst.REMOVE_ENTRY_LABEL}\t{MenueConst.REMOVE_ENTRY_SHORTCUT}")
+        file_menu.Append(22, f"&{MenueConst.RENAME_CATEGORY_LABEL}")
         file_menu.AppendSeparator()
-        file_menu.Append(5, "&Clear Catogory")
+        file_menu.Append(5, f"&{MenueConst.CLEAR_CATEGORY_LABEL}")
         file_menu.AppendSeparator()
         file_menu.AppendSeparator()
-        file_menu.Append(30, "&Exit\tCtrl+Q")
+        file_menu.Append(30, f"&{MenueConst.EXIT_LABEL}\t{MenueConst.EXIT_SHORTCUT}")
 
-        self.Append(file_menu, "&File")
+        self.Append(file_menu, f"&{MenueConst.FIRST_FIELD_LABEL}")
 
         # Create "Edit" menu
         edit_menu = wx.Menu()
-        edit_menu.Append(31, "&Undo\tCtrl+Z")
-        edit_menu.Append(32, "&Reverse Undo\tShift+Ctrl+Z")
+        edit_menu.Append(31, f"&{MenueConst.UNDO_LABLE}\t{MenueConst.UNDO_SHORTCUT}")
+        edit_menu.Append(32, f"&{MenueConst.REDO_SHORTCUT}\t{MenueConst.REDO_SHORTCUT}")
 
-        self.Append(edit_menu, "&Edit")
+        self.Append(edit_menu, f"&{MenueConst.SECONDFIELD_LABEL}")
         
     def _bind_events(self):
         # Bind "File" menu
@@ -41,6 +43,7 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_remove_category, id=3)
         self._main_frame.Bind(wx.EVT_MENU, self._on_remove_entry, id=4)
         self._main_frame.Bind(wx.EVT_MENU, self._on_clear_category, id=5)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_rename_category, id=22)
         
         self._main_frame.Bind(wx.EVT_MENU, self._on_exit, id=30)
         # Bind "Edit" menu
@@ -52,6 +55,9 @@ class TopBarMenu(wx.MenuBar):
         
     def _on_remove_category(self, event) -> None:
         self._command.remove_category()
+        
+    def _on_rename_category(self, event) -> None:
+        self._command.rename_category()
     
     def _on_clear_category(self, event) -> None:
         self._command.clear_category()
@@ -63,7 +69,6 @@ class TopBarMenu(wx.MenuBar):
         self._command.remove_entry()
 
     def _on_exit(self, event) -> None:
-        # self._main_frame = wx.GetApp().GetTopWindow()
         self._main_frame.Destroy()
     
     def _on_undo(self, event) -> None:
