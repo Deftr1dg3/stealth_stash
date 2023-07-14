@@ -3,7 +3,7 @@
 
 import wx
 from config import LeftPanelConst
-from gui.command import Command
+from command import Command
 
 
 class CategoryPanel(wx.Panel):

@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from gui.rightpanel.edit_panel import EditPanel
 from gui.rightpanel.notes_panel import NotesPanel
 from config import RightPanelConst

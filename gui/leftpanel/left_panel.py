@@ -2,9 +2,9 @@
 
 
 import wx
+from command import Command
 from data_file import Category
 from gui.leftpanel.category_row import CategoryRow
-from gui.command import Command
 from config import LeftPanelConst
 
 class LeftPanel(wx.Panel):

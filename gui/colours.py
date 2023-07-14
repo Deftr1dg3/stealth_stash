@@ -21,23 +21,15 @@ class ColoursAssignment(NamedTuple):
     INPUT_BACKGROUND: wx.Colour
     PEN: wx.Colour 
     TEXTCTRL_BACKGROUND: wx.Colour
+    COLOUR_CHANGING_STEP: int
 
     
-    
-MOON_SIMPLE = "\U0000263D"
-SUN_SIMPLE = "\U00002600"
-
-EMOJI_SUN = "\U0001F31E"
-EMOJI_DARK_MOON = "\U0001F311"
-EMOJI_PARTIAL_MOON = "\U0001F312"
-EMOJI_LIGHT_MOON = "\U0001F315"
-SUN = "🔆"
-
-@dataclass
 class ColourTheme:
+    
     DARK_DARK = wx.Colour("#252525")
     DARK_MEDIUM = wx.Colour("#343434")
-    DARK_SELECTION = wx.Colour("#339CB4")
+    DARK_INPUT_BACKGROUND = wx.Colour("#252525")
+    DARK_SELECTION = wx.Colour("#0011FF")
     DARK_TEXT = wx.Colour(wx.WHITE)
     
     DARK = ColoursAssignment(TEXT=wx.Colour(DARK_TEXT),    # RGB for wx.WHITE
@@ -48,14 +40,16 @@ class ColourTheme:
                             MID_PANEL=wx.Colour(DARK_DARK),
                             ENTRY_BACKGROUND=wx.Colour(DARK_DARK), 
                             RIGHT_PANEL=wx.Colour(DARK_MEDIUM), 
-                            INPUT_BACKGROUND=wx.Colour(DARK_DARK),
+                            INPUT_BACKGROUND=wx.Colour(DARK_INPUT_BACKGROUND),
                             PEN=wx.Colour(DARK_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(DARK_DARK),
+                            COLOUR_CHANGING_STEP = 6
                             )
     
     LIGHT_DARK = wx.Colour("#C6C6C6")
     LIGHT_MEDIUM = wx.Colour("#EEEEEE")
-    LIGHT_SELECTION = wx.Colour("#339CB4")
+    LIGHT_INPUT_BACKGROUND = wx.Colour("#C6C6C6")
+    LIGHT_SELECTION = wx.Colour("#0011FF")
     LIGHT_TEXT = wx.Colour(wx.BLACK)
     
     LIGHT = ColoursAssignment(TEXT=wx.Colour(LIGHT_TEXT),    # RGB for wx.WHITE
@@ -66,13 +60,15 @@ class ColourTheme:
                             MID_PANEL=wx.Colour(LIGHT_DARK),
                             ENTRY_BACKGROUND=wx.Colour(LIGHT_DARK), 
                             RIGHT_PANEL=wx.Colour(LIGHT_MEDIUM), 
-                            INPUT_BACKGROUND=wx.Colour(LIGHT_DARK),
+                            INPUT_BACKGROUND=wx.Colour(LIGHT_INPUT_BACKGROUND),
                             PEN=wx.Colour(LIGHT_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(LIGHT_DARK),
+                            COLOUR_CHANGING_STEP = 6
                             )
     
     LIGHT_GREEN_DARK = wx.Colour("#003942")
     LIGHT_GREEN_MEDIUM = wx.Colour("#004952")
+    LIGHT_GREEN_INPUT_BACKGROUND = wx.Colour("#002B34")
     LIGHT_GREEN_SELECTION = wx.Colour("#1991A0")
     LIGHT_GREEN_TEXT = wx.Colour(wx.WHITE)
     
@@ -84,13 +80,15 @@ class ColourTheme:
                             MID_PANEL=wx.Colour(LIGHT_GREEN_DARK),
                             ENTRY_BACKGROUND=wx.Colour(LIGHT_GREEN_DARK), 
                             RIGHT_PANEL=wx.Colour(LIGHT_GREEN_MEDIUM), 
-                            INPUT_BACKGROUND=wx.Colour(LIGHT_GREEN_DARK),
+                            INPUT_BACKGROUND=wx.Colour(LIGHT_GREEN_INPUT_BACKGROUND),
                             PEN=wx.Colour(LIGHT_GREEN_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(LIGHT_GREEN_DARK),
+                            COLOUR_CHANGING_STEP = 3
                             )
     
     BLUE_DARK = wx.Colour("#002958")
     BLUE_MEDIUM = wx.Colour("#003764")
+    BLUE_INPUT_BACKGROUND = wx.Colour("#002958")
     BLUE_SELECTION = wx.Colour("#265F8F")
     BLUE_TEXT = wx.Colour(wx.WHITE)
     
@@ -102,13 +100,15 @@ class ColourTheme:
                             MID_PANEL=wx.Colour(BLUE_DARK),
                             ENTRY_BACKGROUND=wx.Colour(BLUE_DARK), 
                             RIGHT_PANEL=wx.Colour(BLUE_MEDIUM), 
-                            INPUT_BACKGROUND=wx.Colour(BLUE_DARK),
+                            INPUT_BACKGROUND=wx.Colour(BLUE_INPUT_BACKGROUND),
                             PEN=wx.Colour(BLUE_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(BLUE_DARK),
+                            COLOUR_CHANGING_STEP = 3
                             )
     
     BURGUNDY_DARK = wx.Colour("#37171E")
     BURGUNDY_MEDIUM = wx.Colour("#431B24")
+    BURGUNDY_INPUT_BACKGROUND = wx.Colour("#37171E")
     BURGUNDY_SELECTION = wx.Colour("#9C263F")
     BURGUNDY_TEXT = wx.Colour(wx.WHITE)
     
@@ -120,7 +120,37 @@ class ColourTheme:
                             MID_PANEL=wx.Colour(BURGUNDY_DARK),
                             ENTRY_BACKGROUND=wx.Colour(BURGUNDY_DARK), 
                             RIGHT_PANEL=wx.Colour(BURGUNDY_MEDIUM), 
-                            INPUT_BACKGROUND=wx.Colour(BURGUNDY_DARK),
+                            INPUT_BACKGROUND=wx.Colour(BURGUNDY_INPUT_BACKGROUND),
                             PEN=wx.Colour(BURGUNDY_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(BURGUNDY_DARK),
+                            COLOUR_CHANGING_STEP = 3
                             )
+    # Change starts here juugbh  iubhjh iubjbn
+    PURPLE_DARK = wx.Colour("#350C63")
+    PURPLE_MEDIUM = wx.Colour("#471183")
+    PURPLE_INPUT_BACKGROUND = wx.Colour("#270053")
+    PURPLE_SELECTION = wx.Colour("#963AFD")
+    PURPLE_TEXT = wx.Colour(wx.WHITE)
+    
+    PURPLE = ColoursAssignment(TEXT=wx.Colour(PURPLE_TEXT),    # RGB for wx.WHITE
+                            SELECTION=wx.Colour(PURPLE_SELECTION),   # RGB for "#51BC5F"
+                            BODY_PANEL = wx.Colour(PURPLE_DARK),
+                            TOP_BAR=wx.Colour(PURPLE_MEDIUM),
+                            LEFT_PANEL=wx.Colour(PURPLE_MEDIUM), 
+                            MID_PANEL=wx.Colour(PURPLE_DARK),
+                            ENTRY_BACKGROUND=wx.Colour(PURPLE_DARK), 
+                            RIGHT_PANEL=wx.Colour(PURPLE_MEDIUM), 
+                            INPUT_BACKGROUND=wx.Colour(PURPLE_INPUT_BACKGROUND),
+                            PEN=wx.Colour(PURPLE_MEDIUM), 
+                            TEXTCTRL_BACKGROUND = wx.Colour(PURPLE_DARK),
+                            COLOUR_CHANGING_STEP = 5
+                            )
+    
+    
+    AVAILABLE_COLOUR_SCHEMES= {"DARK": DARK, 
+                                "LIGHT": LIGHT,
+                                "LIGHT_GREEN": LIGHT_GREEN,
+                                "BLUE": BLUE,
+                                "BURGUNDY": BURGUNDY,
+                                "PURPLE": PURPLE
+                                }

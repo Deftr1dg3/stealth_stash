@@ -3,8 +3,9 @@
 
 import wx
 import pyperclip
+from command import Command
 from config import MidPanelConst
-from gui.command import Command
+
 
 
 class BaseRecordPanel(wx.Panel):
@@ -23,7 +24,7 @@ class BaseRecordPanel(wx.Panel):
         self._selection_colour = self._colours.SELECTION
         self._current_colour = self._colours.TEXT
         
-        self._colour_step = MidPanelConst.RECORD_PANEL_COLOUR_STEP  # Determines the speed of color transition
+        self._colour_step = self._colours.COLOUR_CHANGING_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
         
         self._init_ui()

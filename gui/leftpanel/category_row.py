@@ -3,7 +3,7 @@
 
 import wx
 from data_file import Category
-from gui.command import Command
+from command import Command
 from gui.icons.icons import IconPanel
 from gui.leftpanel.category_panel import CategoryPanel
 from gui.menues.category_row_right_click import CategotyRightClickMenu
@@ -31,7 +31,7 @@ class CategoryRow(wx.Panel):
         self._current_colour = self._text_colour
         
         # Defining colour timer and colour changing step
-        self._colour_step = 5  # Determines the speed of color transition
+        self._colour_step = self._colours.COLOUR_CHANGING_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
         
         self.SetBackgroundColour(self._background_colour)

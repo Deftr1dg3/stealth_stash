@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-
+import wx
 from dataclasses import dataclass
 from manage_password import PasswordStrength
-
+app = wx.App()
 
 @dataclass(frozen=True)
 class DataFilePath:
@@ -21,6 +21,7 @@ class TopBarConst:
     SEARCH_PLACE_HOLDER = "Search record ..."
     RIGHT_PANEL_TITLE = "Edit Entry:"
     RIGHT_PANEL_SIZE = (250, 30)
+    THEME_BUTTON_LABEL = "Colour Theme"
     
 
 @dataclass(frozen=True)
@@ -40,8 +41,6 @@ class MidPanelConst:
     ENTRY_ROW_SIZE = (-1, 30)
     DISPLAYED_STRING_LEGTH = 12
     DISPLAYED_PASSWORD_LENGTH = 8
-    ENTRY_ROW_COLOUR_STEP = 2
-    RECORD_PANEL_COLOUR_STEP = 1
     EXTRA_CHARACTERS_REPLACEMENT = "..."
     
 
@@ -69,6 +68,18 @@ class RightPanelConst:
     PASSWORD_TITLE = "Password:"
     URL_TITLE = "URL://"
     
+
+@dataclass(frozen=True)
+class SelectColourSchemeConst:
+    TITLE = "Select Colour Scheme"
+    SIZE = (300, 190)
+    STYLE = wx.CLOSE_BOX
+    BACKGROUND_COLOUR = wx.Colour("#202020")
+    CIRCLE_PANEL_PEN_COLOUR = wx.Colour("GREY")
+    CIRCLE_PANEL_PEN_SIZE = 2
+    BUTTON_CONFIRM_LABEL = "Confirm"
+    BUTTON_CANCEL_LABEL = "Cancel"
+    
     
 @dataclass(frozen=True)
 class PasswordReplacemetPopup:
@@ -76,11 +87,6 @@ class PasswordReplacemetPopup:
     MESSAGE = ("If you generate a new password, " 
                 "the current one will be LOST. "
                 "Are you sure you want to proceed?")
-    
-@dataclass(frozen=True)
-class SelectColourSchemeConst:
-    TITLE = "Select Colour Scheme"
-    SIZE = (200, 70)
             
 
 @dataclass(frozen=True)

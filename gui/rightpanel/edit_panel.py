@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from data_file import Entry
 from gui.modals.popups import message_popup, dialog_popup
 from manage_password import PasswordStrength, GeneratePassword, ValidatePassword

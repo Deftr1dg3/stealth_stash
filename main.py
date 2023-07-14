@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
 import os
+import sys
+from command import Command
 from typing import NamedTuple
 from data_file import DataFile
 from settings import Settings
 from main_frame import launch_gui
 from exceptions import UnsupportedSystem, UnreadableToDecodeTheFile
-from gui.command import Command
 from config import DataFilePath
 
-
+# print(sys.executable)
 
 settings = Settings()
 
@@ -27,8 +28,7 @@ def _path_exists(path: str) -> bool:
     
 def _get_default_datafile_path() -> str:
     path = settings.DATAFILE_PATH
-    print(f"{path=}")
-    return settings.DATAFILE_PATH
+    return path
 
 
 def _get_datafile_path() -> str:

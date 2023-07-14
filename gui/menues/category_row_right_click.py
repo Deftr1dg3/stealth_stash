@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from data_file import Category
 
 class CategotyRightClickMenu(wx.Menu):

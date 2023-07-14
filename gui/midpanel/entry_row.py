@@ -3,7 +3,7 @@
 
 import wx
 from data_file import Entry
-from gui.command import Command
+from command import Command
 from gui.midpanel.record_panel import RecordName, Username, Password, URL
 from gui.menues.entry_row_right_click import EntryRightClickMenu
 from config import MidPanelConst
@@ -28,7 +28,7 @@ class EntryRow(wx.Panel):
         self._target_colour = self._selection_colour
         self._current_colour = self._background_colour
         
-        self._colour_step = MidPanelConst.ENTRY_ROW_COLOUR_STEP  # Determines the speed of color transition
+        self._colour_step = self._colours.COLOUR_CHANGING_STEP  # Determines the speed of color transition
         self._colour_timer = wx.Timer(self)
         
         self.SetBackgroundColour(self._background_colour)

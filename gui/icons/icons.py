@@ -2,7 +2,7 @@
 
 
 import wx
-from gui.command import Command
+from command import Command
 
 class IconPanel(wx.Panel):
     def __init__(self, parent: wx.Panel, icon: str, command: Command) -> None:

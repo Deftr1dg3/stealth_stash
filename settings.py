@@ -8,7 +8,7 @@ class Settings:
     
     DEFAULT_DATAFILE_PATH = os.path.abspath("./") + os.sep + "KeyKeeperDataFile.kkdf"
     DEFAULT_BACKUP_PATH = ""
-    DEFAULT_COLOUR_SCHEME = "BLUE"
+    DEFAULT_COLOUR_SCHEME = "LIGHT_GREEN"
     
     def __init__(self) -> None:
         self._datafile_path = os.path.abspath("./") + os.sep +  "settings"

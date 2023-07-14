@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from config import TopBarConst
 
 

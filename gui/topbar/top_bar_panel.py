@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from gui.topbar.top_left_panel import TopLeftPanel
 from gui.topbar.top_mid_panel import TopMidPanel
 from gui.topbar.top_right_panel import TopRightPanel

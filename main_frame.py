@@ -4,8 +4,8 @@
 import os
 import sys
 import wx 
+from command import Command
 from gui.main_panel import MainPanel
-from gui.command import Command
 from gui.menues.top_menu import TopBarMenu
 
 
@@ -22,7 +22,7 @@ class MainFrame(wx.Frame):
     def _init_ui(self) -> None:
         MainPanel(self, self._command)
         self.SetMenuBar(TopBarMenu(self, self._command))
-        
+
     def restart(self):
         python = sys.executable
         os.execl(python, python, * sys.argv)

@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from data_file import Entry
 from gui.rightpanel.entry_state import EntryState
 from config import RightPanelConst

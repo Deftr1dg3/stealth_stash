@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import wx
+from command import Command
 from gui.topbar.top_bar_panel import TopBarPanel
 from gui.body_panel import BodyPanel
-from gui.command import Command
 
 
 class MainPanel(wx.Panel):

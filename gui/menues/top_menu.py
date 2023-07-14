@@ -2,7 +2,7 @@
 
 
 import wx
-from gui.command import Command
+from command import Command
 
 class TopBarMenu(wx.MenuBar):
     def __init__(self, main_frame: wx.Frame, command: Command):

@@ -2,10 +2,11 @@
 
 
 import wx 
+from command import Command
 from gui.leftpanel.left_panel import LeftPanel
 from gui.midpanel.mid_panel import MidPanel
 from gui.rightpanel.right_panel import RightPanel
-from gui.command import Command
+
 
 
 class BodyPanel(wx.Panel):

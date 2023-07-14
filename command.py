@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import wx
-from exceptions import RestartException
+import os
 from data_file import Category, Entry, DataFile
 from settings import Settings
 from gui.colours import ColourTheme, ColoursAssignment
 from gui.modals.popups import get_input, message_popup, dialog_popup
+from gui.modals.select_colour_scheme import launch_colour_theme_selection
 from typing import TYPE_CHECKING
 from config import CategoryExistsPopup, NewCategoryPopup, NoCategorySelectedPopup, NoEntrySelectedPopup
 from config import RemoveConfirmationPopup, RenameCategoryPopup, ChangeColourSchemeConfirmation
@@ -45,14 +46,7 @@ class Command:
         self._selected_entry_id: int = 0
         self._category_rows: dict[int, CategoryRow] = {}
         self._entry_rows: dict[int, EntryRow] = {}
-        self._colous = {
-                        "DARK": ColourTheme.DARK,
-                        "LIGHT": ColourTheme.LIGHT,
-                        "LIGHT_GREEN": ColourTheme.LIGHT_GREEN,
-                        "BLUE": ColourTheme.BLUE,
-                        "BURGUNDY": ColourTheme.BURGUNDY
-                        }
-    
+        self._colous = ColourTheme.AVAILABLE_COLOUR_SCHEMES
     
     # Search query  ----------------------------
     @property
@@ -349,10 +343,12 @@ class Command:
     def colours(self) -> ColoursAssignment:
         colours = self._colous[self._settings.COLOUR_SCHEME]
         return colours
-    
+
+    def choose_colour_scheme(self) -> None:
+        current_colour = self._settings.COLOUR_SCHEME
+        launch_colour_theme_selection(current_colour, self)
+        
     def set_colour(self, colour: str) -> None:
-        if colour not in self._colous:
-            return
         confirmed= dialog_popup(ChangeColourSchemeConfirmation.MESSAGE, ChangeColourSchemeConfirmation.TITLE)
         if confirmed:
             self._settings.COLOUR_SCHEME = colour
@@ -360,4 +356,3 @@ class Command:
         
     
     
-# first remove this line   

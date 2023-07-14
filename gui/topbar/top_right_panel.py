@@ -2,7 +2,7 @@
 
 
 import wx 
-from gui.command import Command
+from command import Command
 from config import TopBarConst
 
 
@@ -27,7 +27,7 @@ class TopRightPanel(wx.Panel):
         # Create gui objects
         entry_edit_title = wx.StaticText(self, label=TopBarConst.RIGHT_PANEL_TITLE)
         entry_edit_title.SetForegroundColour(self._text_colour)
-        self._theme_button =  wx.Button(self, label="Theme", size=(-1, -1))
+        self._theme_button =  wx.Button(self, label=TopBarConst.THEME_BUTTON_LABEL)
         
         # Add created objects to the sizers
         title_box.Add(entry_edit_title, 0, wx.TOP | wx.LEFT, 7)
@@ -47,5 +47,5 @@ class TopRightPanel(wx.Panel):
         
     
     def _on_colour_theme(self, event):
-        self._command.set_colour("BLUE")
+        self._command.choose_colour_scheme()
         
