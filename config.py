@@ -83,9 +83,11 @@ class SelectColourSchemeConst:
 
 @dataclass(frozen=True)
 class MenueConst:
+    # Fields in top menu
     FIRST_FIELD_LABEL = "File"
     SECONDFIELD_LABEL = "Edit"
     
+    # Under first field
     NEW_CATEGORY_LABEL = "New Category"
     NEW_CATEGORY_SHORTCUT = "Shift+Ctrl+N"
     REMOVE_CATEGORY_LABEL = "Remove Category"
@@ -99,10 +101,19 @@ class MenueConst:
     EXIT_LABEL = "Exit"
     EXIT_SHORTCUT = "Ctrl+Q"
     
+    # Under second field
+    COPY_USERNALE_LABEL = "Copy Username"
+    COPY_USERNAME_SHORTCUT = "Ctrl+A"
+    COPY_PASSOWRD_LABEL = "Copy Password"
+    COPY_PASSOWRD_SHORTCUT = "Ctrl+X"
+    COPY_URL_LABEL = "Copy URL"
+    COPY_URL_SHORTCUT = "Ctrl+W"
     UNDO_LABLE = "Undo"
     UNDO_SHORTCUT = "Ctrl+Z"
     REDO_LABLE = "Reverse Undo"
     REDO_SHORTCUT = "Shift+Ctrl+Z"
+
+    
 
     
     

@@ -31,6 +31,10 @@ class TopBarMenu(wx.MenuBar):
 
         # Create "Edit" menu
         edit_menu = wx.Menu()
+        edit_menu.Append(421, f"&{MenueConst.COPY_PASSOWRD_LABEL}\t{MenueConst.COPY_PASSOWRD_SHORTCUT}")
+        edit_menu.Append(422, f"&{MenueConst.COPY_USERNALE_LABEL}\t{MenueConst.COPY_USERNAME_SHORTCUT}")
+        edit_menu.Append(423, f"&{MenueConst.COPY_URL_LABEL}\t{MenueConst.COPY_URL_SHORTCUT}")
+        edit_menu.AppendSeparator()
         edit_menu.Append(31, f"&{MenueConst.UNDO_LABLE}\t{MenueConst.UNDO_SHORTCUT}")
         edit_menu.Append(32, f"&{MenueConst.REDO_SHORTCUT}\t{MenueConst.REDO_SHORTCUT}")
 
@@ -44,11 +48,19 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_remove_entry, id=4)
         self._main_frame.Bind(wx.EVT_MENU, self._on_clear_category, id=5)
         self._main_frame.Bind(wx.EVT_MENU, self._on_rename_category, id=22)
-        
         self._main_frame.Bind(wx.EVT_MENU, self._on_exit, id=30)
+        
         # Bind "Edit" menu
+        self._main_frame.Bind(wx.EVT_MENU, self._on_copy, id=421)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_copy, id=422)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_copy, id=423)
         self._main_frame.Bind(wx.EVT_MENU, self._on_undo, id=31)
         self._main_frame.Bind(wx.EVT_MENU, self._on_reverse_undo, id=32)
+        
+    
+    def _on_copy(self, event) -> None:
+        id = event.GetId()
+        self._command.copy_to_clipboard(id)
 
     def _on_add_category(self, event) -> None:
         self._command.add_category(self._main_frame)

@@ -29,7 +29,7 @@ class ColourTheme:
     DARK_DARK = wx.Colour("#252525")
     DARK_MEDIUM = wx.Colour("#343434")
     DARK_INPUT_BACKGROUND = wx.Colour("#252525")
-    DARK_SELECTION = wx.Colour("#0011FF")
+    DARK_SELECTION = wx.Colour("#3739D7")
     DARK_TEXT = wx.Colour(wx.WHITE)
     
     DARK = ColoursAssignment(TEXT=wx.Colour(DARK_TEXT),    # RGB for wx.WHITE

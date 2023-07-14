@@ -166,3 +166,12 @@ class EntryRow(wx.Panel):
     def set_regular_colour(self) -> None:
         self.SetBackgroundColour(self._background_colour)
         self.Refresh()
+        
+    def copy_username(self) -> None:
+        self._username.copy_to_clipboard()
+        
+    def copy_password(self) -> None:
+        self._password.copy_to_clipboard()
+        
+    def copy_url(self) -> None:
+        self._url.copy_to_clipboard()

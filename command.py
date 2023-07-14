@@ -355,5 +355,17 @@ class Command:
             self._settings.COLOUR_SCHEME = colour
             self.main_frame.restart()
         
+    def copy_to_clipboard(self, id: int) -> None:
+        if self.selected_entry_row is None:
+            message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
+            return
+        match id:
+            case 421:
+                self.selected_entry_row.copy_password()
+            case 422:
+                self.selected_entry_row.copy_username()
+            case 423:
+                self.selected_entry_row.copy_url()
+        
     
     
