@@ -117,10 +117,14 @@ class Category:
 class Data(dict):
     def __init__(self):
         super().__init__()
-        self["General"] = []
         self["Internet"] = []
-        self["Email"] = []
-
+        self["Emails"] = []
+        self["Crypto"] = []
+        self["Devices"] = []
+        self["Development"] = []
+        self["Work"] = []
+        self["Payments"] = []
+        self["WI-FI"] = []
 
 
 class IODataFile:
@@ -141,7 +145,7 @@ class DataFile:
     def __init__(self, file_path: str, password: str) -> None:
         self._aes_encription = AES_Encripton(password)
         self._io_data = IODataFile(file_path)
-        atexit.register(self.commit)
+        atexit.register(self._atexit)
     
     def create(self) -> None:
         self._data = Data()
@@ -156,6 +160,9 @@ class DataFile:
         except ValueError:
             raise UnreadableToDecodeTheFile()
         self._data = json.loads(json_data)
+        
+    def _atexit(self) -> None:
+        self.commit()
         
     def commit(self):
         try:

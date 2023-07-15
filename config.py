@@ -171,3 +171,17 @@ class UndoUnavailable:
 class ChangeColourSchemeConfirmation:
     TITLE = "Confirmation"
     MESSAGE = "In order to change the colour scheme the app has to be restarted. Do you want to proceed?"
+    
+
+@dataclass(frozen=True)
+class CopyPopupConst:
+    FRAME_BACKGROUND_COLOUR = "#00000000"
+    SIZE = (200, 200)
+    ROUND_ANGLE_RADIUS = 10
+    MESSAGE = "Copied..."
+    FONT_SIZE = 30
+    TRANSFORMATION_SPEED = 25
+    TRANSFORMATION_STEP = 5
+    CURRENT_TRANSPARENCY = 250
+    BACKGROUND_COLOR = "#101010"
+    TEXT_COLOUR = "white"

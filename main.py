@@ -70,14 +70,17 @@ def main():
         print("UNRABLE TO DECODE THE FILE")
         exit(1)
     command = Command(data_file, settings)
-    try:
-        launch_gui(command)
-    except Exception as ex:
-        print(f"Exception in MAIN --> {ex}")
+    
+    launch_gui(command)
+   
 
     
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit:
+        print("System exit")
+
 
 
 # There  last changes to  be jubh iub iuh oiuh

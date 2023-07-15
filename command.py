@@ -380,6 +380,5 @@ class Command:
                 self.selected_entry_row.copy_username()
             case 423:
                 self.selected_entry_row.copy_url()
-        
-    
+
     

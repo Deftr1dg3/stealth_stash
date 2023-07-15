@@ -3,7 +3,9 @@
 
 import wx
 import pyperclip
+import threading
 from command import Command
+from gui.modals.copy_popup import launch_copy_poup
 from config import MidPanelConst
 
 
@@ -55,12 +57,17 @@ class BaseRecordPanel(wx.Panel):
         
     def copy_to_clipboard(self) -> None:
         pyperclip.copy(self._record_value)
-    
-    def _on_left_dclick(self, event):
-        self.copy_to_clipboard()
+        launch_copy_poup(self._command.top)
+        
+    def _change_colour(self) -> None:
         self._set_text_colour(self._selection_colour)
         self._current_colour = self._selection_colour
         self._colour_timer.Start(10)
+    
+    def _on_left_dclick(self, event):
+        self._change_colour()
+        self.copy_to_clipboard()
+        
         
     def _on_color_timer(self, event) -> None:
         # Calculate the new color

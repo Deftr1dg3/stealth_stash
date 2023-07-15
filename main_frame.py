@@ -22,6 +22,11 @@ class MainFrame(wx.Frame):
     def _init_ui(self) -> None:
         MainPanel(self, self._command)
         self.SetMenuBar(TopBarMenu(self, self._command))
+        
+        self.Bind(wx.EVT_CLOSE, self._on_close)
+        
+    def _on_close(self, event) -> None:
+        sys.exit(0)
 
     def restart(self):
         python = sys.executable
