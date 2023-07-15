@@ -30,6 +30,10 @@ class LeftPanelConst:
     SCROLL_SETTINGS = (20, 20, 50, 50)
     CATEGORY_ROW_SIZE = (200, 30)
     ICON_FOLDER = "folder"
+    ICON_EMAIL = "mail"
+    ICON_INTERNET = "internetaccountsconnectionswwwonline"
+    ICON_DEVOPS = "git-hubgit_hubgithubpythonjavascriptc++rustrubygitlubgit-lugit_lubdevopsdevelopment"
+    ICON_CRYPTO = "btcbitcoincryptoethereumethsolsolana"
     CATEGORY_PANEL_SIZE = (170, 30)
     CATEGORY_NAME_MAX_LENGTH = 16
     EXTRA_CHARACTERS_REPLACEMENT = "..."
@@ -74,8 +78,8 @@ class SelectColourSchemeConst:
     TITLE = "Select Colour Scheme"
     SIZE = (300, 190)
     STYLE = wx.CLOSE_BOX
-    BACKGROUND_COLOUR = wx.Colour("#202020")
-    CIRCLE_PANEL_PEN_COLOUR = wx.Colour("GREY")
+    BACKGROUND_COLOUR = "#202020"
+    CIRCLE_PANEL_PEN_COLOUR = "GREY"
     CIRCLE_PANEL_PEN_SIZE = 2
     BUTTON_CONFIRM_LABEL = "Confirm"
     BUTTON_CANCEL_LABEL = "Cancel"

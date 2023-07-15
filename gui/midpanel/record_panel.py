@@ -9,7 +9,6 @@ from gui.modals.copy_popup import launch_copy_poup
 from config import MidPanelConst
 
 
-
 class BaseRecordPanel(wx.Panel):
     def __init__(self, parent_panel: wx.Panel, record_value: str, command: Command) -> None:
         self._record_value = record_value
@@ -67,7 +66,6 @@ class BaseRecordPanel(wx.Panel):
     def _on_left_dclick(self, event):
         self._change_colour()
         self.copy_to_clipboard()
-        
         
     def _on_color_timer(self, event) -> None:
         # Calculate the new color

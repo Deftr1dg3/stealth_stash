@@ -103,7 +103,7 @@ class ColourTheme:
                             INPUT_BACKGROUND=wx.Colour(BLUE_INPUT_BACKGROUND),
                             PEN=wx.Colour(BLUE_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(BLUE_DARK),
-                            COLOUR_CHANGING_STEP = 3
+                            COLOUR_CHANGING_STEP = 4
                             )
     
     BURGUNDY_DARK = wx.Colour("#37171E")
@@ -123,7 +123,7 @@ class ColourTheme:
                             INPUT_BACKGROUND=wx.Colour(BURGUNDY_INPUT_BACKGROUND),
                             PEN=wx.Colour(BURGUNDY_MEDIUM), 
                             TEXTCTRL_BACKGROUND = wx.Colour(BURGUNDY_DARK),
-                            COLOUR_CHANGING_STEP = 3
+                            COLOUR_CHANGING_STEP = 4
                             )
     #  Start here oihn
     PURPLE_DARK = wx.Colour("#350C63")

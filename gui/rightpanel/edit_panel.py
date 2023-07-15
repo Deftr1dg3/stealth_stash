@@ -276,6 +276,7 @@ class EditPanel(wx.Panel):
             self._password.SetValue(self.entry.password)
             self._reveal_password.SetLabel(self._show_password_label)
             self.Layout()
+
             
             
     def manage_self_states(self, direction: int = 1):

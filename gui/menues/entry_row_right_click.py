@@ -28,14 +28,19 @@ class EntryRightClickMenu(wx.Menu):
         self.Append(33, f"&{self._remove_button_label}\t{self._remove_button_shortcut}")
    
     def _bind_events(self) -> None:
-        self.Bind(wx.EVT_MENU, self._on_copy, id=421)
-        self.Bind(wx.EVT_MENU, self._on_copy, id=422)
-        self.Bind(wx.EVT_MENU, self._on_copy, id=423)
+        self.Bind(wx.EVT_MENU, self._on_copy_password, id=421)
+        self.Bind(wx.EVT_MENU, self._on_copy_username, id=422)
+        self.Bind(wx.EVT_MENU, self._on_copy_url, id=423)
         self.Bind(wx.EVT_MENU, self._on_remove_entry, id=33)
         
-    def _on_copy(self, event) -> None:
-        id = event.GetId()
-        self._command.copy_to_clipboard(id)
+    def _on_copy_password(self, event) -> None:
+        self._command.copy_to_clipboard(1)
+        
+    def _on_copy_username(self, event) -> None:
+        self._command.copy_to_clipboard(2)
+    
+    def _on_copy_url(self, event) -> None:
+        self._command.copy_to_clipboard(3)
                
     def _on_remove_entry(self, event) -> None:
         self._command.remove_entry(self._entry)

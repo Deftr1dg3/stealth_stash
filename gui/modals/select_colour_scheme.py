@@ -19,7 +19,7 @@ class CirclePanel(wx.Panel):
         self.SetBackgroundColour(SelectColourSchemeConst.BACKGROUND_COLOUR)
         
         self._colour = colour
-        self._pen_colour = SelectColourSchemeConst.CIRCLE_PANEL_PEN_COLOUR
+        self._pen_colour = wx.Colour(SelectColourSchemeConst.CIRCLE_PANEL_PEN_COLOUR)
         self._pen_size = SelectColourSchemeConst.CIRCLE_PANEL_PEN_SIZE
         
         self._bind_events()
@@ -48,7 +48,7 @@ class SelectColourScheme(wx.Frame):
         
         self._current_colour = current_colour
         
-        self.SetBackgroundColour(SelectColourSchemeConst.BACKGROUND_COLOUR)
+        self.SetBackgroundColour(wx.Colour(SelectColourSchemeConst.BACKGROUND_COLOUR))
         
         self._button_confirm_label = SelectColourSchemeConst.BUTTON_CONFIRM_LABEL
         self._button_cancel_label = SelectColourSchemeConst.BUTTON_CANCEL_LABEL

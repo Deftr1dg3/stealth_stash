@@ -374,11 +374,9 @@ class Command:
             message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
             return
         match id:
-            case 421:
+            case 1:
                 self.selected_entry_row.copy_password()
-            case 422:
+            case 2:
                 self.selected_entry_row.copy_username()
-            case 423:
+            case 3:
                 self.selected_entry_row.copy_url()
-
-    

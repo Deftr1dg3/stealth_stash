@@ -63,8 +63,23 @@ class CategoryRow(wx.Panel):
         icon_box = wx.BoxSizer(wx.VERTICAL)
         category_box = wx.BoxSizer(wx.VERTICAL)
         
-        # Create gui objects
-        self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._command)
+        # Create Icon, depending on the category name
+        if self._category.name.lower() in LeftPanelConst.ICON_INTERNET:
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_INTERNET, self._command)
+            
+        elif LeftPanelConst.ICON_EMAIL in self._category.name.lower():
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_EMAIL, self._command)
+            
+        elif self._category.name.lower() in LeftPanelConst.ICON_CRYPTO:
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_CRYPTO, self._command)
+            
+        elif self._category.name.lower() in LeftPanelConst.ICON_DEVOPS:
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_DEVOPS, self._command)
+            
+        else:
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._command)
+        
+        # Create category panel object
         self._display_category = CategoryPanel(self, self._category.name, self._command)
         
         # Add gui objects to secondary sizers

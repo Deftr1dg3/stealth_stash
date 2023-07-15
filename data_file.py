@@ -120,11 +120,11 @@ class Data(dict):
         self["Internet"] = []
         self["Emails"] = []
         self["Crypto"] = []
-        self["Devices"] = []
         self["Development"] = []
-        self["Work"] = []
+        self["Databases"] = []
+        self["Funds"] = []
         self["Payments"] = []
-        self["WI-FI"] = []
+    
 
 
 class IODataFile:
