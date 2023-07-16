@@ -5,7 +5,7 @@ import json
 import atexit
 from base64 import b64encode, b64decode
 from aes import AES_Encripton
-from exceptions import UnreadableToDecodeTheFile
+from exceptions import UnableToDecodeTheFile
 from manage_password import PasswordStrength, GeneratePassword
 from backup import BackUp
 
@@ -145,11 +145,33 @@ class IODataFile:
 
 
 class DataFile:
-    def __init__(self, file_path: str, password: str) -> None:
-        self._aes_encription = AES_Encripton(password)
+    def __init__(self, file_path: str) -> None:
+        # self._aes_encription = AES_Encripton(password)
         self._io_data = IODataFile(file_path)
         self._backup = BackUp()
+        self._datafile_path = file_path
+        self._password = ""
         atexit.register(self._atexit)
+    
+    @property
+    def datafile(self) -> str:
+        return self._datafile_path
+    
+    @datafile.setter
+    def datafile(self, path: str) -> None:
+        self._io_data = IODataFile(path)
+        self._datafile_path = path
+        
+    @property
+    def password(self) -> str:
+        return self._password 
+    
+    @password.setter
+    def password(self, password: str) -> None:
+        if password:
+            self._password = password
+            self._aes_encription = AES_Encripton(password)
+    
     
     def create(self) -> None:
         self._data = Data()
@@ -162,7 +184,7 @@ class DataFile:
             decrypted_bytes_data = self._aes_encription.decrypt(encrypted_bytes_data)
             json_data = decrypted_bytes_data.decode("utf-8")
         except ValueError:
-            raise UnreadableToDecodeTheFile()
+            raise UnableToDecodeTheFile()
         self._data = json.loads(json_data)
         
     def _atexit(self) -> None:

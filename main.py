@@ -7,7 +7,8 @@ from typing import NamedTuple
 from data_file import DataFile
 from settings import Settings
 from main_frame import launch_gui
-from exceptions import UnsupportedSystem, UnreadableToDecodeTheFile
+from get_password import launch_get_password
+from exceptions import UnsupportedSystem, UnableToDecodeTheFile
 from config import DataFilePath
 
 # print(sys.executable)
@@ -46,13 +47,18 @@ def _get_password() -> str:
 
 
 def _load_data(file_path: str, password: str) -> DataFile:
-    data_file = DataFile(file_path, password)
-    if not os.path.exists(file_path):
-        dirname = os.path.dirname(file_path)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-        data_file.create() 
-    data_file.load_data()
+    
+    data_file = DataFile(file_path)
+    
+    launch_get_password(data_file, settings.COLOUR_SCHEME)
+    
+    # if not os.path.exists(file_path):
+    #     dirname = os.path.dirname(file_path)
+    #     if not os.path.exists(dirname):
+    #         os.makedirs(dirname)
+    #     data_file.create() 
+    # data_file.load_data()
+    
     return data_file
 
 
@@ -69,7 +75,7 @@ def main():
         exit(1)
     try:
         data_file = _load_data(path, password)
-    except UnreadableToDecodeTheFile:
+    except UnableToDecodeTheFile:
         print("UNRABLE TO DECODE THE FILE")
         exit(1)
     command = Command(data_file, settings)

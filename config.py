@@ -9,6 +9,24 @@ app = wx.App()
 class DataFilePath:
     DATA_FILE_PATH = "/Users/stasusbondevito/Documents/PYTHON/Projects/KeyKeeper"
     BACKUP_PATH = ""
+    
+    
+@dataclass(frozen=True)
+class PassowrdWindowConst:
+    TITLE = "Key Keeper"
+    SIZE = (400, 200)
+    STYLE = wx.CLOSE_BOX
+    PASSOWRD_HINT = "Insert password ... "
+    CHOOSE_DATAFILE_LABEL = "^ Choose another DataFile"
+    DIALOG_MESSAGE = "Either the file is not correct or password. Do you wish to try again?"
+    DIALOG_TITLE = "Unable to decode the file."
+    
+    
+@dataclass(frozen=True)
+class MainFrameConst:
+    TITLE = "Key Keeper"
+    SIZE = (1100, 600)
+    MIN_SIZE = (800, 400)
 
 
 @dataclass(frozen=True)

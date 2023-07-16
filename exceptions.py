@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-class UnreadableToDecodeTheFile(Exception):
+class UnableToDecodeTheFile(Exception):
     ... 
     
 class UnsupportedSystem(Exception):

@@ -15,8 +15,11 @@ def message_popup(message: str = "", title: str = "", parent: (wx.Panel | None) 
         dlg.ShowModal()
         dlg.Destroy()
         
-def dialog_popup(message: str = "", title: str = "", parent: (wx.Panel | None) = None) -> bool:
-    dialog = wx.MessageDialog(None, message, title, wx.YES_NO | wx.ICON_QUESTION | wx.NO_DEFAULT)
+def dialog_popup(message: str = "", title: str = "", yes_default=False, parent: (wx.Panel | None) = None) -> bool:
+    if yes_default:
+        dialog = wx.MessageDialog(None, message, title, wx.YES_NO | wx.ICON_QUESTION | wx.YES_DEFAULT)
+    else:
+        dialog = wx.MessageDialog(None, message, title, wx.YES_NO | wx.ICON_QUESTION | wx.NO_DEFAULT)
     result = dialog.ShowModal()
     dialog.Destroy()
     if result == wx.ID_YES:

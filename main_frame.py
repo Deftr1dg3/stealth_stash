@@ -7,6 +7,7 @@ import wx
 from command import Command
 from gui.main_panel import MainPanel
 from gui.menues.top_menu import TopBarMenu
+from config import MainFrameConst
 
 
 class MainFrame(wx.Frame):
@@ -14,9 +15,15 @@ class MainFrame(wx.Frame):
         super().__init__(None)
         self._command = command
         self._command.main_frame = self
-        self.SetSize((1100, 600))
-        self.SetTitle('Key Keeper')
-        self.SetMinSize((800, 400))
+        
+        self._colours = self._command.colours()
+        
+        self.SetBackgroundColour(self._colours.MID_PANEL)
+        
+        self.SetSize(MainFrameConst.SIZE)
+        self.SetTitle(MainFrameConst.TITLE)
+        self.SetMinSize(MainFrameConst.MIN_SIZE)
+        
         self._init_ui()
         
     def _init_ui(self) -> None:
