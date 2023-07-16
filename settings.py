@@ -6,8 +6,8 @@ import json
 
 class Settings:
     
-    DEFAULT_DATAFILE_PATH = os.path.abspath("./") + os.sep + "KeyKeeperDataFile.kkdf"
-    DEFAULT_BACKUP_PATH = ""
+    DEFAULT_DATAFILE_PATH = os.path.abspath("./") + os.sep + "data" + os.sep + "KeyKeeperDataFile.kkdf"
+    DEFAULT_BACKUP_PATH = os.path.abspath("./") + os.sep + ".backup"
     DEFAULT_COLOUR_SCHEME = "LIGHT_GREEN"
     
     def __init__(self) -> None:

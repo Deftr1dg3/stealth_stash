@@ -25,14 +25,14 @@ class DefaultPath(NamedTuple):
 def _path_exists(path: str) -> bool:
     return os.path.exists(path)
         
-    
-def _get_default_datafile_path() -> str:
-    path = settings.DATAFILE_PATH
-    return path
+
 
 
 def _get_datafile_path() -> str:
-    path = _get_default_datafile_path()
+    path = settings.DATAFILE_PATH
+    return path
+        
+    
     return path
   
 
@@ -47,8 +47,11 @@ def _get_password() -> str:
 
 def _load_data(file_path: str, password: str) -> DataFile:
     data_file = DataFile(file_path, password)
-    if not _path_exists(file_path):
-        data_file.create()
+    if not os.path.exists(file_path):
+        dirname = os.path.dirname(file_path)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        data_file.create() 
     data_file.load_data()
     return data_file
 

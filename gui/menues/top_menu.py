@@ -2,6 +2,7 @@
 
 
 import wx
+import sys
 from command import Command
 from config import MenueConst
 
@@ -87,6 +88,7 @@ class TopBarMenu(wx.MenuBar):
 
     def _on_exit(self, event) -> None:
         self._main_frame.Destroy()
+        sys.exit(0)
     
     def _on_undo(self, event) -> None:
         try:

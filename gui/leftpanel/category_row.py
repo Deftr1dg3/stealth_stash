@@ -64,17 +64,26 @@ class CategoryRow(wx.Panel):
         category_box = wx.BoxSizer(wx.VERTICAL)
         
         # Create Icon, depending on the category name
-        if self._category.name.lower() in LeftPanelConst.ICON_INTERNET:
-            self._display_icon = IconPanel(self, LeftPanelConst.ICON_INTERNET, self._command)
-            
-        elif LeftPanelConst.ICON_EMAIL in self._category.name.lower():
+        if set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_EMAIL):
             self._display_icon = IconPanel(self, LeftPanelConst.ICON_EMAIL, self._command)
             
-        elif self._category.name.lower() in LeftPanelConst.ICON_CRYPTO:
+        elif set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_CRYPTO):
             self._display_icon = IconPanel(self, LeftPanelConst.ICON_CRYPTO, self._command)
             
-        elif self._category.name.lower() in LeftPanelConst.ICON_DEVOPS:
+        elif set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_DEVOPS):
             self._display_icon = IconPanel(self, LeftPanelConst.ICON_DEVOPS, self._command)
+        
+        elif set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_DATABASE):
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_DATABASE, self._command)
+        
+        elif set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_FUNDS):
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_FUNDS, self._command)
+        
+        elif set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_PAYMENTS):
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_PAYMENTS, self._command)
+            
+        elif set(self._category.name.lower().split()).intersection(LeftPanelConst.ICON_INTERNET):
+            self._display_icon = IconPanel(self, LeftPanelConst.ICON_INTERNET, self._command)  
             
         else:
             self._display_icon = IconPanel(self, LeftPanelConst.ICON_FOLDER, self._command)

@@ -7,6 +7,7 @@ from base64 import b64encode, b64decode
 from aes import AES_Encripton
 from exceptions import UnreadableToDecodeTheFile
 from manage_password import PasswordStrength, GeneratePassword
+from backup import BackUp
 
 
 class Entry:
@@ -124,6 +125,7 @@ class Data(dict):
         self["Databases"] = []
         self["Funds"] = []
         self["Payments"] = []
+        self["Apps"] = []
     
 
 
@@ -141,10 +143,12 @@ class IODataFile:
             f.write(data)
 
 
+
 class DataFile:
     def __init__(self, file_path: str, password: str) -> None:
         self._aes_encription = AES_Encripton(password)
         self._io_data = IODataFile(file_path)
+        self._backup = BackUp()
         atexit.register(self._atexit)
     
     def create(self) -> None:
@@ -163,16 +167,17 @@ class DataFile:
         
     def _atexit(self) -> None:
         self.commit()
+        self._backup.save_backup_file(self._json_data, self._b64_str_data)
         
     def commit(self):
         try:
-            json_data = json.dumps(self._data)
+            self._json_data = json.dumps(self._data)
         except AttributeError:
             return 
-        bytes_data = json_data.encode("utf-8")
+        bytes_data = self._json_data.encode("utf-8")
         encrypted_bytes_packet = self._aes_encription.encrypt(bytes_data)
-        b64_str_data = b64encode(encrypted_bytes_packet).decode('utf-8')
-        self._io_data.save_data(b64_str_data)
+        self._b64_str_data = b64encode(encrypted_bytes_packet).decode('utf-8')
+        self._io_data.save_data(self._b64_str_data)
         
     def get_category_data(self, category: str) -> list[list]:
         return self._data[category]
