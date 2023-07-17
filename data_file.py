@@ -146,7 +146,6 @@ class IODataFile:
 
 class DataFile:
     def __init__(self, file_path: str) -> None:
-        # self._aes_encription = AES_Encripton(password)
         self._io_data = IODataFile(file_path)
         self._backup = BackUp()
         self._datafile_path = file_path

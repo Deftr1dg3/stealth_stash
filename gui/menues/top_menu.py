@@ -25,6 +25,10 @@ class TopBarMenu(wx.MenuBar):
         file_menu.AppendSeparator()
         file_menu.Append(5, f"&{MenueConst.CLEAR_CATEGORY_LABEL}")
         file_menu.AppendSeparator()
+        file_menu.Append(6, f"&{MenueConst.CHANGE_PASSOWRD_LABEL}")
+        file_menu.Append(7, f"&{MenueConst.SHOW_DATAFILE_IN_FOLDER_LABEL}")
+        file_menu.Append(8, f"&{MenueConst.CHANGE_DATAFILE_DIRECTORY_LABEL}")
+        file_menu.Append(9, f"&{MenueConst.CHANGE_DATAFILE_LABEL}")
         file_menu.AppendSeparator()
         file_menu.Append(30, f"&{MenueConst.EXIT_LABEL}\t{MenueConst.EXIT_SHORTCUT}")
 
@@ -48,6 +52,11 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_remove_category, id=3)
         self._main_frame.Bind(wx.EVT_MENU, self._on_remove_entry, id=4)
         self._main_frame.Bind(wx.EVT_MENU, self._on_clear_category, id=5)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_change_file_password, id=6)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_show_datafile_in_folder, id=7)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_change_datafile_directory, id=8)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_change_datafile, id=9)
+        
         self._main_frame.Bind(wx.EVT_MENU, self._on_rename_category, id=22)
         self._main_frame.Bind(wx.EVT_MENU, self._on_exit, id=30)
         
@@ -58,7 +67,18 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_undo, id=31)
         self._main_frame.Bind(wx.EVT_MENU, self._on_reverse_undo, id=32)
         
+    def _on_change_datafile(self, event) -> None:
+        self._command.change_datafile()
+        
+    def _on_change_datafile_directory(self, event) -> None:
+        self._command.change_datafile_directory()
+        
+    def _on_show_datafile_in_folder(self, event) -> None:
+        self._command.show_datafile_in_folder()
     
+    def _on_change_file_password(self, event) -> None:
+        self._command.set_new_password()
+        
     def _on_copy_password(self, event) -> None:
         self._command.copy_to_clipboard(1)
         

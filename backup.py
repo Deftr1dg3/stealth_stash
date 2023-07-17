@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from hashlib import sha256
 from settings import Settings
+from config import GeneralConst
 
 
 settings = Settings()
@@ -26,15 +27,14 @@ class BackUp:
     def _control_hash_path(self) -> str:
         if not os.path.exists(self._CONTROL_HASH_PATH):
             dirname = os.path.dirname(self._CONTROL_HASH_PATH)
-            if not os.path.exists(dirname):
-                os.makedirs(dirname)
-            with open(self._CONTROL_HASH_PATH, "w") as f:
+            os.makedirs(dirname, exist_ok=True)
+            with open(self._CONTROL_HASH_PATH, "w", encoding="utf-8") as f:
                 ...
         return self._CONTROL_HASH_PATH
         
     def _get_backup_file_name(self) -> str:
-        seconds = int(datetime.now().timestamp())
-        file_name = str(seconds)
+        current_datetime = datetime.now()
+        file_name = current_datetime.strftime("%Y-%m-%d_%H-%M-%S") + GeneralConst.DATAFILE_EXTENSION
         return file_name
 
     def _create_control_hash(self, json_data: str) -> str:
@@ -58,7 +58,7 @@ class BackUp:
         file_path = self._backup_dir + os.sep + file_name 
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(b64_data)
-        with open(self._hash_file, "w") as f:
+        with open(self._hash_file, "w", encoding="utf-8") as f:
             f.write(self._new_hash)
     
     def save_backup_file(self, json_data: str, b64_data: str) -> None:

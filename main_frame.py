@@ -35,7 +35,7 @@ class MainFrame(wx.Frame):
     def _on_close(self, event) -> None:
         sys.exit(0)
 
-    def restart(self):
+    def restart(self) -> None:
         python = sys.executable
         os.execl(python, python, * sys.argv)
     

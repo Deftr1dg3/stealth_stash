@@ -168,12 +168,20 @@ class EditPanel(wx.Panel):
         # Refresh layout
         self.Layout()
         
+        # Create dummy element to Kill Focus in main elements
+        self.dummy_panel = wx.Panel(self, size=(0, 0))
+        
         
     def _bind_events(self):
         self._record_name.Bind(wx.EVT_TEXT, self._on_record_name)
         self._username.Bind(wx.EVT_TEXT, self._on_username)
         self._password.Bind(wx.EVT_TEXT, self._on_password)
         self._url.Bind(wx.EVT_TEXT, self._on_url)
+        
+        self._record_name.Bind(wx.EVT_TEXT_ENTER, self._on_enter_pressed)
+        self._username.Bind(wx.EVT_TEXT_ENTER, self._on_enter_pressed)
+        self._password.Bind(wx.EVT_TEXT_ENTER, self._on_enter_pressed)
+        self._url.Bind(wx.EVT_TEXT_ENTER, self._on_enter_pressed)
         
         self._reveal_password.Bind(wx.EVT_BUTTON, self._on_show_password)
         self._generate_password_button.Bind(wx.EVT_BUTTON, self._on_generate_password)
@@ -185,6 +193,12 @@ class EditPanel(wx.Panel):
         self._password.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
         self._url.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
         
+    
+    def _on_enter_pressed(self, event) -> None:
+        obj = event.GetEventObject()
+        if obj.HasFocus():
+            self.dummy_panel.SetFocus()
+            
         
     def _on_set_focus(self, event) -> None:
         self._undo_available = True

@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import wx
 import os
+import subprocess
 from data_file import Category, Entry, DataFile
 from settings import Settings
 from gui.colours import ColourTheme, ColoursAssignment
-from gui.modals.popups import get_input, message_popup, dialog_popup
+from gui.modals.popups import get_input, message_popup, dialog_popup, save_file_as, select_dir, select_file
 from gui.modals.select_colour_scheme import launch_colour_theme_selection
+from set_new_password import launch_set_new_password
 from typing import TYPE_CHECKING
 from config import CategoryExistsPopup, NewCategoryPopup, NoCategorySelectedPopup, NoEntrySelectedPopup
 from config import RemoveConfirmationPopup, RenameCategoryPopup, ChangeColourSchemeConfirmation
@@ -380,3 +382,32 @@ class Command:
                 self.selected_entry_row.copy_username()
             case 3:
                 self.selected_entry_row.copy_url()
+                
+    def set_new_password(self) -> None:
+        launch_set_new_password(self._data_file, self._settings, change_password=True)
+        
+    def show_datafile_in_folder(self) -> None:
+        datafile_path = self._settings.DATAFILE_PATH
+        script = """
+                    tell application "Finder"
+                        run
+                        activate
+                        reveal POSIX file "%s"
+                    end tell
+        """ % (datafile_path)
+        subprocess.call(["osascript", "-e", script])
+        
+    def change_datafile_directory(self) -> None:
+        save_as = save_file_as()
+        if save_as is not None:
+            self._data_file.datafile = save_as
+            self._settings.DATAFILE_PATH = save_as
+            self._data_file.commit()
+            
+    def change_datafile(self) -> None:
+        new_file = select_file()
+        if new_file is not None:
+            self._settings.DATAFILE_PATH = new_file
+            self._main_frame.restart()
+                
+

@@ -5,11 +5,47 @@ from dataclasses import dataclass
 from manage_password import PasswordStrength
 app = wx.App()
 
+
+
 @dataclass(frozen=True)
-class DataFilePath:
-    DATA_FILE_PATH = "/Users/stasusbondevito/Documents/PYTHON/Projects/KeyKeeper"
-    BACKUP_PATH = ""
+class GeneralConst:
+    DATAFILE_EXTENSION = ".kkdf"
+    DEFAULT_DATAFILE_NAME = "KeyKeeper"
     
+
+@dataclass(frozen=True)
+class PassowrdStrengthConst:
+    VERY_WEAK = "VERY WEAK"
+    WEAK = "WEAK"
+    MEDIUM = "MEDIUM"
+    STRONG = "STRONG"
+    VERY_STRONG = "VERY STRONG"
+
+    
+@dataclass(frozen=True)
+class SetNewPasswordConst:
+    TITLE = "Create New Password"
+    CONFIRM_LABEL = "Confirm"
+    CANCEL_LABEL = "Cancel"
+    PASSWORD_STRENGTH_TITLE_LABEL = "Password strength:"
+    NEW_PASSOWRD_HINT = "Insert new password"
+    CONFIRM_NEW_PASSWORD_HINT = "Confirm new password"
+    VERY_WEAK_COLOUR = "#9B0602"
+    WEAK_COLOUR = "#B03B03"
+    MEDIUM_COLOUR = "#C8B903"
+    STRONG_COLOUR = "#11D900"
+    VERY_STROG_COLOUR = "#1CE500"
+    INPUT_FIELD_SIZE = (200, -1)
+    DISTANCE_BETWEEN_BUTTONS = 10
+    
+
+@dataclass(frozen=True)
+class NewLaunchConst:
+    TITLE = "Key Keeper"
+    WRONG_EXTENSION_TITLE = "Wrong File Extension"
+    WRONG_EXTENSION_MESSAGE = "Provided file has wrong extension and most probably is incompatible with current app. Do you wish to proceed anyway?"
+    CREATE_NEW_LABEL = "Create new DataFile"
+    IMPORT_DATAFILE_LABEL = "Import existing DataFile"
     
 @dataclass(frozen=True)
 class PassowrdWindowConst:
@@ -118,11 +154,15 @@ class MenueConst:
     REMOVE_CATEGORY_LABEL = "Remove Category"
     REMOVE_CATEGORY_SHORTCUT = "Shift+Ctrl+D" 
     RENAME_CATEGORY_LABEL = "Rename Category"
-    CLEAR_CATEGORY_LABEL = "Clear category"
     NEW_ENTRY_LABEL = "New Entry"
     NEW_ENTRY_SHORTCUT = "Ctrl+N"
     REMOVE_ENTRY_LABEL = "Remove Entry"
     REMOVE_ENTRY_SHORTCUT = "Ctrl+D"
+    CLEAR_CATEGORY_LABEL = "Clear Category"
+    CHANGE_PASSOWRD_LABEL = "Change Password"
+    SHOW_DATAFILE_IN_FOLDER_LABEL = "Show DataFile in Folder"
+    CHANGE_DATAFILE_DIRECTORY_LABEL = "Change Datafile Directory to ..."
+    CHANGE_DATAFILE_LABEL = "Choose Another DataFile"
     EXIT_LABEL = "Exit"
     EXIT_SHORTCUT = "Ctrl+Q"
     
@@ -186,6 +226,43 @@ class RemoveConfirmationPopup:
     TITLE = "INPORTANT: Confirmation"
     MESSAGE = "All content of the '{}' will be permanentely LOST.\nARE YOU SURE YOU WANT TO CONTINUE?"
     
+@dataclass(frozen=True)
+class WrongExtensionPopup:
+    TITLE = "Wrong File Extension"
+    MESSAGE = "Provided file has wrong extension and most probably is incompatible with current app. Do you wish to proceed anyway?"
+    
+
+@dataclass(frozen=True)
+class PasswordDoesNotMatchPopup:
+    TITLE = "Error."
+    MESSAGE = "Confirmation of password does not match."
+    
+    
+@dataclass(frozen=True)
+class PasswordCreatedPopup:
+    TITLE = "The password has been applied"
+    MESSAGE = "IMPORTANT.\nPlease remember this passowrd. There is no way to restore it."
+    
+
+@dataclass(frozen=True)
+class SaveAsPopup:
+    TITLE = "Save KeyKeeper Datafile As..."
+
+
+
+@dataclass(frozen=True)
+class SelectFilePopup:
+    TITLE = "Choose a file"
+    WILDCARD = "*.*"
+    DEFAULT_DIRECTORY = "./"
+    
+@dataclass(frozen=True)
+class SelectDirectoryPopup:
+    TITLE = "Choose a directory:"
+    
+    
+    
+
     
 @dataclass(frozen=True)
 class UndoUnavailable:

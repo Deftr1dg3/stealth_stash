@@ -3,81 +3,54 @@
 import os
 import sys
 from command import Command
-from typing import NamedTuple
 from data_file import DataFile
 from settings import Settings
 from main_frame import launch_gui
-from get_password import launch_get_password
+from get_password_from_user import launch_get_password
+from first_launch import launch_first_start
 from exceptions import UnsupportedSystem, UnableToDecodeTheFile
-from config import DataFilePath
 
-# print(sys.executable)
 
 settings = Settings()
-
-current_dir = DataFilePath.DATA_FILE_PATH
-
-class DefaultPath(NamedTuple):
-    DARWIN = current_dir + os.sep + "gui" + os.sep + "KeyKeeperDataFile.kkdf"
-    LINUX = ""
-    WINDOWS = ""
-
-
-def _path_exists(path: str) -> bool:
-    return os.path.exists(path)
-        
-
 
 
 def _get_datafile_path() -> str:
     path = settings.DATAFILE_PATH
     return path
-        
-    
-    return path
-  
-
-def _unable_to_decode():
-    ...
-      
-    
-def _get_password() -> str:
-    password = "pass"
-    return password
 
 
-def _load_data(file_path: str, password: str) -> DataFile:
-    
+def _validate_file_path(file_path: str) -> bool:
+    if not os.path.exists(file_path):
+        dirname = os.path.dirname(file_path)
+        os.makedirs(dirname, exist_ok=True)
+        return False
+    return True
+
+
+def _load_data(file_path: str) -> DataFile:
+    file_exists = _validate_file_path(file_path)
+    colour = settings.COLOUR_SCHEME
     data_file = DataFile(file_path)
-    
-    launch_get_password(data_file, settings.COLOUR_SCHEME)
-    
-    # if not os.path.exists(file_path):
-    #     dirname = os.path.dirname(file_path)
-    #     if not os.path.exists(dirname):
-    #         os.makedirs(dirname)
-    #     data_file.create() 
-    # data_file.load_data()
-    
-    return data_file
+    if not file_exists:
+        launch_first_start(data_file, settings)
+        return data_file
+    else:
+        launch_get_password(data_file, settings)
+        return data_file
 
 
 def main():
     try:
         path = _get_datafile_path()
-    except UnsupportedSystem:
-        print(f"Unsupported system. Exit(1)")
-        exit(1)
-    try:
-        password = _get_password()
     except Exception as ex:
-        print(f"Occured exception whyle getting password from user -->\n{ex}")
+        print(f"Exception in MAIN --> {ex}")
         exit(1)
     try:
-        data_file = _load_data(path, password)
-    except UnableToDecodeTheFile:
-        print("UNRABLE TO DECODE THE FILE")
+        data_file = _load_data(path)
+    except Exception as ex:
+        print(f"Exception in MAIN --> {ex}")
         exit(1)
+        
     command = Command(data_file, settings)
     
     launch_gui(command)
@@ -87,8 +60,9 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except SystemExit:
-        print("System exit")
+    except Exception as ex:
+        print(f"Exception in MAIN --> {ex}")
+        exit(1)
 
 
 
