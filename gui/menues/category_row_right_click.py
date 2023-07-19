@@ -17,8 +17,8 @@ class CategoryRightClickMenu(wx.Menu):
         
     def _init_menu(self) -> None:
         self.Append(1, f'&{MenueConst.RENAME_CATEGORY_LABEL}')
-        self.Append(2, f'&{MenueConst.REMOVE_CATEGORY_LABEL}\t{MenueConst.REMOVE_CATEGORY_SHORTCUT}')
         self.AppendSeparator()
+        self.Append(2, f'&{MenueConst.REMOVE_CATEGORY_LABEL}\t{MenueConst.REMOVE_CATEGORY_SHORTCUT}')
         self.Append(3, f'&{MenueConst.CLEAR_CATEGORY_LABEL}')
 
     def _bind_events(self) -> None:

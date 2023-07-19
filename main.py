@@ -5,9 +5,9 @@ import sys
 from command import Command
 from data_file import DataFile
 from settings import Settings
-from main_frame import launch_gui
-from get_password_from_user import launch_get_password
-from first_launch import launch_first_start
+from gui.main_frame import launch_gui
+from gui.modals.get_password_from_user import launch_get_password
+from gui.modals.first_launch import launch_first_start
 from exceptions import UnsupportedSystem, UnableToDecodeTheFile
 
 
@@ -29,7 +29,6 @@ def _validate_file_path(file_path: str) -> bool:
 
 def _load_data(file_path: str) -> DataFile:
     file_exists = _validate_file_path(file_path)
-    colour = settings.COLOUR_SCHEME
     data_file = DataFile(file_path)
     if not file_exists:
         launch_first_start(data_file, settings)
@@ -40,15 +39,12 @@ def _load_data(file_path: str) -> DataFile:
 
 
 def main():
-    try:
-        path = _get_datafile_path()
-    except Exception as ex:
-        print(f"Exception in MAIN --> {ex}")
-        exit(1)
+    path = _get_datafile_path()
+
     try:
         data_file = _load_data(path)
     except Exception as ex:
-        print(f"Exception in MAIN --> {ex}")
+        print(f"Exception in MAIN datafile --> {ex}")
         exit(1)
         
     command = Command(data_file, settings)

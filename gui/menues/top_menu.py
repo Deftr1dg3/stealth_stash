@@ -4,7 +4,7 @@
 import wx
 import sys
 from command import Command
-from config import MenueConst
+from config import MenueConst, GeneralConst
 
 class TopBarMenu(wx.MenuBar):
     def __init__(self, main_frame: wx.Frame, command: Command):
@@ -15,6 +15,7 @@ class TopBarMenu(wx.MenuBar):
         self._bind_events()
         
     def _init_menu(self):
+        
         # Create "File" menu
         file_menu = wx.Menu()
         file_menu.Append(1, f"&{MenueConst.NEW_CATEGORY_LABEL}\t{MenueConst.NEW_CATEGORY_SHORTCUT}")
@@ -25,12 +26,13 @@ class TopBarMenu(wx.MenuBar):
         file_menu.AppendSeparator()
         file_menu.Append(5, f"&{MenueConst.CLEAR_CATEGORY_LABEL}")
         file_menu.AppendSeparator()
-        file_menu.Append(6, f"&{MenueConst.CHANGE_PASSOWRD_LABEL}")
+        file_menu.Append(11, f"&{MenueConst.SAVE_DATAFILE_AS_LABEL}\t{MenueConst.SAVE_DATAFILE_AS_SHORTCUT}")
+        file_menu.Append(9, f"&{MenueConst.CHANGE_DATAFILE_LABEL}")
         file_menu.Append(7, f"&{MenueConst.SHOW_DATAFILE_IN_FOLDER_LABEL}")
         file_menu.Append(8, f"&{MenueConst.CHANGE_DATAFILE_DIRECTORY_LABEL}")
-        file_menu.Append(9, f"&{MenueConst.CHANGE_DATAFILE_LABEL}")
         file_menu.AppendSeparator()
-        file_menu.Append(30, f"&{MenueConst.EXIT_LABEL}\t{MenueConst.EXIT_SHORTCUT}")
+        file_menu.Append(6, f"&{MenueConst.CHANGE_PASSOWRD_LABEL}")
+        file_menu.Append(10, f"&{MenueConst.RESTORE_FROM_BACKUP_LABEL}")
 
         self.Append(file_menu, f"&{MenueConst.FIRST_FIELD_LABEL}")
 
@@ -43,9 +45,16 @@ class TopBarMenu(wx.MenuBar):
         edit_menu.Append(31, f"&{MenueConst.UNDO_LABLE}\t{MenueConst.UNDO_SHORTCUT}")
         edit_menu.Append(32, f"&{MenueConst.REDO_SHORTCUT}\t{MenueConst.REDO_SHORTCUT}")
 
-        self.Append(edit_menu, f"&{MenueConst.SECONDFIELD_LABEL}")
+        self.Append(edit_menu, f"&{MenueConst.SECOND_FIELD_LABEL}")
+        
+        # Create "Help" menu
+        help_menu = wx.Menu()
+        help_menu.Append(61, f"&{MenueConst.OPEN_MANUAL_LABEL}\t{MenueConst.OPEN_MANUAL_SHORTCUT}")
+        
+        self.Append(help_menu, f"&{MenueConst.THIRD_FIELD_LABEL}")
         
     def _bind_events(self):
+        
         # Bind "File" menu
         self._main_frame.Bind(wx.EVT_MENU, self._on_add_category, id=1)
         self._main_frame.Bind(wx.EVT_MENU, self._on_add_entry, id=2)
@@ -56,9 +65,10 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_show_datafile_in_folder, id=7)
         self._main_frame.Bind(wx.EVT_MENU, self._on_change_datafile_directory, id=8)
         self._main_frame.Bind(wx.EVT_MENU, self._on_change_datafile, id=9)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_restore_from_backup, id=10)
+        self._main_frame.Bind(wx.EVT_MENU, self._on_save_datafile_as, id=11)
         
         self._main_frame.Bind(wx.EVT_MENU, self._on_rename_category, id=22)
-        self._main_frame.Bind(wx.EVT_MENU, self._on_exit, id=30)
         
         # Bind "Edit" menu
         self._main_frame.Bind(wx.EVT_MENU, self._on_copy_password, id=41)
@@ -66,6 +76,19 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_copy_url, id=43)
         self._main_frame.Bind(wx.EVT_MENU, self._on_undo, id=31)
         self._main_frame.Bind(wx.EVT_MENU, self._on_reverse_undo, id=32)
+        
+        # Bind "Help" menu
+        self._main_frame.Bind(wx.EVT_MENU, self._on_help, id=61)
+
+    
+    def _on_help(self, event) -> None:
+        self._command.help()
+        
+    def _on_save_datafile_as(self, event) -> None:
+        self._command.save_datafile_as()
+        
+    def _on_restore_from_backup(self, event) -> None:
+        self._command.restore_from_backup()
         
     def _on_change_datafile(self, event) -> None:
         self._command.change_datafile()
@@ -80,13 +103,13 @@ class TopBarMenu(wx.MenuBar):
         self._command.set_new_password()
         
     def _on_copy_password(self, event) -> None:
-        self._command.copy_to_clipboard(1)
+        self._command.copy_password()
         
     def _on_copy_username(self, event) -> None:
-        self._command.copy_to_clipboard(2)
+        self._command.copy_username()
     
     def _on_copy_url(self, event) -> None:
-        self._command.copy_to_clipboard(3)
+        self._command.copy_url()
 
     def _on_add_category(self, event) -> None:
         self._command.add_category(self._main_frame)
@@ -105,10 +128,6 @@ class TopBarMenu(wx.MenuBar):
     
     def _on_remove_entry(self, event) -> None:
         self._command.remove_entry()
-
-    def _on_exit(self, event) -> None:
-        self._main_frame.Destroy()
-        sys.exit(0)
     
     def _on_undo(self, event) -> None:
         try:

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import wx
+import os
 from dataclasses import dataclass
 from manage_password import PasswordStrength
 app = wx.App()
@@ -9,9 +10,29 @@ app = wx.App()
 
 @dataclass(frozen=True)
 class GeneralConst:
-    DATAFILE_EXTENSION = ".kkdf"
-    DEFAULT_DATAFILE_NAME = "KeyKeeper"
+    DATAFILE_EXTENSION = ".sdf"
+    DEFAULT_DATAFILE_NAME = "StealthStash"
+    APP_NAME = "StealthStash"
     
+
+@dataclass(frozen=True)
+class SettingsConst:
+    DEFAULT_BACKUP_FOLDER = ".backup"
+    DEFAULT_DATA_FOLDER = "data"
+    DEFAULT_COLOUR_THEME = "LIGHT_GREEN"
+    DEFAULT_SETTINGS_FILE = "settings"
+    
+    
+
+@dataclass(frozen=True)
+class BackupConst:
+    STORED_BACKUPS = 10
+    
+
+@dataclass(frozen=True)
+class HelpConst:
+    HELP_URL = "https://github.com/Deftr1dg3/metadata_remover"
+
 
 @dataclass(frozen=True)
 class PassowrdStrengthConst:
@@ -20,6 +41,7 @@ class PassowrdStrengthConst:
     MEDIUM = "MEDIUM"
     STRONG = "STRONG"
     VERY_STRONG = "VERY STRONG"
+    NOT_INCLODED_CHARACTERS = "\\][`\"'"
 
     
 @dataclass(frozen=True)
@@ -40,27 +62,24 @@ class SetNewPasswordConst:
     
 
 @dataclass(frozen=True)
-class NewLaunchConst:
-    TITLE = "Key Keeper"
+class FirstLaunchConst:
     WRONG_EXTENSION_TITLE = "Wrong File Extension"
     WRONG_EXTENSION_MESSAGE = "Provided file has wrong extension and most probably is incompatible with current app. Do you wish to proceed anyway?"
     CREATE_NEW_LABEL = "Create new DataFile"
-    IMPORT_DATAFILE_LABEL = "Import existing DataFile"
+    IMPORT_DATAFILE_LABEL = "Select existing DataFile"
     
 @dataclass(frozen=True)
 class PassowrdWindowConst:
-    TITLE = "Key Keeper"
     SIZE = (400, 200)
     STYLE = wx.CLOSE_BOX
     PASSOWRD_HINT = "Insert password ... "
-    CHOOSE_DATAFILE_LABEL = "^ Choose another DataFile"
+    CHOOSE_DATAFILE_LABEL = "^ Select another DataFile"
     DIALOG_MESSAGE = "Either the file is not correct or password. Do you wish to try again?"
     DIALOG_TITLE = "Unable to decode the file."
     
     
 @dataclass(frozen=True)
 class MainFrameConst:
-    TITLE = "Key Keeper"
     SIZE = (1100, 600)
     MIN_SIZE = (800, 400)
 
@@ -146,7 +165,9 @@ class SelectColourSchemeConst:
 class MenueConst:
     # Fields in top menu
     FIRST_FIELD_LABEL = "File"
-    SECONDFIELD_LABEL = "Edit"
+    SECOND_FIELD_LABEL = "Edit"
+    THIRD_FIELD_LABEL = "Help"
+    
     
     # Under first field
     NEW_CATEGORY_LABEL = "New Category"
@@ -161,8 +182,11 @@ class MenueConst:
     CLEAR_CATEGORY_LABEL = "Clear Category"
     CHANGE_PASSOWRD_LABEL = "Change Password"
     SHOW_DATAFILE_IN_FOLDER_LABEL = "Show DataFile in Folder"
-    CHANGE_DATAFILE_DIRECTORY_LABEL = "Change Datafile Directory to ..."
-    CHANGE_DATAFILE_LABEL = "Choose Another DataFile"
+    CHANGE_DATAFILE_DIRECTORY_LABEL = "Change Datafile Directory"
+    CHANGE_DATAFILE_LABEL = "Select another DataFile"
+    RESTORE_FROM_BACKUP_LABEL = "Restore from backup"
+    SAVE_DATAFILE_AS_LABEL = "Save DataFile as..."
+    SAVE_DATAFILE_AS_SHORTCUT = "Shift+Ctrl+S" 
     EXIT_LABEL = "Exit"
     EXIT_SHORTCUT = "Ctrl+Q"
     
@@ -177,6 +201,10 @@ class MenueConst:
     UNDO_SHORTCUT = "Ctrl+Z"
     REDO_LABLE = "Reverse Undo"
     REDO_SHORTCUT = "Shift+Ctrl+Z"
+    
+    # Under third field
+    OPEN_MANUAL_LABEL = "Help"
+    OPEN_MANUAL_SHORTCUT = "Ctrl+H"
 
     
 
@@ -246,9 +274,9 @@ class PasswordCreatedPopup:
 
 @dataclass(frozen=True)
 class SaveAsPopup:
-    TITLE = "Save KeyKeeper Datafile As..."
-
-
+    TITLE = "Save file as"
+    DEFAULT_DIRECTORY = "./"
+    
 
 @dataclass(frozen=True)
 class SelectFilePopup:
@@ -259,10 +287,50 @@ class SelectFilePopup:
 @dataclass(frozen=True)
 class SelectDirectoryPopup:
     TITLE = "Choose a directory:"
-    
-    
+    DEFAULT_DIRECTORY = "./"
     
 
+@dataclass(frozen=True)
+class RestoreFromBackupPopup:
+    TITLE = "IMPORTANT: Confirmation"
+    MESSAGE = "Current DataFile will be replaced with {0} file fom backup. Backup of current file will be stored. Do you wish to proceed anyway?"
+    
+    
+@dataclass(frozen=True)
+class NoBackupsAvailablePopup:
+    TITLE = "Info"
+    MESSAGE = "No backups available."
+    
+
+@dataclass(frozen=True)
+class ChangeDatafileDirectoryPopup:
+    TITLE = "Info"
+    MESSAGE = "Default DataFile directory has been changed. Now full path to the DataFile will be:\n{}"
+    
+    
+@dataclass(frozen=True)
+class FileSavedPopup:
+    TITLE = "Info"
+    MESSAGE = "The file has been saved as:\n{}"
+    
+@dataclass(frozen=True)
+class FileAlreadyExistsPopup:
+    TITLE = "Error."
+    MESSAGE = "Unable to save the file. File with selected name already exists. Do you with to select another name?"
+    
+
+@dataclass(frozen=True)
+class ConfirmDirectoryPopup:
+    TITLE = "Confirmation"
+    MESSAGE = "Your DataFile will be stored in\n{}\nDo you wish to proceed?"
+    
+    
+    
+    
+    
+    
+    
+    
     
 @dataclass(frozen=True)
 class UndoUnavailable:

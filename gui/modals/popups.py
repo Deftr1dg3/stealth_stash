@@ -39,11 +39,12 @@ def select_file(default_dir: str = SelectFilePopup.DEFAULT_DIRECTORY) -> (str | 
     file_dialog.Destroy()
     
     
-def save_file_as() -> (str | None):
+def save_file_as(default_dir: str = SaveAsPopup.DEFAULT_DIRECTORY) -> (str | None):
     default_file_name = GeneralConst.DEFAULT_DATAFILE_NAME + GeneralConst.DATAFILE_EXTENSION
     file_dialog = wx.FileDialog(None, SaveAsPopup.TITLE, 
                             defaultFile=default_file_name, 
-                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+                            defaultDir=default_dir)
     if file_dialog.ShowModal() == wx.ID_OK:
         save_path = file_dialog.GetPath()
         file_dialog.Destroy()
@@ -51,7 +52,7 @@ def save_file_as() -> (str | None):
     file_dialog.Destroy()
 
 
-def select_dir() -> (str | None):
+def select_dir(default_dir: str = SelectDirectoryPopup.DEFAULT_DIRECTORY) -> (str | None):
     dir_dialog = wx.DirDialog(None, SelectDirectoryPopup.TITLE)
     if dir_dialog.ShowModal() == wx.ID_OK:
         dir_path = dir_dialog.GetPath()

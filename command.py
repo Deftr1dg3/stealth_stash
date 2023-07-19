@@ -4,20 +4,21 @@ from __future__ import annotations
 
 import wx
 import os
+import sys
 import subprocess
+import config
+import webbrowser
 from data_file import Category, Entry, DataFile
 from settings import Settings
 from gui.colours import ColourTheme, ColoursAssignment
 from gui.modals.popups import get_input, message_popup, dialog_popup, save_file_as, select_dir, select_file
 from gui.modals.select_colour_scheme import launch_colour_theme_selection
-from set_new_password import launch_set_new_password
+from gui.modals.set_new_password import launch_set_new_password
 from typing import TYPE_CHECKING
-from config import CategoryExistsPopup, NewCategoryPopup, NoCategorySelectedPopup, NoEntrySelectedPopup
-from config import RemoveConfirmationPopup, RenameCategoryPopup, ChangeColourSchemeConfirmation
 
 
 if TYPE_CHECKING:
-    from main_frame import MainFrame
+    from gui.main_frame import MainFrame
     from gui.body_panel import BodyPanel
     from gui.topbar.top_bar_panel import TopBarPanel
     from gui.leftpanel.left_panel import LeftPanel
@@ -209,114 +210,38 @@ class Command:
            
     
     # Methods ----------------------------------------------------------------------------------------------------------------------------------------     
-                
-    def _validate_new_name(self, new_name: str) -> bool:
-        namespace = self._data_file.get_categories_namespace()
-        if new_name in namespace:
-            return False 
-        return True
+    
+    
+    # Category related methods ------------------------------------------------------------
         
     def list_categories(self) -> list[Category]:
         categories = self._data_file.get_categories()
         return categories
     
-    def add_category(self, parent: (wx.Panel | wx.Frame)) -> None:
-        name = get_input(NewCategoryPopup.MESSAGE, NewCategoryPopup.TITLE)
-        if name is None:
-            return
-        valid = self._validate_new_name(name)
-        if not valid:
-            message_popup(CategoryExistsPopup.MESSAGE.format(name), CategoryExistsPopup.TITLE)
-            return
-        self._data_file.add_category(name)
-        self.selected_category_row = None
-        self.refresh_left()
-        self.refresh_mid()
-        self.refresh_right()
-        self._keep_category_row_selected()
-        
-    def remove_category(self) -> None:
-        if self.selected_category_row is None:
-            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
-            return
-        category = self.selected_category_row.category
-        result = dialog_popup(RemoveConfirmationPopup.MESSAGE.format(category.name), RemoveConfirmationPopup.TITLE)
-        if result:
-            category.remove()
-            self.selected_category_row = None
-            self.refresh_left()
-            self.refresh_mid()
-            self.refresh_right()
-            self._keep_category_row_selected()
-
-    def rename_category(self) -> None:
-        if self.selected_category_row is None:
-            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
-            return
-        category = self.selected_category_row.category
-        default_value = category.name
-        name = get_input(RenameCategoryPopup.MESSAGE, RenameCategoryPopup.TITLE, default_value)
-        if name is None:
-            return
-        valid = self._validate_new_name(name)
-        if not valid:
-            if name == self.selected_category_row.category.name:
-                return
-            message_popup(CategoryExistsPopup.MESSAGE.format(name), CategoryExistsPopup.TITLE)
-            return
-        category.rename(name)
-        self.selected_category_row = None
-        self.refresh_left()
-        self.refresh_mid()
-        self.refresh_right()
-        self._keep_category_row_selected()
-        
-    def clear_category(self) -> None:
-        if self.selected_category_row is None:
-            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
-            return
-        category = self.selected_category_row.category
-        confirmed = dialog_popup(RemoveConfirmationPopup.MESSAGE.format(category.name), RemoveConfirmationPopup.TITLE)
-        if confirmed:
-            category.clear_category()
-            self.refresh_mid()
-            self.refresh_right()
-            self._keep_category_row_selected()
         
     def display_category_content(self) -> None:
         if self.selected_category_row is not None:
             self.refresh_mid()
             self.refresh_right()
-    
-    def add_entry(self) -> None:
-        if self.selected_category_row is None:
-            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
-            return 
-        category = self.selected_category_row.category
-        category.new_entry()
-        self.refresh_mid()
-        self.refresh_right()
             
+    
+    def _keep_category_row_selected(self) -> None:
+        if self.selected_category_id and self.selected_category_id in self.category_rows:
+            category_row = self.category_rows[self.selected_category_id]
+            category_row.select_category()
+
+    
+    # ------------------------------------------------------------
+    
+
+    # Entry related methods ------------------------------------------------------------
+    
     def edit_entry(self) -> None:
         if self.selected_entry_row is None:
-            message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
             return
         self.refresh_right()
         
-    def remove_entry(self, entry: (Entry | None) = None) -> None:
-        if self.selected_category_row is None:
-            message_popup(NoCategorySelectedPopup.MESSAGE, NoCategorySelectedPopup.TITLE)
-            return
-        if entry is None:
-            if self.selected_entry_row is None:
-                message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
-                return
-            entry = self.selected_entry_row.entry
-        result = dialog_popup(RemoveConfirmationPopup.MESSAGE.format(entry.record_name), RemoveConfirmationPopup.TITLE)
-        if result:
-            self.selected_category_row.category.remove_entry(entry)
-            self.refresh_mid()
-            self.refresh_right()
             
     def _keep_entry_row_selected(self) -> None:
         if self._entry_rows and self.selected_entry_id:
@@ -326,65 +251,192 @@ class Command:
                     entry_row.set_selected_colour()
                 except RuntimeError as ex:
                     pass
+                
+    # ------------------------------------------------------------
+     
     
-    def _keep_category_row_selected(self) -> None:
-        if self.selected_category_id and self.selected_category_id in self.category_rows:
-            category_row = self.category_rows[self.selected_category_id]
-            category_row.select_category()
-            
-    def refresh_on_item_change(self) -> None:
-        self.refresh_mid()
-        self._keep_entry_row_selected()
 
+    # Refresh Panel methods ------------------------------------------------------------
+    
     def refresh_left(self) -> None:
         self.left.refresh()
     
+    
     def refresh_mid(self) -> None:
         self.mid.refresh()
-        # self._keep_entry_row_selected()
+        
         
     def refresh_right(self) -> None:
         self.right.refresh()
+        
+    def refresh_on_item_change(self) -> None:
+        self.refresh_mid()
+        self._keep_entry_row_selected()
     
-    def manage_entry_states(self, direction: int = 1):
-        self.edit_panel.manage_self_states(direction)
+    # ------------------------------------------------------------
+    
     
     def commit(self) -> None:
         if self.selected_category_row is not None:
             self.selected_category_row.category.commit()
 
+
     def search(self) -> list[Entry]:
         results = self._data_file.search(self.query)
         return results
+    
+    
+    def _validate_new_name(self, new_name: str) -> bool:
+        namespace = self._data_file.get_categories_namespace()
+        if new_name in namespace:
+            return False 
+        return True
+
+
+    # Colours methods ------------------------------------------------------------
 
     def colours(self) -> ColoursAssignment:
         colours = self._colous[self._settings.COLOUR_SCHEME]
         return colours
 
+
     def choose_colour_scheme(self) -> None:
         current_colour = self._settings.COLOUR_SCHEME
         launch_colour_theme_selection(current_colour, self)
         
+        
     def set_colour(self, colour: str) -> None:
-        confirmed= dialog_popup(ChangeColourSchemeConfirmation.MESSAGE, ChangeColourSchemeConfirmation.TITLE)
+        confirmed= dialog_popup(config.ChangeColourSchemeConfirmation.MESSAGE, config.ChangeColourSchemeConfirmation.TITLE)
         if confirmed:
             self._settings.COLOUR_SCHEME = colour
             self.main_frame.restart()
-        
-    def copy_to_clipboard(self, id: int) -> None:
+    
+    # ------------------------------------------------------------
+            
+    def _enty_row_is_selected(self) -> bool:
         if self.selected_entry_row is None:
-            message_popup(NoEntrySelectedPopup.MESSAGE, NoEntrySelectedPopup.TITLE)
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return False
+        return True
+    
+    
+    def _swap_files_data(self, source_file: str, destination_file: str) -> None:
+        with open(source_file, "r", encoding="utf-8") as f:
+            source_data = f.read()
+        with open(destination_file, "w", encoding="utf-8") as f:
+            f.write(source_data)
+    
+    
+               
+#   TOP MENUE ----------------------------------------------------------------------------------------------------------------------
+
+    
+    # "APP" menu --------------------------------------------------------------------
+         
+    def exit_app(self) -> None:
+        self.main_frame.Destroy()
+        sys.exit(0)
+        
+         
+
+    # "File" menu --------------------------------------------------------------------
+    
+    def add_category(self, parent: (wx.Panel | wx.Frame)) -> None:
+        name = get_input(config.NewCategoryPopup.MESSAGE, config.NewCategoryPopup.TITLE)
+        if name is None:
             return
-        match id:
-            case 1:
-                self.selected_entry_row.copy_password()
-            case 2:
-                self.selected_entry_row.copy_username()
-            case 3:
-                self.selected_entry_row.copy_url()
-                
+        valid = self._validate_new_name(name)
+        if not valid:
+            message_popup(config.CategoryExistsPopup.MESSAGE.format(name), config.CategoryExistsPopup.TITLE)
+            return
+        self._data_file.add_category(name)
+        self.selected_category_row = None
+        self.refresh_left()
+        self.refresh_mid()
+        self.refresh_right()
+        self._keep_category_row_selected()
+        
+    
+    def add_entry(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return 
+        category = self.selected_category_row.category
+        category.new_entry()
+        self.refresh_mid()
+        self.refresh_right()
+        
+    
+    def remove_category(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        category = self.selected_category_row.category
+        result = dialog_popup(config.RemoveConfirmationPopup.MESSAGE.format(category.name), config.RemoveConfirmationPopup.TITLE)
+        if result:
+            category.remove()
+            self.selected_category_row = None
+            self.refresh_left()
+            self.refresh_mid()
+            self.refresh_right()
+            self._keep_category_row_selected()
+            
+        
+    def remove_entry(self, entry: (Entry | None) = None) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        if entry is None:
+            if self.selected_entry_row is None:
+                message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+                return
+            entry = self.selected_entry_row.entry
+        result = dialog_popup(config.RemoveConfirmationPopup.MESSAGE.format(entry.record_name), config.RemoveConfirmationPopup.TITLE)
+        if result:
+            self.selected_category_row.category.remove_entry(entry)
+            self.refresh_mid()
+            self.refresh_right()
+            
+        
+    def rename_category(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        category = self.selected_category_row.category
+        default_value = category.name
+        name = get_input(config.RenameCategoryPopup.MESSAGE, config.RenameCategoryPopup.TITLE, default_value)
+        if name is None:
+            return
+        valid = self._validate_new_name(name)
+        if not valid:
+            if name == self.selected_category_row.category.name:
+                return
+            message_popup(config.CategoryExistsPopup.MESSAGE.format(name), config.CategoryExistsPopup.TITLE)
+            return
+        category.rename(name)
+        self.selected_category_row = None
+        self.refresh_left()
+        self.refresh_mid()
+        self.refresh_right()
+        self._keep_category_row_selected()
+            
+    
+    def clear_category(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        category = self.selected_category_row.category
+        confirmed = dialog_popup(config.RemoveConfirmationPopup.MESSAGE.format(category.name), config.RemoveConfirmationPopup.TITLE)
+        if confirmed:
+            category.clear_category()
+            self.refresh_mid()
+            self.refresh_right()
+            self._keep_category_row_selected()
+            
+            
     def set_new_password(self) -> None:
         launch_set_new_password(self._data_file, self._settings, change_password=True)
+            
         
     def show_datafile_in_folder(self) -> None:
         datafile_path = self._settings.DATAFILE_PATH
@@ -397,17 +449,90 @@ class Command:
         """ % (datafile_path)
         subprocess.call(["osascript", "-e", script])
         
+    
     def change_datafile_directory(self) -> None:
-        save_as = save_file_as()
-        if save_as is not None:
+        new_dir_path = select_dir()
+        if new_dir_path is None:
+            return
+        confirmed = dialog_popup(config.ConfirmDirectoryPopup.MESSAGE.format(new_dir_path), config.ConfirmDirectoryPopup.TITLE)
+        if confirmed:
+            save_as = new_dir_path + os.sep + config.GeneralConst.DEFAULT_DATAFILE_NAME + config.GeneralConst.DATAFILE_EXTENSION
             self._data_file.datafile = save_as
             self._settings.DATAFILE_PATH = save_as
             self._data_file.commit()
-            
+            message_popup(config.ChangeDatafileDirectoryPopup.MESSAGE.format(save_as), config.ChangeDatafileDirectoryPopup.TITLE)
+        
+    
     def change_datafile(self) -> None:
         new_file = select_file()
         if new_file is not None:
             self._settings.DATAFILE_PATH = new_file
             self._main_frame.restart()
+            
+            
+    def save_datafile_as(self) -> None:
+        save_as = save_file_as()
+        if save_as is not None:
+            datafile_path = self._data_file.datafile
+            with open(datafile_path, "r", encoding="utf-8") as f:
+                data = f.read()
+            with open(save_as, "w", encoding="utf-8") as f:
+                f.write(data)
+            message_popup(config.FileSavedPopup.MESSAGE.format(save_as), config.FileSavedPopup.TITLE)
+            
+    
+    def restore_from_backup(self) -> None:
+        datafile_path = self._settings.DATAFILE_PATH
+        backup_dir = self._settings.BACKUP_PATH
+        available_backups = os.listdir(backup_dir)
+        if available_backups:
+            chosen_backup_file = select_file(default_dir=backup_dir)
+            if chosen_backup_file is not None:
+                backup_file_name = os.path.basename(chosen_backup_file)
+                confirmed = dialog_popup(config.RestoreFromBackupPopup.MESSAGE.format(backup_file_name), config.RestoreFromBackupPopup.TITLE)
+                if confirmed:
+                    self._data_file.back_up()
+                    self._swap_files_data(chosen_backup_file, datafile_path)
+                    self.main_frame.restart()
+        else:
+            message_popup(config.NoBackupsAvailablePopup.MESSAGE, config.NoBackupsAvailablePopup.TITLE)
+            
+
+        
+    
+    # "Edit" menu --------------------------------------------------------------------
+                
+    def copy_password(self) -> None:   
+        if self.selected_entry_row is None:
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return 
+        self.selected_entry_row.copy_password()
+    
+    
+    def copy_username(self) -> None:
+        if self.selected_entry_row is None:
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return 
+        self.selected_entry_row.copy_username()
+        
+        
+    def copy_url(self) -> None: 
+        if self.selected_entry_row is None:
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return 
+        self.selected_entry_row.copy_url() 
+                         
+    
+    def manage_entry_states(self, direction: int = 1):
+        self.edit_panel.manage_self_states(direction)
+            
+            
+            
+    # "Help" menu --------------------------------------------------------------------
+         
+    
+    def help(self) -> None:
+        webbrowser.open(config.HelpConst.HELP_URL)
+            
                 
 

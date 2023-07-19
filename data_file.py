@@ -115,6 +115,7 @@ class Category:
         self._data_file.commit()
         
     
+    
 class Data(dict):
     def __init__(self):
         super().__init__()
@@ -150,7 +151,7 @@ class DataFile:
         self._backup = BackUp()
         self._datafile_path = file_path
         self._password = ""
-        atexit.register(self._atexit)
+        atexit.register(self.back_up)
     
     @property
     def datafile(self) -> str:
@@ -171,7 +172,6 @@ class DataFile:
             self._password = password
             self._aes_encription = AES_Encripton(password)
     
-    
     def create(self) -> None:
         self._data = Data()
         self.commit()
@@ -185,8 +185,8 @@ class DataFile:
         except ValueError:
             raise UnableToDecodeTheFile()
         self._data = json.loads(json_data)
-        
-    def _atexit(self) -> None:
+    
+    def back_up(self) -> None:
         self.commit()
         self._backup.save_backup_file(self._json_data, self._b64_str_data)
         

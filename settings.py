@@ -3,15 +3,16 @@
 
 import os
 import json
+from config import GeneralConst, SettingsConst
 
 class Settings:
     
-    DEFAULT_DATAFILE_PATH = os.path.abspath("./") + os.sep + "data" + os.sep + "KeyKeeperDataFile.kkdf"
-    DEFAULT_BACKUP_PATH = os.path.abspath("./") + os.sep + ".backup"
-    DEFAULT_COLOUR_SCHEME = "LIGHT_GREEN"
+    DEFAULT_DATAFILE_PATH = os.path.abspath("./") + os.sep + SettingsConst.DEFAULT_DATA_FOLDER + os.sep + GeneralConst.DEFAULT_DATAFILE_NAME + GeneralConst.DATAFILE_EXTENSION
+    DEFAULT_BACKUP_PATH = os.path.abspath("./") + os.sep + SettingsConst.DEFAULT_BACKUP_FOLDER
+    DEFAULT_COLOUR_SCHEME = SettingsConst.DEFAULT_COLOUR_THEME
     
     def __init__(self) -> None:
-        self._datafile_path = os.path.abspath("./") + os.sep +  "settings"
+        self._datafile_path = os.path.abspath("./") + os.sep +  SettingsConst.DEFAULT_SETTINGS_FILE
         self._settings = self._get_settings()
     
     @property
@@ -55,10 +56,10 @@ class Settings:
                     "BACKUP_PATH": self.DEFAULT_BACKUP_PATH,
                     "COLOUR_SCHEME": self.DEFAULT_COLOUR_SCHEME,
                     }
-        with open(self._datafile_path, "w") as f:
+        with open(self._datafile_path, "w", encoding="utf-8") as f:
             json.dump(settings, f)
         return settings
     
     def _save_settings(self):
-        with open(self._datafile_path, "w") as f:
+        with open(self._datafile_path, "w", encoding="utf-8") as f:
             json.dump(self._settings, f)

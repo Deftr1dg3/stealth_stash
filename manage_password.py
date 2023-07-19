@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import NamedTuple
 from string import ascii_uppercase, ascii_lowercase, digits, punctuation
 
+
 punctuation = punctuation.replace("\\", "")
 punctuation = punctuation.replace("`", "")
 punctuation = punctuation.replace("'", "")
@@ -31,7 +32,6 @@ class PasswordStrength:
     WEAK = StrengthSpecification(uppercase=0, lowercase=2, digit=3, special_symbol=0, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
     VERY_WEAK = StrengthSpecification(uppercase=0, lowercase=0, digit=0, special_symbol=0, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
     
-
 
 class GeneratePassword:
     def __init__(self):
@@ -112,11 +112,11 @@ class ValidatePassword:
     
     def validate_password(self, password: str) -> str:
         if self._validate_very_strong(password):
-            return "VERY STRONG"
+            return "VERY_STRONG"
         if self._validate_strong(password):
             return "STRONG"
         if self._validate_medium(password):
             return "MEDIUM"
         if self._validate_weak(password):
             return "WEAK"
-        return "VERY WEAK"     
+        return "VERY_WEAK"
