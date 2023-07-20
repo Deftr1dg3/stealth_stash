@@ -252,6 +252,13 @@ class Command:
                 except RuntimeError as ex:
                     pass
                 
+    def _enty_row_is_selected(self) -> bool:
+        if self.selected_entry_row is None:
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return False
+        return True
+    
+                
     # ------------------------------------------------------------
      
     
@@ -312,13 +319,6 @@ class Command:
             self.main_frame.restart()
     
     # ------------------------------------------------------------
-            
-    def _enty_row_is_selected(self) -> bool:
-        if self.selected_entry_row is None:
-            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
-            return False
-        return True
-    
     
     def _swap_files_data(self, source_file: str, destination_file: str) -> None:
         with open(source_file, "r", encoding="utf-8") as f:

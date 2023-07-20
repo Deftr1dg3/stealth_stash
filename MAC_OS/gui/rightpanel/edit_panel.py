@@ -210,7 +210,6 @@ class EditPanel(wx.Panel):
             
         
     def _on_set_focus(self, event) -> None:
-        print('set focus')
         self._undo_available = True
 
         
