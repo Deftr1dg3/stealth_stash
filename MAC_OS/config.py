@@ -17,6 +17,11 @@ class GeneralConst:
     
 
 @dataclass(frozen=True)
+class AESConst:
+    ITERATIONS_COUNT = 100000
+    
+
+@dataclass(frozen=True)
 class SettingsConst:
     DEFAULT_BACKUP_FOLDER = ".backup"
     DEFAULT_DATA_FOLDER = "data"
@@ -70,7 +75,7 @@ class PassowrdWindowConst:
     SIZE = (400, 200)
     STYLE = wx.CLOSE_BOX
     PASSOWRD_HINT = "Insert password ... "
-    CHOOSE_DATAFILE_LABEL = "^ Select another DataFile"
+    SELECT_DATAFILE_LABEL = "^ Select another DataFile"
     DIALOG_MESSAGE = "Either the file is not correct or password. Do you wish to try again?"
     DIALOG_TITLE = "Unable to decode the file."
     
@@ -277,13 +282,13 @@ class SaveAsPopup:
 
 @dataclass(frozen=True)
 class SelectFilePopup:
-    TITLE = "Choose a file"
+    TITLE = "Select a file"
     WILDCARD = "*.*"
     DEFAULT_DIRECTORY = "./"
     
 @dataclass(frozen=True)
 class SelectDirectoryPopup:
-    TITLE = "Choose a directory:"
+    TITLE = "Select a directory:"
     DEFAULT_DIRECTORY = "./"
     
 

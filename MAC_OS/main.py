@@ -7,7 +7,6 @@ from settings import Settings
 from gui.main_frame import launch_gui
 from gui.modals.get_password_from_user import launch_get_password
 from gui.modals.first_launch import launch_first_start
-from exceptions import UnsupportedSystem, UnableToDecodeTheFile
 
 
 settings = Settings()

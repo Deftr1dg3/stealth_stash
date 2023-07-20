@@ -39,7 +39,7 @@ class SetPassword(wx.Frame):
         self._password.SetHint(PassowrdWindowConst.PASSOWRD_HINT)
         self._password.SetFocus()
         
-        self._choose_datafile = wx.Button(panel, label=PassowrdWindowConst.CHOOSE_DATAFILE_LABEL)
+        self._choose_datafile = wx.Button(panel, label=PassowrdWindowConst.SELECT_DATAFILE_LABEL)
         
         input_box.Add(self._password, 1, wx.ALIGN_CENTER)
 
