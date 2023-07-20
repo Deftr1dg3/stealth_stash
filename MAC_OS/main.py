@@ -52,6 +52,3 @@ if __name__ == "__main__":
         print(f"Exception in MAIN --> {ex}")
         exit(1)
 
-
-
-# There  last changes to  be jubh iub iuh oiuhpa

@@ -252,6 +252,7 @@ class Command:
                 except RuntimeError as ex:
                     pass
                 
+                
     def _enty_row_is_selected(self) -> bool:
         if self.selected_entry_row is None:
             message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
