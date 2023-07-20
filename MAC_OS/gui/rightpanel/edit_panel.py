@@ -5,18 +5,22 @@ import wx
 from command import Command
 from data_file import Entry
 from gui.modals.popups import message_popup, dialog_popup
-from manage_password import PasswordStrength, GeneratePassword, ValidatePassword
+from manage_password import GeneratePassword, ValidatePassword
 from gui.rightpanel.entry_state import EntryState
-from gui.rightpanel.notes_panel import NotesPanel
 from gui.rightpanel.entry_state import EntrySnapshot
 from gui.modals.popups import message_popup
 from config import RightPanelConst, PasswordReplacemetPopup, UndoUnavailable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from gui.rightpanel.right_panel import RightPanel
 
 
 class EditPanel(wx.Panel):
-    def __init__(self, right_panel: wx.Panel, command: Command) -> None:
+    def __init__(self, right_panel: "RightPanel", command: Command) -> None:
         self._right_panel = right_panel
         self._command = command
+
         super().__init__(self._right_panel)
         
         self._undo_available = False
@@ -49,6 +53,14 @@ class EditPanel(wx.Panel):
         # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
+        
+    @property
+    def undo_available(self) -> bool:
+        return self._undo_available
+
+    @undo_available.setter
+    def undo_available(self, arg: bool) -> None:
+        self._undo_available = arg
     
 
     @property
@@ -141,11 +153,8 @@ class EditPanel(wx.Panel):
             self._command.edit_panel = self
             
             self._entry_state = EntryState(self.entry.id)
-
-            # Point of vulnarability -- segmentation fault -------------------------
+            self.make_snapshot()
             
-            self._make_snapshot()
-
             entry_name = self.entry.record_name
             username = self.entry.username
             password = self.entry.password
@@ -192,7 +201,7 @@ class EditPanel(wx.Panel):
         self._username.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
         self._password.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
         self._url.Bind(wx.EVT_SET_FOCUS, self._on_set_focus)
-        
+       
     
     def _on_enter_pressed(self, event) -> None:
         obj = event.GetEventObject()
@@ -201,6 +210,7 @@ class EditPanel(wx.Panel):
             
         
     def _on_set_focus(self, event) -> None:
+        print('set focus')
         self._undo_available = True
 
         
@@ -231,7 +241,7 @@ class EditPanel(wx.Panel):
         
     def _on_enter(self, event) -> None:
         if self._entry_state is not None and not self._undo_in_progress:
-            self._make_snapshot()
+            self.make_snapshot()
         self._command.refresh_on_item_change()
     
     
@@ -254,7 +264,7 @@ class EditPanel(wx.Panel):
     def _on_generate_password(self, event) -> None:
         confirmation = dialog_popup(PasswordReplacemetPopup.MESSAGE, PasswordReplacemetPopup.TITLE)
         if confirmation:
-            self._make_snapshot()
+            self.make_snapshot()
             self._undo_available = True
             g = GeneratePassword()
             password = g.generate_password(self._PASSWORD_STRENGTH[self._current_password_strength])  
@@ -297,14 +307,17 @@ class EditPanel(wx.Panel):
         if not self._undo_available:
             message_popup(UndoUnavailable.MESSAGE, UndoUnavailable.TITLE)
             return
+        
         if self._entry_state is None:
             return 
+        
         if direction:
             state = self._entry_state.undo()
         else:
             state = self._entry_state.reverse_undo()
         
         self._undo_in_progress = True
+        self._right_panel.undo_in_progress_notes(True)
         
         self._set_values_to_entry(state)
         
@@ -317,13 +330,15 @@ class EditPanel(wx.Panel):
             self._password.SetInsertionPointEnd()
             self._url.SetValue(state.url)
             self._url.SetInsertionPointEnd()
+            self._right_panel.set_notes_value(state.notes)
         except RuntimeError:
             pass
         
         self._undo_in_progress = False
+        self._right_panel.undo_in_progress_notes(False)
         
         
-    def _make_snapshot(self) -> None:
+    def make_snapshot(self) -> None:
         if self._entry_state is not None:
             snapshot = EntrySnapshot(record_name=self.entry.record_name, username=self.entry.username,
                 password=self.entry.password, url=self.entry.url, notes=self.entry.notes)
@@ -338,4 +353,3 @@ class EditPanel(wx.Panel):
         self.entry.url = snapshot.url
         self.entry.notes = snapshot.notes
         self._command.commit()
-        

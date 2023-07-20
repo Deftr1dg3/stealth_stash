@@ -58,6 +58,3 @@ class EntryState:
         self._move_forvard()
         snapshot = self._entry_states[self._id][self._cursor]
         return snapshot
-    
-    
-# Changes starts here here here ahd here

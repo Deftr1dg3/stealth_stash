@@ -23,6 +23,16 @@ class RightPanel(wx.Panel):
         
         self.SetBackgroundColour(self._background_colour)
         
+        
+    @property
+    def notes_panel(self) -> NotesPanel:
+        return self._notes_panel
+    
+    @property
+    def edit_panel(self) -> EditPanel:
+        return self._edit_panel
+    
+        
     def _init_ui(self):
         """ Function initializing visible interface. """
         
@@ -34,12 +44,12 @@ class RightPanel(wx.Panel):
         notes_box = wx.BoxSizer(wx.HORIZONTAL)
         
         # Create GUI objects
-        edit_panel = EditPanel(self, self._command)
-        notes_panel = NotesPanel(self, self._command)
+        self._notes_panel = NotesPanel(self, self._command)
+        self._edit_panel = EditPanel(self, self._command)
         
         # Add GUI objects to secondary sizers
-        edit_box.Add(edit_panel, 1, wx.EXPAND)
-        notes_box.Add(notes_panel, 1, wx.EXPAND)
+        edit_box.Add(self._edit_panel, 1, wx.EXPAND)
+        notes_box.Add(self._notes_panel, 1, wx.EXPAND)
         
         # Add secondary sizers to the main sizer
         self._main_box.Add(edit_box, 1, wx.EXPAND)
@@ -54,3 +64,15 @@ class RightPanel(wx.Panel):
     def refresh(self):
         self._main_box.Clear(True)
         self._init_ui()
+        
+    def undo_availbale(self, arg: bool) -> None:
+        self._edit_panel.undo_available = arg
+        
+    def make_snapshot(self) -> None:
+        self._edit_panel.make_snapshot()
+        
+    def undo_in_progress_notes(self, arg: bool) -> None:
+        self._notes_panel.undo_in_progress = arg
+        
+    def set_notes_value(self, value: str) -> None:
+        self._notes_panel.set_value(value)

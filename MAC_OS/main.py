@@ -40,9 +40,7 @@ def _load_data(file_path: str) -> DataFile:
 def main():
     path = _get_datafile_path()
     data_file = _load_data(path)
-  
     command = Command(data_file, settings)
-    
     launch_gui(command)
    
 
