@@ -1,1 +1,3 @@
-# stealth_stash
+# StealthStath
+
+The application is build to store login credentials in most secure way.
