@@ -42,5 +42,6 @@ class MainFrame(wx.Frame):
 
 def launch_gui(command: Command) -> None:
     app = wx.App()
+    app.SetAppName(GeneralConst.APP_NAME)
     MainFrame(command).Show()
     app.MainLoop()

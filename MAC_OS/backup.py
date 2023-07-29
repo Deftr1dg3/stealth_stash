@@ -13,7 +13,7 @@ settings = Settings()
 class BackUp:
     
     _BACKUP_DIR_PATH = settings.BACKUP_PATH
-    _CONTROL_HASH_PATH = os.path.abspath("./") + os.sep + "data" + os.sep + "control_hash"
+    _CONTROL_HASH_PATH = BackupConst.CONTROL_HASH_PATH
     
     def __init__(self) -> None:
         self._hash_file = self._control_hash_path()
@@ -30,17 +30,17 @@ class BackUp:
         if not os.path.exists(self._CONTROL_HASH_PATH):
             dirname = os.path.dirname(self._CONTROL_HASH_PATH)
             os.makedirs(dirname, exist_ok=True)
-            with open(self._CONTROL_HASH_PATH, "w", encoding="utf-8") as f:
+            with open(self._CONTROL_HASH_PATH, "w", encoding=GeneralConst.ENCODING_FORMAT) as f:
                 ...
         return self._CONTROL_HASH_PATH
         
     def _create_backup_file_name(self) -> str:
         current_datetime = datetime.now()
-        file_name = current_datetime.strftime("%Y-%m-%d_%H-%M-%S") + GeneralConst.DATAFILE_EXTENSION
+        file_name = current_datetime.strftime(BackupConst.BACKUP_FILE_NAME_FORMAT) + GeneralConst.DATAFILE_EXTENSION
         return file_name
 
     def _create_control_hash(self, json_data: str) -> str:
-        data_hash = sha256(json_data.encode("utf-8")).hexdigest()
+        data_hash = sha256(json_data.encode(GeneralConst.ENCODING_FORMAT)).hexdigest()
         return data_hash
 
     def _get_control_hash(self) -> str:
@@ -58,9 +58,9 @@ class BackUp:
     def _backup_data(self, b64_data: str) -> None:
         file_name = self._create_backup_file_name()
         file_path = self._backup_dir + os.sep + file_name 
-        with open(file_path, "w", encoding="utf-8") as f:
+        with open(file_path, "w", encoding=GeneralConst.ENCODING_FORMAT) as f:
             f.write(b64_data)
-        with open(self._hash_file, "w", encoding="utf-8") as f:
+        with open(self._hash_file, "w", encoding=GeneralConst.ENCODING_FORMAT) as f:
             f.write(self._new_hash)
             
     def _get_backups_list(self) -> list[str]:

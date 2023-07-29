@@ -14,9 +14,6 @@ class EntryRightClickMenu(wx.Menu):
         self._entry = entry
         super().__init__()
         
-        self._remove_button_label = MenueConst.REMOVE_ENTRY_LABEL
-        self._remove_button_shortcut = MenueConst.REMOVE_ENTRY_SHORTCUT
-        
         self._init_menu()
         self._bind_events()
         
@@ -25,22 +22,33 @@ class EntryRightClickMenu(wx.Menu):
         self.Append(422, f"&{MenueConst.COPY_USERNALE_LABEL}\t{MenueConst.COPY_USERNAME_SHORTCUT}")
         self.Append(423, f"&{MenueConst.COPY_URL_LABEL}\t{MenueConst.COPY_URL_SHORTCUT}")
         self.AppendSeparator()
-        self.Append(33, f"&{self._remove_button_label}\t{self._remove_button_shortcut}")
+        self.Append(35, f"&{MenueConst.MOVE_ENTRY_UP_LABLE}")
+        self.Append(36, f"&{MenueConst.MOVE_ENTRY_DOWN_LABLE}")
+        self.AppendSeparator()
+        self.Append(33, f"&{MenueConst.REMOVE_ENTRY_LABEL}\t{MenueConst.REMOVE_ENTRY_SHORTCUT}")
    
     def _bind_events(self) -> None:
         self.Bind(wx.EVT_MENU, self._on_copy_password, id=421)
         self.Bind(wx.EVT_MENU, self._on_copy_username, id=422)
         self.Bind(wx.EVT_MENU, self._on_copy_url, id=423)
         self.Bind(wx.EVT_MENU, self._on_remove_entry, id=33)
+        self.Bind(wx.EVT_MENU, self._on_move_entry_up, id=35)
+        self.Bind(wx.EVT_MENU, self._on_move_entry_down, id=36)
+        
+    def _on_move_entry_up(self, event) -> None:
+        self._command.move_entry_up()
+    
+    def _on_move_entry_down(self, event) -> None:
+        self._command.move_entry_down() 
         
     def _on_copy_password(self, event) -> None:
-        self._command.copy_to_clipboard(1)
+        self._command.copy_password()
         
     def _on_copy_username(self, event) -> None:
-        self._command.copy_to_clipboard(2)
+        self._command.copy_username()
     
     def _on_copy_url(self, event) -> None:
-        self._command.copy_to_clipboard(3)
+        self._command.copy_url()
                
     def _on_remove_entry(self, event) -> None:
         self._command.remove_entry(self._entry)

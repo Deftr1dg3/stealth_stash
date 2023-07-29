@@ -14,6 +14,7 @@ class GeneralConst:
     DEFAULT_DATAFILE_NAME = "StealthStash"
     APP_NAME = "StealthStash"
     GIT_HUB = "https://github.com/Deftr1dg3/stealth_stash.git"
+    ENCODING_FORMAT = "utf-8"
     
 
 @dataclass(frozen=True)
@@ -33,6 +34,8 @@ class SettingsConst:
 @dataclass(frozen=True)
 class BackupConst:
     STORED_BACKUPS = 10
+    CONTROL_HASH_PATH = "data" + os.sep + "control_hash"
+    BACKUP_FILE_NAME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 
 
 
@@ -109,8 +112,8 @@ class LeftPanelConst:
     ICON_CRYPTO = {"crypto", "btc", "bitcoin", "bitcoins"}
     ICON_DEVOPS = {"development", "c", "c++", "python", "java", "javascript", "rust", "ruby", "php", "git-hub", "github", "git_hub", "dev", "devops", "gamedev"}
     ICON_DATABASE = {"database", "databases", "data", "mysql", "psql", "postgres", "postgresql", "sql", "storage"}
-    ICON_FUNDS = {"funds", "fund", "bank", "banks", "paypal", "pay-pal", "pay_pal"}
-    ICON_PAYMENTS = {"payments", "payment"}
+    ICON_FUNDS = {"funds", "fund", "bank", "banks", "paypal", "pay-pal", "pay_pal", "credit card", "creadit cards", "exchange", "exchanges"}
+    ICON_PAYMENTS = {"payments", "payment", "store", "stores", "shop", "shops", "ebay", "amazon", "purchase", "purchases"}
     ICON_FOLDER = {"folder",}
     CATEGORY_PANEL_SIZE = (170, 30)
     CATEGORY_NAME_MAX_LENGTH = 16
@@ -203,6 +206,14 @@ class MenueConst:
     UNDO_SHORTCUT = "Ctrl+Z"
     REDO_LABLE = "Reverse Undo"
     REDO_SHORTCUT = "Shift+Ctrl+Z"
+    MOVE_CATEGORY_UP_LABLE = "Move Category Up"
+    MOVE_CATEGORY_UP_SHORTCUT = "Shift+Ctrl+U"
+    MOVE_CATEGORY_DOWN_LABLE = "Move Category Down"
+    MOVE_CATEGORY_DOWN_SHORTCUT = "Shift+Ctrl+D"
+    MOVE_ENTRY_UP_LABLE = "Move Entry Up"
+    MOVE_ENTRY_UP_SHORTCUT = "Shift+U"
+    MOVE_ENTRY_DOWN_LABLE = "Move Entry Down"
+    MOVE_ENTRY_DOWN_SHORTCUT = "Shift+D"
     
     # Under third field
     OPEN_MANUAL_LABEL = "Help"

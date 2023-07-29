@@ -7,12 +7,12 @@ from config import GeneralConst, SettingsConst
 
 class Settings:
     
-    DEFAULT_DATAFILE_PATH = os.path.abspath("./") + os.sep + SettingsConst.DEFAULT_DATA_FOLDER + os.sep + GeneralConst.DEFAULT_DATAFILE_NAME + GeneralConst.DATAFILE_EXTENSION
-    DEFAULT_BACKUP_PATH = os.path.abspath("./") + os.sep + SettingsConst.DEFAULT_BACKUP_FOLDER
+    DEFAULT_DATAFILE_PATH = SettingsConst.DEFAULT_DATA_FOLDER + os.sep + GeneralConst.DEFAULT_DATAFILE_NAME + GeneralConst.DATAFILE_EXTENSION
+    DEFAULT_BACKUP_PATH = SettingsConst.DEFAULT_BACKUP_FOLDER
     DEFAULT_COLOUR_SCHEME = SettingsConst.DEFAULT_COLOUR_THEME
     
     def __init__(self) -> None:
-        self._datafile_path = os.path.abspath("./") + os.sep +  SettingsConst.DEFAULT_SETTINGS_FILE
+        self._datafile_path = SettingsConst.DEFAULT_SETTINGS_FILE
         self._settings = self._get_settings()
     
     @property

@@ -24,7 +24,7 @@ class Entry:
         return self._id
         
     @property
-    def entry_data(self) -> list:
+    def entry_data(self) -> list[str]:
         return self._entry_data
         
     @property
@@ -93,7 +93,7 @@ class Category:
         return content
     
     def rename(self, new_name: str) -> None:
-        self._data_file.rename_category(self.name, new_name)
+        self._data_file.rename_category(self._name, new_name)
         self._name = new_name
     
     def remove(self) -> None:
@@ -109,10 +109,24 @@ class Category:
         return new_row
     
     def clear_category(self) -> None:
-        self._data_file.clear_category(self.name)
+        self._data_file.clear_category(self._name)
     
     def commit(self):
         self._data_file.commit()
+        
+    def move_category_up(self) -> None:
+        self._data_file.move_category_up(self._name)
+    
+    def move_category_down(self) -> None:
+        self._data_file.move_category_down(self._name)
+        
+    def move_entry_up(self, entry: Entry) -> None:
+        entry_data = entry.entry_data
+        self._data_file.move_entry_up(self._name, entry_data)
+    
+    def move_entry_down(self, entry: Entry) -> None:
+        entry_data = entry.entry_data
+        self._data_file.move_entry_down(self._name, entry_data)
         
     
     
@@ -151,6 +165,7 @@ class DataFile:
         self._backup = BackUp()
         self._datafile_path = file_path
         self._password = ""
+        self._data: dict[str, list[list[str]]]
         atexit.register(self.back_up)
     
     @property
@@ -257,6 +272,43 @@ class DataFile:
             return all_entries
         found = [entry for entry in all_entries if query.lower() in entry.record_name.lower() or query in entry.username.lower()]
         return found
+    
+    def move_category_up(self, category_name: str) -> None:
+        keys = list(self._data.keys())
+        values = list(self._data.values())
+        category_index = keys.index(category_name)
+        if category_index == 0:
+            return 
+        keys[category_index], keys[category_index - 1] = keys[category_index - 1], keys[category_index]
+        values[category_index], values[category_index - 1] = values[category_index - 1], values[category_index]
+        self._data = dict(zip(keys, values))
+        self.commit()
+    
+    def move_category_down(self, category_name: str) -> None:
+        keys = list(self._data.keys())
+        values = list(self._data.values())
+        category_index = keys.index(category_name)
+        if category_index == len(keys) - 1:
+            return 
+        keys[category_index], keys[category_index + 1] = keys[category_index + 1], keys[category_index]
+        values[category_index], values[category_index + 1] = values[category_index + 1], values[category_index]
+        self._data = dict(zip(keys, values))
+        self.commit()
+        
+    def move_entry_up(self, category_name: str, entry_data: list[str]) -> None:
+        content = self._data[category_name]
+        entry_index = content.index(entry_data)
+        if entry_index == 0:
+            return 
+        content[entry_index], content[entry_index - 1] = content[entry_index - 1], content[entry_index]
+        
+    def move_entry_down(self, category_name: str, entry_data: list[str]) -> None:
+        content = self._data[category_name]
+        entry_index = content.index(entry_data)
+        if entry_index == len(content) - 1:
+            return 
+        content[entry_index], content[entry_index + 1] = content[entry_index + 1], content[entry_index]
+    
         
         
 

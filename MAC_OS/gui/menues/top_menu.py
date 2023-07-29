@@ -43,7 +43,12 @@ class TopBarMenu(wx.MenuBar):
         edit_menu.Append(43, f"&{MenueConst.COPY_URL_LABEL}\t{MenueConst.COPY_URL_SHORTCUT}")
         edit_menu.AppendSeparator()
         edit_menu.Append(31, f"&{MenueConst.UNDO_LABLE}\t{MenueConst.UNDO_SHORTCUT}")
-        edit_menu.Append(32, f"&{MenueConst.REDO_SHORTCUT}\t{MenueConst.REDO_SHORTCUT}")
+        edit_menu.Append(32, f"&{MenueConst.REDO_LABLE}\t{MenueConst.REDO_SHORTCUT}")
+        # edit_menu.AppendSeparator()
+        # edit_menu.Append(33, f"&{MenueConst.MOVE_CATEGORY_UP_LABLE}\t{MenueConst.MOVE_CATEGORY_UP_SHORTCUT}")
+        # edit_menu.Append(34, f"&{MenueConst.MOVE_CATEGORY_DOWN_LABLE}\t{MenueConst.MOVE_CATEGORY_DOWN_SHORTCUT}")
+        # edit_menu.Append(35, f"&{MenueConst.MOVE_ENTRY_UP_LABLE}\t{MenueConst.MOVE_ENTRY_UP_SHORTCUT}")
+        # edit_menu.Append(36, f"&{MenueConst.MOVE_ENTRY_DOWN_LABLE}\t{MenueConst.MOVE_ENTRY_DOWN_SHORTCUT}")
 
         self.Append(edit_menu, f"&{MenueConst.SECOND_FIELD_LABEL}")
         
@@ -76,10 +81,25 @@ class TopBarMenu(wx.MenuBar):
         self._main_frame.Bind(wx.EVT_MENU, self._on_copy_url, id=43)
         self._main_frame.Bind(wx.EVT_MENU, self._on_undo, id=31)
         self._main_frame.Bind(wx.EVT_MENU, self._on_reverse_undo, id=32)
+        # self._main_frame.Bind(wx.EVT_MENU, self._on_move_category_up, id=33)
+        # self._main_frame.Bind(wx.EVT_MENU, self._on_move_category_down, id=34)
+        # self._main_frame.Bind(wx.EVT_MENU, self._on_move_entry_up, id=35)
+        # self._main_frame.Bind(wx.EVT_MENU, self._on_move_entry_down, id=36)
         
         # Bind "Help" menu
         self._main_frame.Bind(wx.EVT_MENU, self._on_help, id=61)
+        
+    # def _on_move_entry_up(self, event) -> None:
+    #     self._command.move_entry_up()
+    
+    # def _on_move_entry_down(self, event) -> None:
+    #     self._command.move_entry_down() 
 
+    # def _on_move_category_up(self, event) -> None:
+    #     self._command.move_category_up()
+    
+    # def _on_move_category_down(self, event) -> None:
+    #     self._command.move_category_down()
     
     def _on_help(self, event) -> None:
         self._command.help()

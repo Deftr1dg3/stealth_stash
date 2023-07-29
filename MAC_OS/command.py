@@ -277,6 +277,7 @@ class Command:
     def refresh_right(self) -> None:
         self.right.refresh()
         
+        
     def refresh_on_item_change(self) -> None:
         self.refresh_mid()
         self._keep_entry_row_selected()
@@ -392,8 +393,8 @@ class Command:
                 message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
                 return
             entry = self.selected_entry_row.entry
-        result = dialog_popup(config.RemoveConfirmationPopup.MESSAGE.format(entry.record_name), config.RemoveConfirmationPopup.TITLE)
-        if result:
+        confirmed = dialog_popup(config.RemoveConfirmationPopup.MESSAGE.format(entry.record_name), config.RemoveConfirmationPopup.TITLE)
+        if confirmed:
             self.selected_category_row.category.remove_entry(entry)
             self.refresh_mid()
             self.refresh_right()
@@ -526,6 +527,56 @@ class Command:
     
     def manage_entry_states(self, direction: int = 1):
         self.edit_panel.manage_self_states(direction)
+        
+    
+    def move_category_up(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        category = self.selected_category_row.category
+        category.move_category_up()
+        self.selected_category_row = None
+        self.refresh_left()
+        self._keep_category_row_selected()
+    
+    
+    def move_category_down(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        category = self.selected_category_row.category
+        category.move_category_down()
+        self.selected_category_row = None
+        self.refresh_left()
+        self._keep_category_row_selected()
+        
+        
+    def move_entry_up(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        if self.selected_entry_row is None:
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return
+        entry = self.selected_entry_row.entry
+        self.selected_category_row.category.move_entry_up(entry)
+        self.refresh_mid()
+        self._keep_entry_row_selected()
+    
+    
+    def move_entry_down(self) -> None:
+        if self.selected_category_row is None:
+            message_popup(config.NoCategorySelectedPopup.MESSAGE, config.NoCategorySelectedPopup.TITLE)
+            return
+        if self.selected_entry_row is None:
+            message_popup(config.NoEntrySelectedPopup.MESSAGE, config.NoEntrySelectedPopup.TITLE)
+            return
+        entry = self.selected_entry_row.entry
+        self.selected_category_row.category.move_entry_down(entry)
+        self.refresh_mid()
+        self._keep_entry_row_selected()
+        
+    
             
             
             
