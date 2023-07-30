@@ -50,6 +50,8 @@ class EditPanel(wx.Panel):
         self._text_colour = self._colours.TEXT
         self._input_background_colour = self._colours.INPUT_BACKGROUND
         
+        self._password_validator = ValidatePassword()
+        
         # Initializing visible objects and binding events
         self._init_ui()
         self._bind_events()
@@ -250,11 +252,9 @@ class EditPanel(wx.Panel):
         
     def _validate_password_strength(self, event) -> None:
         password = self.entry.password
-        validator = ValidatePassword()
-        result = validator.validate_password(password)
+        result = self._password_validator.validate_password(password)
         self._current_password_strength = result 
         self._password_strength.SetValue(self._current_password_strength)
-        
         
     def _on_select_password_strength(self, event) -> None:
         self._current_password_strength = self._password_strength.GetValue()

@@ -26,10 +26,10 @@ class StrengthSpecification(NamedTuple):
 class PasswordStrength:
     _SHUFFLE_CYCLE = 10000
     MAX_PASSWORD_LEGTH = 32
-    VERY_STRONG = StrengthSpecification(uppercase=2, lowercase=2, digit=2, special_symbol=2, length=16, shuffle_cycle=_SHUFFLE_CYCLE)
-    STRONG = StrengthSpecification(uppercase=1, lowercase=2, digit=2, special_symbol=1, length=12, shuffle_cycle=_SHUFFLE_CYCLE)
-    MEDIUM = StrengthSpecification(uppercase=1, lowercase=1, digit=1, special_symbol=1, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
-    WEAK = StrengthSpecification(uppercase=0, lowercase=2, digit=3, special_symbol=0, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
+    VERY_STRONG = StrengthSpecification(uppercase=1, lowercase=2, digit=2, special_symbol=1, length=16, shuffle_cycle=_SHUFFLE_CYCLE)
+    STRONG = StrengthSpecification(uppercase=1, lowercase=1, digit=1, special_symbol=1, length=12, shuffle_cycle=_SHUFFLE_CYCLE)
+    MEDIUM = StrengthSpecification(uppercase=1, lowercase=0, digit=1, special_symbol=0, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
+    WEAK = StrengthSpecification(uppercase=0, lowercase=1, digit=1, special_symbol=0, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
     VERY_WEAK = StrengthSpecification(uppercase=0, lowercase=0, digit=0, special_symbol=0, length=8, shuffle_cycle=_SHUFFLE_CYCLE)
     
 
@@ -112,11 +112,11 @@ class ValidatePassword:
     
     def validate_password(self, password: str) -> str:
         if self._validate_very_strong(password):
-            return "VERY_STRONG"
+            return "VERY STRONG"
         if self._validate_strong(password):
             return "STRONG"
         if self._validate_medium(password):
             return "MEDIUM"
         if self._validate_weak(password):
             return "WEAK"
-        return "VERY_WEAK"
+        return "VERY WEAK"
