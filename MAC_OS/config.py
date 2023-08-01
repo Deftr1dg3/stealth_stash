@@ -74,7 +74,7 @@ class FirstLaunchConst:
     IMPORT_DATAFILE_LABEL = "Select existing DataFile"
     
 @dataclass(frozen=True)
-class PassowrdWindowConst:
+class PasswordWindowConst:
     SIZE = (400, 200)
     STYLE = wx.CLOSE_BOX
     PASSOWRD_HINT = "Insert password ... "
@@ -337,6 +337,11 @@ class ConfirmDirectoryPopup:
     TITLE = "Confirmation"
     MESSAGE = "Your DataFile will be stored in\n{}\nDo you wish to proceed?"
     
+    
+@dataclass(frozen=True)
+class EmptyFieldPopup:
+    TITLE = "Unable to proceed."
+    MESSAGE = "No characters inserted."
     
     
     

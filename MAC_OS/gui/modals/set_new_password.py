@@ -9,7 +9,7 @@ from data_file import DataFile
 from settings import Settings
 from gui.colours import ColourTheme
 from gui.modals.popups import message_popup
-from config import SetNewPasswordConst, PasswordCreatedPopup, PasswordDoesNotMatchPopup
+from config import SetNewPasswordConst, PasswordCreatedPopup, PasswordDoesNotMatchPopup, EmptyFieldPopup
 
 
 class SetNewPassword(wx.Frame):
@@ -73,6 +73,11 @@ class SetNewPassword(wx.Frame):
         self._confirm_new_password.Bind(wx.EVT_TEXT_ENTER, self._on_confirm_new_password_enter)
         
     def _on_new_password_enter(self, event) -> None:
+        password = self._new_password.GetValue()
+        if len(password) == 0:
+            message_popup(EmptyFieldPopup.TITLE, EmptyFieldPopup.MESSAGE)
+            self._new_password.SetFocus()
+            return 
         self._confirm_new_password.SetFocus()
         
     def _on_confirm_new_password_enter(self, event) -> None:

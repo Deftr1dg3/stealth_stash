@@ -10,11 +10,11 @@ from gui.modals.popups import dialog_popup
 from exceptions import UnableToDecodeTheFile
 from gui.colours import ColourTheme
 from gui.modals.popups import select_file
-from config import PassowrdWindowConst, GeneralConst, WrongExtensionPopup
+from config import PasswordWindowConst, GeneralConst, WrongExtensionPopup
 
 class SetPassword(wx.Frame):
     def __init__(self, data_file: DataFile, settings: Settings) -> None:
-        super().__init__(None, style=PassowrdWindowConst.STYLE, size=PassowrdWindowConst.SIZE, title=GeneralConst.APP_NAME)
+        super().__init__(None, style=PasswordWindowConst.STYLE, size=PasswordWindowConst.SIZE, title=GeneralConst.APP_NAME)
         
         self.SetBackgroundColour(ColourTheme.AVAILABLE_COLOUR_SCHEMES[settings.COLOUR_SCHEME].MID_PANEL)
         
@@ -36,10 +36,10 @@ class SetPassword(wx.Frame):
         buttons_box = wx.BoxSizer(wx.HORIZONTAL)
         
         self._password = wx.TextCtrl(panel, style=wx.TE_PASSWORD | wx.TE_PROCESS_ENTER, size=(200, -1))
-        self._password.SetHint(PassowrdWindowConst.PASSOWRD_HINT)
+        self._password.SetHint(PasswordWindowConst.PASSOWRD_HINT)
         self._password.SetFocus()
         
-        self._choose_datafile = wx.Button(panel, label=PassowrdWindowConst.SELECT_DATAFILE_LABEL)
+        self._choose_datafile = wx.Button(panel, label=PasswordWindowConst.SELECT_DATAFILE_LABEL)
         
         input_box.Add(self._password, 1, wx.ALIGN_CENTER)
 
@@ -66,7 +66,7 @@ class SetPassword(wx.Frame):
             self._data_file.load_data()
             self.Destroy()
         except UnableToDecodeTheFile:
-            another_try = dialog_popup(PassowrdWindowConst.DIALOG_MESSAGE, PassowrdWindowConst.DIALOG_TITLE, yes_default=True)
+            another_try = dialog_popup(PasswordWindowConst.DIALOG_MESSAGE, PasswordWindowConst.DIALOG_TITLE, yes_default=True)
             if not another_try:
                 os._exit(0)
             self._password.SetValue("")
