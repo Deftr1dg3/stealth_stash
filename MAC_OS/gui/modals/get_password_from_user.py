@@ -6,11 +6,11 @@ import os
 import sys
 from data_file import DataFile
 from settings import Settings
-from gui.modals.popups import dialog_popup
+from gui.modals.popups import dialog_popup, message_popup
 from exceptions import UnableToDecodeTheFile
 from gui.colours import ColourTheme
 from gui.modals.popups import select_file
-from config import PasswordWindowConst, GeneralConst, WrongExtensionPopup
+from config import PasswordWindowConst, GeneralConst, WrongExtensionPopup, EmptyFieldPopup
 
 class SetPassword(wx.Frame):
     def __init__(self, data_file: DataFile, settings: Settings) -> None:
@@ -61,6 +61,10 @@ class SetPassword(wx.Frame):
         
     def _on_confirm(self, event) -> None:
         password = self._password.GetValue()
+        if len(password) == 0:
+            message_popup(EmptyFieldPopup.TITLE, EmptyFieldPopup.MESSAGE)
+            self._password.SetFocus()
+            return 
         try:
             self._data_file.password = password
             self._data_file.load_data()
