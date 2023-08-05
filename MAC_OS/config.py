@@ -33,7 +33,7 @@ class SettingsConst:
 
 @dataclass(frozen=True)
 class BackupConst:
-    STORED_BACKUPS = 10
+    STORED_BACKUPS = 100
     CONTROL_HASH_PATH = "data" + os.sep + "control_hash"
     BACKUP_FILE_NAME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 
@@ -342,10 +342,6 @@ class ConfirmDirectoryPopup:
 class EmptyFieldPopup:
     TITLE = "Unable to proceed."
     MESSAGE = "No characters inserted."
-    
-    
-    
-    
     
     
     
