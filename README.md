@@ -35,7 +35,7 @@ probably you know how to do it:).
 Pay attention:
 
 Version for ARM assembled and tested on Mac OS Ventura only and may not work on previous versions of Mac OS.
-Version for x86_64 assembled and tested on Big Sure and will work on this OS and higher.
+Version for x86_64 assembled and tested on Ventura and may not work on previous versions of Mac OS.
 
 # Download
 
@@ -48,11 +48,11 @@ It will download the file.
 
 3. Open Terminal, navigate to Downloads folder and unpack it using terminal command:
 
-    - tar -xzvf stealth_stash_arm64.tar.gz 
+    - tar -xzvf stealth_stash_ventura_arm64.tar.gz 
 
         or
 
-    - tar -xzvf stealth_stash_big_sur_x86_64.tar.gz
+    - tar -xzvf stealth_stash_ventura_x86_64.tar.gz
 
     x - For extract
 
