@@ -2,76 +2,6 @@
 
 <u>Genaral info about the app. User Guide a bit below :)</u>
 
-The application is build to store login credentials in the most secure way.
-
-The password is NOT stored in any place nor the password hash. The password after adding
-Initialization Vector and Salt is used to encrypt the data directly. 
-Currently it is the most secure way to store the data.
-But at the same time there is no way to restore password in case you forgot it.
-Used AES 256 bit for encryption. 
-
-If you don't have the password you won't be able to reach the data.
-
-Datafile stores all your date in ecrypted way. 
-Datafile - usually colled "StealthStash.sdf", but you can change it.
-If you have the correct password, this application will decrypt
-file, regardless of its name or extension.
-The file written in regular text format (base64), so it can be stored in the cloud or in the email as backup.
-No system will recognize it as a threat.
-
-Datafile usually stored inside the App packages in 
-"./data/StealthStash.sdf", but you can specify any
-other directorey to store the file manually.
-
-<u>In the future will be added option to encrypt files.</u>
-
-# User Guide
-
-You can either download ready app from ReadyAppARM64 or from ReadyAppX86_64, depending on your 
-MAC OS and CPU type.
-Or to assemble it on your own using the source code from this repo (if you consider this option
-probably you know how to do it:).
-
-Pay attention:
-
-Version for ARM assembled and tested on Mac OS Ventura only and may not work on previous versions of Mac OS.
-Version for x86_64 assembled and tested on Big Sure and will work on this OS and higher.
-
-# Download
-
-1. Navigate to the app folder and Click on the file name.
-![Navigate to the app mfolder and Click on the file name.](MAC_OS/stealth_stash_screenshots/file_repo.png)
-
-2. In the file repo click on "Raw" at the up right corner.
-It will download the file.
-![Navigate to the app mfolder](MAC_OS/stealth_stash_screenshots/download_repo.png)
-
-3. Open Terminal, navigate to Downloads folder and unpack it using terminal command:
-
-    - tar -xzvf stealth_stash_arm64.tar.gz 
-
-        or
-
-    - tar -xzvf stealth_stash_big_sur_x86_64.tar.gz
-
-    x - For extract
-
-    z - For .gz format
-
-    v - Verbose extracting process 
-
-    f - specify file name
-
-After extracting you will see the app Icon in your "Downloads" folder
-![After extracting you will see the app Icon in you Downloads folder](MAC_OS/stealth_stash_screenshots/downloads_folder.png)
-
-Now you can move the app either to "Applications" or
-to any else desired directory.
-
-To launch the app just Doubleclick it.
-
-(First launch on x86_64 machine might take several seconds)
-
 # Usage
 
 1. Doublecklick the app icon and you will see "First launch window"
@@ -162,3 +92,76 @@ you can use:
 ![Change datafile directory](MAC_OS/stealth_stash_screenshots/file_menu_change_datafile_directory.png)
 
 And choose the desired directory.
+
+The application is build to store login credentials in the most secure way.
+
+The password is NOT stored in any place nor the password hash. The password after adding
+Initialization Vector and Salt is used to encrypt the data directly. 
+Currently it is the most secure way to store the data.
+But at the same time there is no way to restore password in case you forgot it.
+Used AES 256 bit for encryption. 
+
+If you don't have the password you won't be able to reach the data.
+
+Datafile stores all your date in ecrypted way. 
+Datafile - usually colled "StealthStash.sdf", but you can change it.
+If you have the correct password, this application will decrypt
+file, regardless of its name or extension.
+The file written in regular text format (base64), so it can be stored in the cloud or in the email as backup.
+No system will recognize it as a threat.
+
+Datafile usually stored inside the App packages in 
+"./data/StealthStash.sdf", but you can specify any
+other directorey to store the file manually.
+
+<u>In the future will be added option to encrypt files.</u>
+
+# User Guide
+
+You can either download ready app from ReadyAppARM64 or from ReadyAppX86_64, depending on your 
+MAC OS and CPU type.
+Or to assemble it on your own using the source code from this repo (if you consider this option
+probably you know how to do it:).
+
+Pay attention:
+
+Version for ARM assembled and tested on Mac OS Ventura only and may not work on previous versions of Mac OS.
+Version for x86_64 assembled and tested on Big Sure and will work on this OS and higher.
+
+# Download
+
+### Meanwhile only M1 version is working correctly.
+
+1. Navigate to the app folder and Click on the file name.
+![Navigate to the app mfolder and Click on the file name.](MAC_OS/stealth_stash_screenshots/file_repo.png)
+
+2. In the file repo click on "Raw" at the up right corner.
+It will download the file.
+![Navigate to the app mfolder](MAC_OS/stealth_stash_screenshots/download_repo.png)
+
+3. Open Terminal, navigate to Downloads folder and unpack it using terminal command:
+
+    - tar -xzvf stealth_stash_arm64.tar.gz 
+
+        or
+
+    - tar -xzvf stealth_stash_big_sur_x86_64.tar.gz
+
+    x - For extract
+
+    z - For .gz format
+
+    v - Verbose extracting process 
+
+    f - specify file name
+
+After extracting you will see the app Icon in your "Downloads" folder
+![After extracting you will see the app Icon in you Downloads folder](MAC_OS/stealth_stash_screenshots/downloads_folder.png)
+
+Now you can move the app either to "Applications" or
+to any else desired directory.
+
+To launch the app just Doubleclick it.
+
+(First launch on x86_64 machine might take several seconds)
+
