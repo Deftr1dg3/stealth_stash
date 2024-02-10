@@ -26,11 +26,11 @@ class ColoursAssignment(NamedTuple):
     
 class ColourTheme:
     
-    DARK_DARK = wx.Colour("#252525")
-    DARK_MEDIUM = wx.Colour("#343434")
-    DARK_INPUT_BACKGROUND = wx.Colour("#252525")
-    DARK_SELECTION = wx.Colour("#0059D0")
-    DARK_TEXT = wx.Colour(wx.WHITE)
+    DARK_DARK = wx.Colour("#182924")
+    DARK_MEDIUM = wx.Colour("#2d3f39")
+    DARK_INPUT_BACKGROUND = wx.Colour("#182924")
+    DARK_SELECTION = wx.Colour("#4f7169")
+    DARK_TEXT = wx.Colour("#90d5c0")
     
     DARK = ColoursAssignment(TEXT=wx.Colour(DARK_TEXT),    # RGB for wx.WHITE
                             SELECTION=wx.Colour(DARK_SELECTION),   # RGB for "#51BC5F"
@@ -49,8 +49,8 @@ class ColourTheme:
     LIGHT_DARK = wx.Colour("#C6C6C6")
     LIGHT_MEDIUM = wx.Colour("#EEEEEE")
     LIGHT_INPUT_BACKGROUND = wx.Colour("#C6C6C6")
-    LIGHT_SELECTION = wx.Colour("#0011FF")
-    LIGHT_TEXT = wx.Colour(wx.BLACK)
+    LIGHT_SELECTION = wx.Colour("#8a8db2")
+    LIGHT_TEXT = wx.Colour("#323442")
     
     LIGHT = ColoursAssignment(TEXT=wx.Colour(LIGHT_TEXT),    # RGB for wx.WHITE
                             SELECTION=wx.Colour(LIGHT_SELECTION),   # RGB for "#51BC5F"
@@ -69,8 +69,8 @@ class ColourTheme:
     LIGHT_GREEN_DARK = wx.Colour("#003942")
     LIGHT_GREEN_MEDIUM = wx.Colour("#004952")
     LIGHT_GREEN_INPUT_BACKGROUND = wx.Colour("#00333b")
-    LIGHT_GREEN_SELECTION = wx.Colour("#1991A0")
-    LIGHT_GREEN_TEXT = wx.Colour(wx.WHITE)
+    LIGHT_GREEN_SELECTION = wx.Colour("#42848d")
+    LIGHT_GREEN_TEXT = wx.Colour("#a7f2fb")
     
     LIGHT_GREEN = ColoursAssignment(TEXT=wx.Colour(LIGHT_GREEN_TEXT),    # RGB for wx.WHITE
                             SELECTION=wx.Colour(LIGHT_GREEN_SELECTION),   # RGB for "#51BC5F"
@@ -86,11 +86,11 @@ class ColourTheme:
                             COLOUR_CHANGING_STEP = 3
                             )
     
-    BLUE_DARK = wx.Colour("#002958")
-    BLUE_MEDIUM = wx.Colour("#003764")
-    BLUE_INPUT_BACKGROUND = wx.Colour("#002958")
-    BLUE_SELECTION = wx.Colour("#265F8F")
-    BLUE_TEXT = wx.Colour(wx.WHITE)
+    BLUE_DARK = wx.Colour("#19202f")
+    BLUE_MEDIUM = wx.Colour("#353c4c" )
+    BLUE_INPUT_BACKGROUND = wx.Colour("#1f2635")
+    BLUE_SELECTION = wx.Colour("#5c6e96")
+    BLUE_TEXT = wx.Colour("#b0c6fa")
     
     BLUE = ColoursAssignment(TEXT=wx.Colour(BLUE_TEXT),    # RGB for wx.WHITE
                             SELECTION=wx.Colour(BLUE_SELECTION),   # RGB for "#51BC5F"
@@ -106,11 +106,11 @@ class ColourTheme:
                             COLOUR_CHANGING_STEP = 4
                             )
     
-    BURGUNDY_DARK = wx.Colour("#37171E")
-    BURGUNDY_MEDIUM = wx.Colour("#431B24")
-    BURGUNDY_INPUT_BACKGROUND = wx.Colour("#37171E")
-    BURGUNDY_SELECTION = wx.Colour("#9C263F")
-    BURGUNDY_TEXT = wx.Colour(wx.WHITE)
+    BURGUNDY_DARK = wx.Colour("#2f212e")
+    BURGUNDY_MEDIUM = wx.Colour("#463644")
+    BURGUNDY_INPUT_BACKGROUND = wx.Colour("#2f212e")
+    BURGUNDY_SELECTION = wx.Colour("#7d617c")
+    BURGUNDY_TEXT = wx.Colour("#ecb3e7")
     
     BURGUNDY = ColoursAssignment(TEXT=wx.Colour(BURGUNDY_TEXT),    # RGB for wx.WHITE
                             SELECTION=wx.Colour(BURGUNDY_SELECTION),   # RGB for "#51BC5F"
@@ -126,11 +126,11 @@ class ColourTheme:
                             COLOUR_CHANGING_STEP = 4
                             )
     #  Start here oihn
-    PURPLE_DARK = wx.Colour("#350C63")
-    PURPLE_MEDIUM = wx.Colour("#471183")
-    PURPLE_INPUT_BACKGROUND = wx.Colour("#270053")
-    PURPLE_SELECTION = wx.Colour("#963AFD")
-    PURPLE_TEXT = wx.Colour(wx.WHITE)
+    PURPLE_DARK = wx.Colour("#221c2e")
+    PURPLE_MEDIUM = wx.Colour("#3e384b")
+    PURPLE_INPUT_BACKGROUND = wx.Colour("#221c2e")
+    PURPLE_SELECTION = wx.Colour("#6b5e85")
+    PURPLE_TEXT = wx.Colour("#d0bcfa")
     
     PURPLE = ColoursAssignment(TEXT=wx.Colour(PURPLE_TEXT),    # RGB for wx.WHITE
                             SELECTION=wx.Colour(PURPLE_SELECTION),   # RGB for "#51BC5F"

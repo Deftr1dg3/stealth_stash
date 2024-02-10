@@ -131,6 +131,7 @@ Version for x86_64 assembled and tested on Big Sure and will work on this OS and
 # Download
 
 ### Meanwhile only M1 version is working correctly.
+### If you have x_86 processer, you have to clone the repo, install all dependencies and to build the app from scratch usinf 'py2app' utility.
 
 1. Navigate to the app folder and Click on the file name.
 ![Navigate to the app mfolder and Click on the file name.](MAC_OS/stealth_stash_screenshots/file_repo.png)
